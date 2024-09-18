@@ -3,9 +3,54 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34701.34
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{C03A22E5-CBAD-4C10-9336-18A14A9DBA30}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TouristAttraction", "TouristAttraction", "{8023400A-16A3-4A7A-A8A4-B86C9ADBAB9E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TouristAttraction.API", "Services\TouristAttraction\TouristAttraction.API\TouristAttraction.API.csproj", "{7F82CA22-48B5-4EA8-897A-679F706889DF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildingBlocks", "BuildingBlocks", "{85169FAB-11AF-466B-9EF2-04EFD87D9B8E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuildingBlocks", "BuildingBlocks\BuildingBlocks\BuildingBlocks.csproj", "{47055F4D-9115-4BFF-864B-ABD034B432D0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProvinceVietNam", "ProvinceVietNam", "{17E98031-7035-48F5-B9DA-A7BA976EE5D5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProvinceVietNam.API", "Services\ProvinceVietNam\ProvinceVietNam.API\ProvinceVietNam.API.csproj", "{5B0DE351-B812-45AE-B488-63CA3EE600B3}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{D7221BE0-660E-4EB5-89BD-F46F0161A224}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7F82CA22-48B5-4EA8-897A-679F706889DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F82CA22-48B5-4EA8-897A-679F706889DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F82CA22-48B5-4EA8-897A-679F706889DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F82CA22-48B5-4EA8-897A-679F706889DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47055F4D-9115-4BFF-864B-ABD034B432D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47055F4D-9115-4BFF-864B-ABD034B432D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47055F4D-9115-4BFF-864B-ABD034B432D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47055F4D-9115-4BFF-864B-ABD034B432D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B0DE351-B812-45AE-B488-63CA3EE600B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B0DE351-B812-45AE-B488-63CA3EE600B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B0DE351-B812-45AE-B488-63CA3EE600B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B0DE351-B812-45AE-B488-63CA3EE600B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7221BE0-660E-4EB5-89BD-F46F0161A224}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7221BE0-660E-4EB5-89BD-F46F0161A224}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7221BE0-660E-4EB5-89BD-F46F0161A224}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7221BE0-660E-4EB5-89BD-F46F0161A224}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8023400A-16A3-4A7A-A8A4-B86C9ADBAB9E} = {C03A22E5-CBAD-4C10-9336-18A14A9DBA30}
+		{7F82CA22-48B5-4EA8-897A-679F706889DF} = {8023400A-16A3-4A7A-A8A4-B86C9ADBAB9E}
+		{47055F4D-9115-4BFF-864B-ABD034B432D0} = {85169FAB-11AF-466B-9EF2-04EFD87D9B8E}
+		{17E98031-7035-48F5-B9DA-A7BA976EE5D5} = {C03A22E5-CBAD-4C10-9336-18A14A9DBA30}
+		{5B0DE351-B812-45AE-B488-63CA3EE600B3} = {17E98031-7035-48F5-B9DA-A7BA976EE5D5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A3E24053-2FFA-479B-A57B-0C926C4E6910}
