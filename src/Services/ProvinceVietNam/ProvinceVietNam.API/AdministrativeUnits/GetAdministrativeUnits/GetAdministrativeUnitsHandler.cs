@@ -3,15 +3,12 @@
     public record GetAdministrativeUnitsQuery() : IQuery<GetAdministrativeUnitsResult>;
     public record GetAdministrativeUnitsResult(IEnumerable<AdministrativeUnit> AdministrativeUnits);
     internal class GetAdministrativeUnitsHandler(
-        ProvincedbContext dbContext,
-        ILogger<GetAdministrativeUnitsHandler> logger
+        ProvincedbContext dbContext
         )
         : IQueryHandler<GetAdministrativeUnitsQuery, GetAdministrativeUnitsResult>
     {
         public async Task<GetAdministrativeUnitsResult> Handle(GetAdministrativeUnitsQuery query, CancellationToken cancellationToken)
         {
-            logger.LogInformation("GetAdministrativeUnitsHandler.Handle called with {@Query}", query);
-
             var administrativeUnits = await dbContext.AdministrativeUnits
                 .Select(au => new AdministrativeUnit
                 {

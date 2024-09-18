@@ -1,7 +1,7 @@
 ﻿namespace ProvinceVietNam.API.Exceptions
 {
-    public class AdministrativeUnitNotFoundException : Exception
+    public class AdministrativeUnitNotFoundException : NotFoundException
     {
-        public AdministrativeUnitNotFoundException() : base() { }
+        public AdministrativeUnitNotFoundException(int Id) : base("AdministrativeUnit", Id) { }
     }
 }

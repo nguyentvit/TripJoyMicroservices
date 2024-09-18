@@ -1,7 +1,7 @@
 ﻿namespace ProvinceVietNam.API.Exceptions
 {
-    public class AdministrativeRegionNotFoundException : Exception
+    public class AdministrativeRegionNotFoundException :NotFoundException
     {
-        public AdministrativeRegionNotFoundException() : base() { }
+        public AdministrativeRegionNotFoundException(int Id) : base("AdministrativeRegion", Id) { }
     }
 }

@@ -1,7 +1,7 @@
 ﻿namespace ProvinceVietNam.API.Exceptions
 {
-    public class DistrictNotFoundException : Exception
+    public class DistrictNotFoundException : NotFoundException
     {
-        public DistrictNotFoundException() : base() { }
+        public DistrictNotFoundException(string Code) : base("District", Code) { }
     }
 }

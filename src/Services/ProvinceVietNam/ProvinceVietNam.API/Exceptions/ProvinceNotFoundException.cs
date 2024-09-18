@@ -1,7 +1,7 @@
 ﻿namespace ProvinceVietNam.API.Exceptions
 {
-    public class ProvinceNotFoundException : Exception
+    public class ProvinceNotFoundException : NotFoundException
     {
-        public ProvinceNotFoundException() : base() { }
+        public ProvinceNotFoundException(string Code) : base("Province", Code) { }
     }
 }

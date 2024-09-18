@@ -3,15 +3,12 @@
     public record GetAdministrativeRegionByIdQuery(int Id) : IQuery<GetAdministrativeRegionByIdResult>;
     public record GetAdministrativeRegionByIdResult(AdministrativeRegion AdministrativeRegion);
     internal class GetAdministrativeRegionByIdHandler(
-        ProvincedbContext dbContext,
-        ILogger<GetAdministrativeRegionByIdHandler> logger
+        ProvincedbContext dbContext
         )
         : IQueryHandler<GetAdministrativeRegionByIdQuery, GetAdministrativeRegionByIdResult>
     {
         public async Task<GetAdministrativeRegionByIdResult> Handle(GetAdministrativeRegionByIdQuery query, CancellationToken cancellationToken)
         {
-            logger.LogInformation("GetAdministrativeRegionByIdHandler.Handle called with {@Query}", query);
-
             var administrativeRegion = await dbContext.AdministrativeRegions
                 .Select(ar => new AdministrativeRegion
             {
@@ -26,7 +23,7 @@
             
             if (administrativeRegion == null)
             {
-                throw new AdministrativeRegionNotFoundException();
+                throw new AdministrativeRegionNotFoundException(query.Id);
             }
 
             return new GetAdministrativeRegionByIdResult(administrativeRegion);
