@@ -15,3 +15,17 @@ services:
       - ./Services/ProvinceVietNam/ProvinceVietNam.API/Database/CreateTables.sql:/docker-entrypoint-initdb.d/CreateTables.sql
       - ./Services/ProvinceVietNam/ProvinceVietNam.API/Scripts/init.sh:/docker-entrypoint-initdb.d/init.sh
   
+  provincevietnam.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8180
+      - ASPNETCORE_HTTPS_PORTS=8181
+      - ConnectionStrings__Database=Server=provincedb;Port=5432;Database=ProvinceDb;User Id=postgres;Password=nguyenqb242;Include Error Detail=true
+    depends_on:
+      - provincedb
+    ports:
+      - "6100:8180"
+      - "6160:8181"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro

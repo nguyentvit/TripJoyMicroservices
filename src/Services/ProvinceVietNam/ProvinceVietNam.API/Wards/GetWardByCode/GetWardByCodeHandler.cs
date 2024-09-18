@@ -3,15 +3,12 @@
     public record GetWardByCodeQuery(string Code) : IQuery<GetWardByCodeResult>;
     public record GetWardByCodeResult(Ward Ward);
     internal class GetWardByCodeHandler(
-        ProvincedbContext dbContext,
-        ILogger<GetWardByCodeHandler> logger
+        ProvincedbContext dbContext
         )
         : IRequestHandler<GetWardByCodeQuery, GetWardByCodeResult>
     {
         public async Task<GetWardByCodeResult> Handle(GetWardByCodeQuery query, CancellationToken cancellationToken)
         {
-            logger.LogInformation("GetWardByCodeHandler.Handle called with {@Query}", query);
-
             var ward = await dbContext.Wards
                 .Select(w => new Ward
                 {
@@ -30,7 +27,7 @@
 
             if (ward == null)
             {
-                throw new WardNotFoundException();
+                throw new WardNotFoundException(query.Code);
             }
 
             return new GetWardByCodeResult(ward);

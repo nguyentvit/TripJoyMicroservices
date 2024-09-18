@@ -1,7 +1,7 @@
 ﻿namespace ProvinceVietNam.API.Exceptions
 {
-    public class WardNotFoundException : Exception
+    public class WardNotFoundException : NotFoundException
     {
-        public WardNotFoundException() : base() { }
+        public WardNotFoundException(string Code) : base("Ward", Code) { }
     }
 }

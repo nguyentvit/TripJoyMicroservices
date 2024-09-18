@@ -4,6 +4,13 @@ services:
  provincedb:
   image: postgres
 
+ provincevietnam.api:
+  image: ${DOCKER_REGISTRY-}provincevietnamapi
+  build:
+   context: .
+   dockerfile: Services/ProvinceVietNam/ProvinceVietNam.API/Dockerfile
+
 volumes:
   postgres_province:
+
 

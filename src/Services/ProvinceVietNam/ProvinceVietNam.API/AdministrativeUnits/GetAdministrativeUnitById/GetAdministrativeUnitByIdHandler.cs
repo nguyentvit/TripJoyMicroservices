@@ -3,15 +3,12 @@
     public record GetAdministrativeUnitByIdQuery(int Id) : IQuery<GetAdministrativeUnitByIdResult>;
     public record GetAdministrativeUnitByIdResult(AdministrativeUnit AdministrativeUnit);
     internal class GetAdministrativeUnitByIdHandler(
-        ProvincedbContext dbContext,
-        ILogger<GetAdministrativeUnitByIdHandler> logger
+        ProvincedbContext dbContext
         )
         : IRequestHandler<GetAdministrativeUnitByIdQuery, GetAdministrativeUnitByIdResult>
     {
         public async Task<GetAdministrativeUnitByIdResult> Handle(GetAdministrativeUnitByIdQuery query, CancellationToken cancellationToken)
         {
-            logger.LogInformation("GetAdministrativeUnitByIdHandler.Handle called with {@Query}", query);
-
             var administrativeUnit = await dbContext.AdministrativeUnits
                 .Select(au => new AdministrativeUnit
                 {
@@ -28,7 +25,7 @@
 
             if (administrativeUnit == null)
             {
-                throw new AdministrativeUnitNotFoundException();
+                throw new AdministrativeUnitNotFoundException(query.Id);
             }
 
             return new GetAdministrativeUnitByIdResult(administrativeUnit);

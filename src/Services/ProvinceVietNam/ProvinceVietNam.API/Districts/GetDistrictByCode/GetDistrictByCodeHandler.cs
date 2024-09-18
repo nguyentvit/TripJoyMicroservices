@@ -3,15 +3,12 @@
     public record GetDistrictByCodeQuery(string Code) : IQuery<GetDistrictByCodeResult>;
     public record GetDistrictByCodeResult(District District);
     internal class GetDistrictByCodeHandler(
-        ProvincedbContext dbContext,
-        ILogger<GetDistrictByCodeHandler> logger
+        ProvincedbContext dbContext
         )
         : IRequestHandler<GetDistrictByCodeQuery, GetDistrictByCodeResult>
     {
         public async Task<GetDistrictByCodeResult> Handle(GetDistrictByCodeQuery query, CancellationToken cancellationToken)
         {
-            logger.LogInformation("GetDistrictByCodeHandler.Handle called with {@Query}", query);
-
             var district = await dbContext.Districts
                 .Select(d => new District
                 {
@@ -31,7 +28,7 @@
 
             if (district == null)
             {
-                throw new DistrictNotFoundException();
+                throw new DistrictNotFoundException(query.Code);
             }
 
             return new GetDistrictByCodeResult(district);

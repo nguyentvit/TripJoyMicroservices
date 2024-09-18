@@ -3,15 +3,12 @@
     public record GetProvinceByCodeQuery(string Code) : IQuery<GetProvinceByCodeResult>;
     public record GetProvinceByCodeResult(Province Province);
     internal class GetProvinceByCodeHandler(
-        ProvincedbContext dbContext,
-        ILogger<GetProvinceByCodeHandler> logger
+        ProvincedbContext dbContext
         )
         : IRequestHandler<GetProvinceByCodeQuery, GetProvinceByCodeResult>
     {
         public async Task<GetProvinceByCodeResult> Handle(GetProvinceByCodeQuery query, CancellationToken cancellationToken)
         {
-            logger.LogInformation("GetProvinceByCodeHandler.Handle called with {@Query}", query);
-
             var province = await dbContext.Provinces
                 .Select(p => new Province
                 {
@@ -31,7 +28,7 @@
 
             if (province == null )
             {
-                throw new ProvinceNotFoundException();
+                throw new ProvinceNotFoundException(query.Code);
             }
 
             return new GetProvinceByCodeResult(province);

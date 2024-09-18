@@ -3,15 +3,12 @@
     public record GetWardsQuery() : IQuery<GetWardsResult>;
     public record GetWardsResult(IEnumerable<Ward> Wards);
     internal class GetWardsHandler(
-        ProvincedbContext dbContext,
-        ILogger<GetWardsHandler> logger
+        ProvincedbContext dbContext
         )
         : IRequestHandler<GetWardsQuery, GetWardsResult>
     {
         public async Task<GetWardsResult> Handle(GetWardsQuery query, CancellationToken cancellationToken)
         {
-            logger.LogInformation("GetWardsHandler.Handle called with {@Query}", query);
-
             var wards = await dbContext.Wards
                 .Select(w => new Ward
                 {

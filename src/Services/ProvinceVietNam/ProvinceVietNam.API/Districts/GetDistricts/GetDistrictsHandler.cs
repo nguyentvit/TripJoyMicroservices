@@ -3,15 +3,12 @@
     public record GetDistrictsQuery() : IQuery<GetDistrictsResult>;
     public record GetDistrictsResult(IEnumerable<District> Districts);
     internal class GetDistrictsHandler(
-        ProvincedbContext dbContext,
-        ILogger<GetDistrictsHandler> logger
+        ProvincedbContext dbContext
         )
         : IRequestHandler<GetDistrictsQuery, GetDistrictsResult>
     {
         public async Task<GetDistrictsResult> Handle(GetDistrictsQuery query, CancellationToken cancellationToken)
         {
-            logger.LogInformation("GetDistrictsHandler.Handle called with {@Query}", query);
-
             var district = await dbContext.Districts
                 .Select(d => new District
                 {
