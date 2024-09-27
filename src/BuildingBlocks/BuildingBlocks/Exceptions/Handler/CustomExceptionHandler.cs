@@ -40,6 +40,13 @@ namespace BuildingBlocks.Exceptions.Handler
                     exception.GetType().Name,
                     httpContext.Response.StatusCode = StatusCodes.Status404NotFound
                 ),
+                AuthenticationException => 
+                (
+                    exception.Message,
+                    exception.GetType().Name,
+                    httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized
+                )
+                ,
                 _ =>
                 (
                     exception.Message,
