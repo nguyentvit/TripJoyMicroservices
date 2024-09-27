@@ -4,13 +4,34 @@ services:
  provincedb:
   image: postgres
 
+ identityredis:
+   image: redis
+
+ sqlserveridentity:
+  image: mcr.microsoft.com/mssql/server:2017-latest
+
  provincevietnam.api:
   image: ${DOCKER_REGISTRY-}provincevietnamapi
   build:
    context: .
    dockerfile: Services/ProvinceVietNam/ProvinceVietNam.API/Dockerfile
 
+ identity.api:
+   image: ${DOCKER_REGISTRY-}identityapi
+   build:
+     context: .
+     dockerfile: Services/Identity/Identity.API/Dockerfile
+
+ authentication.api:
+    image: ${DOCKER_REGISTRY-}authenticationapi
+    build:
+      context: .
+      dockerfile: Services/Authentication/Authentication.API/Dockerfile
+
 volumes:
   postgres_province:
+  mssqlvolume:
+
+
 
 

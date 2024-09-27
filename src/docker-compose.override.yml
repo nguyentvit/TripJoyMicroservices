@@ -14,7 +14,29 @@ services:
       - postgres_province:/var/lib/postgresql/data/
       - ./Services/ProvinceVietNam/ProvinceVietNam.API/Database/CreateTables.sql:/docker-entrypoint-initdb.d/CreateTables.sql
       - ./Services/ProvinceVietNam/ProvinceVietNam.API/Scripts/init.sh:/docker-entrypoint-initdb.d/init.sh
-  
+
+  identityredis:
+    container_name: identityredis
+    restart: always
+    ports:
+     - "6379:6379"
+
+  sqlserveridentity:
+    container_name: sqlserveridentity
+    environment:
+        - ACCEPT_EULA=Y
+        - SA_PASSWORD=Nguyenqb242
+        - MSSQL_PID=Express
+    hostname: mssql
+    ports:
+     - "1433:1433"
+    restart: always
+    volumes:
+        -  mssqlvolume:/var/opt/mssql/data
+        - ./Services/Identity/Identity.Infrastructure/Database/CreateTables.sql:/usr/src/app/CreateTables.sql
+        - ./Services/Identity/Identity.Infrastructure/Scripts/init.sh:/usr/src/app/init.sh
+    entrypoint: ["/bin/bash", "/usr/src/app/init.sh"]
+
   provincevietnam.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -29,3 +51,39 @@ services:
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+
+  identity.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8280
+      - ASPNETCORE_HTTPS_PORTS=8281
+      - ConnectionStrings__Redis=identityredis:6379
+      - ConnectionStrings__DefaultConnection=Server=sqlserveridentity,1433;Database=IdentityDb;User Id=sa;Password=Nguyenqb242;TrustServerCertificate=True;
+      - ConnectionStrings__SqlConnection=Server=sqlserveridentity,1433;Database=IdentityDb;User Id=sa;Password=Nguyenqb242;TrustServerCertificate=True;
+      
+    depends_on:
+      - identityredis
+      - sqlserveridentity
+    ports:
+      - "6200:8280"
+      - "6260:8281"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+
+  authentication.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8380
+      - ASPNETCORE_HTTPS_PORTS=8381
+      - SERVER_IP=https://192.168.30.120:6260
+    ports:
+      - "6300:8380"
+      - "6360:8381"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+
+networks:
+  default:
+   driver: bridge

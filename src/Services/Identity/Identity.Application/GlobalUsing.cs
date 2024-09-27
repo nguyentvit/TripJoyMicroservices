@@ -1,0 +1,13 @@
+﻿global using System.Data;
+global using Identity.Domain.Identity;
+global using Newtonsoft.Json;
+global using Duende.IdentityServer.EntityFramework.Entities;
+global using Identity.Application.Common.Contracts;
+global using Identity.Domain.Model;
+global using ErrorOr;
+global using FluentValidation;
+global using MediatR;
+global using Identity.Application.Common.Behaviors;
+global using Microsoft.Extensions.DependencyInjection;
+global using System.Reflection;
+global using Identity.Application.Common.Results;
