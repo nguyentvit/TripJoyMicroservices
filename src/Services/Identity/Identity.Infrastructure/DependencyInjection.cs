@@ -1,6 +1,8 @@
 ﻿using Identity.Application.Services.Interfaces;
 using Identity.Infrastructure.Persistence;
 using Identity.Infrastructure.Persistence.Repository;
+using System.Net;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Identity.Infrastructure
 {
@@ -91,6 +93,7 @@ namespace Identity.Infrastructure
                 options.Events.RaiseFailureEvents = true;
                 options.Events.RaiseSuccessEvents = true;
                 options.EmitStaticAudienceClaim = true;
+                
             })
                 .AddConfigurationStore(options =>
                 {
@@ -122,8 +125,9 @@ namespace Identity.Infrastructure
             services.AddSingleton(Options.Create(smtpSettings));
 
             services.AddFluentEmail(smtpSettings.FromEmail, smtpSettings.FromName)
-                .AddSmtpSender(smtpSettings.Host, smtpSettings.Port, smtpSettings.UserName, smtpSettings.Password)
-                .AddRazorRenderer();
+               .AddSmtpSender(smtpSettings.Host, smtpSettings.Port, smtpSettings.UserName, smtpSettings.Password)
+               .AddRazorRenderer();
+
             return services;
         }
 

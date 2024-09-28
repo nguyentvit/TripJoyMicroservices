@@ -41,13 +41,13 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8180
-      - ASPNETCORE_HTTPS_PORTS=8181
+      #- ASPNETCORE_HTTPS_PORTS=8181
       - ConnectionStrings__Database=Server=provincedb;Port=5432;Database=ProvinceDb;User Id=postgres;Password=nguyenqb242;Include Error Detail=true
     depends_on:
       - provincedb
     ports:
       - "6100:8180"
-      - "6160:8181"
+      #- "6160:8181"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
@@ -56,7 +56,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8280
-      - ASPNETCORE_HTTPS_PORTS=8281
+      #- ASPNETCORE_HTTPS_PORTS=8281
       - ConnectionStrings__Redis=identityredis:6379
       - ConnectionStrings__DefaultConnection=Server=sqlserveridentity,1433;Database=IdentityDb;User Id=sa;Password=Nguyenqb242;TrustServerCertificate=True;
       - ConnectionStrings__SqlConnection=Server=sqlserveridentity,1433;Database=IdentityDb;User Id=sa;Password=Nguyenqb242;TrustServerCertificate=True;
@@ -66,7 +66,7 @@ services:
       - sqlserveridentity
     ports:
       - "6200:8280"
-      - "6260:8281"
+      #- "6260:8281"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
@@ -75,11 +75,11 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8380
-      - ASPNETCORE_HTTPS_PORTS=8381
-      - SERVER_IP=https://192.168.30.120:6260
+      #- ASPNETCORE_HTTPS_PORTS=8381
+      - SERVER_IP=http://192.168.30.120:6200
     ports:
       - "6300:8380"
-      - "6360:8381"
+      #- "6360:8381"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
