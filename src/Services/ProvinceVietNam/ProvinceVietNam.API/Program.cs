@@ -1,5 +1,8 @@
 var builder = WebApplication.CreateBuilder(args);
 
+System.Net.ServicePointManager.ServerCertificateValidationCallback =
+    (sender, certificate, chain, sslPolicyErrors) => true;
+
 var assembly = typeof(Program).Assembly;
 
 builder.Services.AddCarter();

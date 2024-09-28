@@ -47,10 +47,9 @@ namespace Identity.API
             {
                 options.AddPolicy("AllowFrontendLocalhost", builder =>
                 {
-                    builder.WithOrigins("http://localhost:5173")
-                           .AllowAnyHeader()                  
-                           .AllowAnyMethod()                   
-                           .AllowCredentials();                 
+                    builder.AllowAnyOrigin() 
+                .AllowAnyHeader()
+                .AllowAnyMethod();
                 });
             });
 

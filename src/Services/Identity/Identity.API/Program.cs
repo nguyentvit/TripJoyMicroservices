@@ -9,6 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
         .AddInfrastructure(builder.Configuration)
         .AddApplication();
 }
+
+System.Net.ServicePointManager.ServerCertificateValidationCallback =
+    (sender, certificate, chain, sslPolicyErrors) => true;
 var app = builder.Build();
 
 app.UseCors("AllowFrontendLocalhost");

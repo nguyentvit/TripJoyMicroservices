@@ -1,6 +1,7 @@
 var builder = WebApplication.CreateBuilder(args);
 
-
+System.Net.ServicePointManager.ServerCertificateValidationCallback =
+    (sender, certificate, chain, sslPolicyErrors) => true;
 var serverIp = Environment.GetEnvironmentVariable("SERVER_IP");
 if (!string.IsNullOrEmpty(serverIp))
 {
@@ -89,6 +90,7 @@ builder.Services
         options.Scope.Add("openid");
         options.Scope.Add("profile");
         options.Scope.Add("email");
+        options.RequireHttpsMetadata = false;
     });
 builder.Services.AddAuthorization();
 
