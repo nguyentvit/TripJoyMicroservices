@@ -1,7 +1,10 @@
-﻿using Identity.Application.Command.RegisterUserWithOtp;
+﻿using Identity.Application.Command.ChangePw;
+using Identity.Application.Command.RegisterUserWithOtp;
 using Identity.Application.Command.SendOtp;
 using Identity.Application.Command.VerifyOtpEmail;
 using Identity.Application.Common.Results;
+using Identity.Application.Queries.ConfirmForgetPwOtp;
+using Identity.Application.Queries.ForgetPassword;
 using Identity.Contract.Authentication.Reponse;
 using Identity.Contract.Authentication.Request;
 using Mapster;
@@ -44,6 +47,29 @@ namespace Identity.API.Common.Mapping
                 .Map(dest => dest.userId, src => src.userId)
                 .Map(dest => dest.userName, src => src.userName)
                 .Map(dest => dest.email, src => src.email);
+
+            config.NewConfig<ForgetPasswordRequest, ForgetPasswordQuery>()
+                .Map(dest => dest.Email, src => src.Email);
+
+            config.NewConfig<ForgetPasswordResult, ForgetPasswordResponse>()
+                .Map(dest => dest.Status, src => src.Status)
+                .Map(dest => dest.Message, src => src.Message)
+                .Map(dest => dest.Email, src => src.Email)
+                .Map(dest => dest.Url, src => src.Url);
+
+            config.NewConfig<(string hashedUserId, ConfirmForgetPwRequest request), ConfirmForgetPwOtpQuery>()
+                .Map(dest => dest.Otp, src => src.request.Otp)
+                .Map(dest => dest.HashedUserId, src => src.hashedUserId);
+
+            config.NewConfig<(string key, string userId, ChangePwRequest request), ChangePwCommand>()
+                .Map(dest => dest.ConfirmPassword, src => src.request.ConfirmPassword)
+                .Map(dest => dest.Password, src => src.request.Password)
+                .Map(dest => dest.Key, src => src.key)
+                .Map(dest => dest.UserId, src => src.userId);
+
+            config.NewConfig<ChangePwResult, ChangePwResponse>()
+                .Map(dest => dest.Message, src => src.Message)
+                .Map(dest => dest.Status, src => src.Status);
         }
     }
 }
