@@ -26,6 +26,21 @@ namespace Identity.Infrastructure.Persistence
                 .WithMany()
                 .HasForeignKey(o => o.UserId)
                 .IsRequired();
+
+            builder.Entity<IdentityRole>().HasData(
+        new IdentityRole
+        {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Admin",
+            NormalizedName = "ADMIN"
+        },
+        new IdentityRole
+        {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Customer",
+            NormalizedName = "CUSTOMER"
+        }
+    );
         }
     }
 }
