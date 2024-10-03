@@ -1,9 +1,5 @@
-﻿using Identity.Application.Services.Interfaces;
-using Identity.Infrastructure.Persistence;
+﻿using Identity.Infrastructure.Persistence;
 using Identity.Infrastructure.Persistence.Repository;
-using System.Net;
-using System.Security.Cryptography.X509Certificates;
-
 namespace Identity.Infrastructure
 {
     public static class DependencyInjection
@@ -54,7 +50,7 @@ namespace Identity.Infrastructure
             var connection = configuration.GetConnectionString("DefaultConnection");
             var migrationsAssembly = typeof(DependencyInjection).Assembly.GetName().FullName;
 
-            services.AddDbContext<IdentityDbContext>(options =>
+            services.AddDbContext<Persistence.IdentityDbContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
@@ -82,6 +78,7 @@ namespace Identity.Infrastructure
                 // configure signin
                 options.SignIn.RequireConfirmedEmail = true;
                 options.SignIn.RequireConfirmedAccount = true;
+                
             })
                 .AddEntityFrameworkStores<IdentityDbContext>()
                 .AddDefaultTokenProviders();

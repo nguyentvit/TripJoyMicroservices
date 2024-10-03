@@ -103,6 +103,7 @@ builder.Services.AddMediatR(config =>
 });
 
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 
@@ -114,5 +115,7 @@ app.UseAuthorization();
 app.MapCarter();
 
 app.UseExceptionHandler(options => { });
+
+app.UseHealthChecks("/health");
 
 app.Run();
