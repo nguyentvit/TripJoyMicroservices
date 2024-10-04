@@ -60,7 +60,7 @@ services:
       - ConnectionStrings__Redis=identityredis:6379
       - ConnectionStrings__DefaultConnection=Server=sqlserveridentity,1433;Database=IdentityDb;User Id=sa;Password=Nguyenqb242;TrustServerCertificate=True;
       - ConnectionStrings__SqlConnection=Server=sqlserveridentity,1433;Database=IdentityDb;User Id=sa;Password=Nguyenqb242;TrustServerCertificate=True;
-      
+      - ConnectionStrings__SERVER_IP=http://192.168.30.120:6200
     depends_on:
       - identityredis
       - sqlserveridentity
@@ -72,8 +72,7 @@ services:
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
     restart: always
     
-
-  authentication.api:
+  user.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8380
@@ -81,7 +80,7 @@ services:
       - SERVER_IP=http://192.168.30.120:6200
     ports:
       - "6300:8380"
-      #- "6360:8381"
+    #- "6360:8381"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
@@ -91,3 +90,4 @@ services:
 networks:
   default:
    driver: bridge
+

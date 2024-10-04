@@ -22,15 +22,16 @@ services:
      context: .
      dockerfile: Services/Identity/Identity.API/Dockerfile
 
- authentication.api:
-    image: ${DOCKER_REGISTRY-}authenticationapi
+ user.api:
+    image: ${DOCKER_REGISTRY-}userapi
     build:
       context: .
-      dockerfile: Services/Authentication/Authentication.API/Dockerfile
+      dockerfile: Services/User/User.API/Dockerfile
 
 volumes:
   postgres_province:
   mssqlvolume:
+
 
 
 

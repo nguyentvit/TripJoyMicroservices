@@ -1,4 +1,6 @@
-﻿namespace Identity.Application
+﻿using Microsoft.Extensions.Configuration;
+
+namespace Identity.Application
 {
     public static class DependencyInjection
     {

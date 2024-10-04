@@ -1,5 +1,7 @@
 ﻿using Asp.Versioning;
 using Identity.Application.Command.ChangePw;
+using Identity.Application.Command.Login;
+using Identity.Application.Command.Logout;
 using Identity.Application.Command.RegisterUserWithOtp;
 using Identity.Application.Command.SendOtp;
 using Identity.Application.Command.VerifyOtpEmail;
@@ -7,6 +9,7 @@ using Identity.Application.Queries.ConfirmForgetPwOtp;
 using Identity.Application.Queries.ForgetPassword;
 using Identity.Contract.Authentication.Reponse;
 using Identity.Contract.Authentication.Request;
+using Identity.Contract.Authentication.Response;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -92,6 +95,30 @@ namespace Identity.API.Controllers.v1
 
             return result.Match(
                 result => Ok(_mapper.Map<ForgetPasswordResponse>(result)),
+                errors => Problem(errors)
+                );
+        }
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        {
+            var command = _mapper.Map<LoginCommand>(request);
+
+            var result = await _mediator.Send(command);
+
+            return result.Match(
+                result => Ok(_mapper.Map<LoginResponse>(result)),
+                errors => Problem(errors)
+                );
+        }
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout([FromBody] LogoutRequest request)
+        {
+            var command = _mapper.Map<LogoutCommand>(request);
+
+            var result = await _mediator.Send(command);
+
+            return result.Match(
+                result => Ok(_mapper.Map<LogoutResponse>(result)),
                 errors => Problem(errors)
                 );
         }
