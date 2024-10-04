@@ -70,6 +70,8 @@ services:
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+    restart: always
+    
 
   authentication.api:
     environment:
@@ -83,7 +85,9 @@ services:
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-
+    depends_on:
+      - identity.api
+    restart: always
 networks:
   default:
    driver: bridge

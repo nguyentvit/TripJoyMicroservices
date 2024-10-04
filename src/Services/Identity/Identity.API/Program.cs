@@ -1,6 +1,6 @@
 using Duende.IdentityServer.EntityFramework.DbContexts;
 using Duende.IdentityServer.EntityFramework.Mappers;
-using Microsoft.AspNetCore.Identity;
+using Identity.API.Common.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 System.Net.ServicePointManager.ServerCertificateValidationCallback =
     (sender, certificate, chain, sslPolicyErrors) => true;
 var app = builder.Build();
+await app.UseMigration();
 
 app.UseCors("AllowFrontendLocalhost");
 
@@ -39,19 +40,8 @@ app.Run();
 
 void InitializeDatabase(IApplicationBuilder app)
 {
-    using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+    using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>()!.CreateScope())
     {
-        var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-        if (!roleManager.RoleExistsAsync("Admin").Result)
-        {
-            roleManager.CreateAsync(new IdentityRole("Admin")).Wait();
-        }
-
-        if (!roleManager.RoleExistsAsync("Customer").Result)
-        {
-            roleManager.CreateAsync(new IdentityRole("Customer")).Wait();
-        }
 
         serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
 
