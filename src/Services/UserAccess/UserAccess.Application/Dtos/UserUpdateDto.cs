@@ -4,7 +4,7 @@
         Guid Id,
         string UserName,
         string PhoneNumber,
-        string DateOfBirth,
+        DateTime DateOfBirth,
         ImageDto Avatar,
         AddressDto Address,
         UserGender Gender
