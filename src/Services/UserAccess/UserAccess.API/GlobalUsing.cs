@@ -1,0 +1,11 @@
+﻿global using BuildingBlocks.Behaviors;
+global using BuildingBlocks.Exceptions.Handler;
+global using Carter;
+global using Microsoft.AspNetCore.Authentication.Cookies;
+global using Microsoft.AspNetCore.Authentication.Google;
+global using Microsoft.AspNetCore.Authentication.JwtBearer;
+global using Microsoft.IdentityModel.Tokens;
+global using Newtonsoft.Json;
+global using UserAccess.Application.Dtos;
+global using MediatR;
+global using Mapster;
