@@ -17,7 +17,7 @@
                 throw new Exception("Could not connect to Redis.");
             }
 
-            _server = _connectionMultiplexer.GetServer("localhost", 6379);
+            _server = _connectionMultiplexer.GetServer("identityredis", 6379);
 
         }
         public async Task SetCacheReponseAsync(string userId, string accessToken, object response, TimeSpan timeOut)

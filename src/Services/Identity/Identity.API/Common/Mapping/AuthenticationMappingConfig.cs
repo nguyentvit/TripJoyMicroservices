@@ -1,4 +1,6 @@
 ﻿using Identity.Application.Command.ChangePw;
+using Identity.Application.Command.Login;
+using Identity.Application.Command.Logout;
 using Identity.Application.Command.RegisterUserWithOtp;
 using Identity.Application.Command.SendOtp;
 using Identity.Application.Command.VerifyOtpEmail;
@@ -7,6 +9,7 @@ using Identity.Application.Queries.ConfirmForgetPwOtp;
 using Identity.Application.Queries.ForgetPassword;
 using Identity.Contract.Authentication.Reponse;
 using Identity.Contract.Authentication.Request;
+using Identity.Contract.Authentication.Response;
 using Mapster;
 
 namespace Identity.API.Common.Mapping
@@ -70,6 +73,32 @@ namespace Identity.API.Common.Mapping
             config.NewConfig<ChangePwResult, ChangePwResponse>()
                 .Map(dest => dest.Message, src => src.Message)
                 .Map(dest => dest.Status, src => src.Status);
+
+            config.NewConfig<LoginRequest, LoginCommand>()
+                .Map(dest => dest.Email, src => src.Email)
+                .Map(dest => dest.Password, src => src.Password);
+
+            config.NewConfig<LoginUserResult, LoginUserReponse>()
+                .Map(dest => dest.Email, src => src.Email)
+                .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.Name, src => src.Name)
+                .Map(dest => dest.UserName, src => src.UserName);
+
+            config.NewConfig<LoginResult, LoginResponse>()
+                .Map(dest => dest.User, src => src.User)
+                .Map(dest => dest.AccessToken, src => src.AccessToken)
+                .Map(dest => dest.RefreshToken, src => src.RefreshToken)
+                .Map(dest => dest.ExpiresIn, src => src.ExpiresIn)
+                .Map(dest => dest.TokenType, src => src.TokenType)
+                .Map(dest => dest.IdToken, src => src.IdToken);
+
+            config.NewConfig<LogoutRequest, LogoutCommand>()
+                .Map(dest => dest.AccessToken, src => src.AccessToken)
+                .Map(dest => dest.RefreshToken, src => src.RefreshToken);
+
+            config.NewConfig<LogoutResult, LogoutResponse>()
+                .Map(dest => dest.Status, src => src.Status)
+                .Map(dest => dest.Message, src => src.Message);
         }
     }
 }

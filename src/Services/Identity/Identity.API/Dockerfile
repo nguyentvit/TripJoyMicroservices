@@ -16,6 +16,11 @@ COPY ["Services/Identity/Identity.Application/Identity.Application.csproj", "Ser
 COPY ["Services/Identity/Identity.Domain/Identity.Domain.csproj", "Services/Identity/Identity.Domain/"]
 RUN dotnet restore "./Services/Identity/Identity.API/Identity.API.csproj"
 COPY . .
+
+# Sao chép file init.sh vào trong container
+COPY init.sh /usr/src/app/init.sh
+RUN chmod +x /usr/src/app/init.sh  # Ð?m b?o file có quy?n th?c thi
+
 WORKDIR "/src/Services/Identity/Identity.API"
 RUN dotnet build "./Identity.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
