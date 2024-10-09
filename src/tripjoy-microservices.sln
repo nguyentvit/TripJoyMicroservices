@@ -19,9 +19,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProvinceVietNam.API", "Serv
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{D7221BE0-660E-4EB5-89BD-F46F0161A224}"
 EndProject
+<<<<<<< HEAD
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "User", "User", "{FFBB5919-4317-4D79-9B1F-ADE31F3253E2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "User.API", "Services\User\User.API\User.API.csproj", "{2F7C5754-1C14-4674-9B1B-EE3337C34F82}"
+=======
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UserAccess", "UserAccess", "{FFBB5919-4317-4D79-9B1F-ADE31F3253E2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserAccess.API", "Services\UserAccess\UserAccess.API\UserAccess.API.csproj", "{2F7C5754-1C14-4674-9B1B-EE3337C34F82}"
+>>>>>>> a15b20f6432bac157c3eb8c62d1455aaea90207c
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{72D79BB8-0D45-436B-9DAD-09D8D8E804F8}"
 EndProject
@@ -35,11 +41,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Domain", "Services
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Infrastructure", "Services\Identity\Identity.Infrastructure\Identity.Infrastructure.csproj", "{C7AFE3D7-236F-464D-AA41-65DD9A6CBBE6}"
 EndProject
+<<<<<<< HEAD
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "User.Application", "Services\User\User.Application\User.Application.csproj", "{966E1053-F382-4B21-BDBB-EABADAF6FC09}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "User.Domain", "Services\User\User.Domain\User.Domain.csproj", "{D4FBE777-4346-48CD-B7A5-57D7E694E7D7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "User.Infrastructure", "Services\User\User.Infrastructure\User.Infrastructure.csproj", "{FCF53BDA-513C-4D1E-8FAF-CCC7ED80F22E}"
+=======
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserAccess.Application", "Services\UserAccess\UserAccess.Application\UserAccess.Application.csproj", "{966E1053-F382-4B21-BDBB-EABADAF6FC09}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserAccess.Domain", "Services\UserAccess\UserAccess.Domain\UserAccess.Domain.csproj", "{D4FBE777-4346-48CD-B7A5-57D7E694E7D7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserAccess.Infrastructure", "Services\UserAccess\UserAccess.Infrastructure\UserAccess.Infrastructure.csproj", "{FCF53BDA-513C-4D1E-8FAF-CCC7ED80F22E}"
+>>>>>>> a15b20f6432bac157c3eb8c62d1455aaea90207c
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -4,6 +4,7 @@ using Identity.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Identity.Infrastructure.Migrations
 {
     [DbContext(typeof(IdentityDbContext))]
-    partial class IdentityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241005063708_init2")]
+    partial class init2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -178,21 +181,13 @@ namespace Identity.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-<<<<<<< HEAD
-                            Id = "64b81ca4-32e0-4fd6-80b8-00e1757ad5ca",
-=======
                             Id = "75ecda09-88a1-4af8-aa55-7cc93e5cf50a",
->>>>>>> a15b20f6432bac157c3eb8c62d1455aaea90207c
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-<<<<<<< HEAD
-                            Id = "d3e1df8f-ecb4-4751-bcbd-8db10041aea1",
-=======
                             Id = "fce39955-2269-4cb3-b9da-46b46f0f5861",
->>>>>>> a15b20f6432bac157c3eb8c62d1455aaea90207c
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         });

@@ -22,11 +22,19 @@ services:
      context: .
      dockerfile: Services/Identity/Identity.API/Dockerfile
 
+<<<<<<< HEAD
  user.api:
     image: ${DOCKER_REGISTRY-}userapi
     build:
       context: .
       dockerfile: Services/User/User.API/Dockerfile
+=======
+ # user.api:
+ #    image: ${DOCKER_REGISTRY-}userapi
+ #    build:
+ #      context: .
+ #      dockerfile: Services/User/User.API/Dockerfile
+>>>>>>> a15b20f6432bac157c3eb8c62d1455aaea90207c
 
 volumes:
   postgres_province:

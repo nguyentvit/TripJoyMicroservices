@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+set -e
 
 # Khởi động SQL Server trong background
 /opt/mssql/bin/sqlservr &
