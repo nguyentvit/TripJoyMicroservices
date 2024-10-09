@@ -33,9 +33,6 @@ services:
     restart: always
     volumes:
         -  mssqlvolume:/var/opt/mssql/data
-        - ./Services/Identity/Identity.Infrastructure/Database/CreateTables.sql:/usr/src/app/CreateTables.sql
-        - ./Services/Identity/Identity.Infrastructure/Scripts/init.sh:/usr/src/app/init.sh
-    entrypoint: ["/bin/bash", "/usr/src/app/init.sh"]
 
   provincevietnam.api:
     environment:
