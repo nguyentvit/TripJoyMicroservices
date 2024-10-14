@@ -1,6 +1,7 @@
 ﻿using Identity.Application.Services.Interfaces;
 using Identity.Domain.Common.Errors;
 using Microsoft.Extensions.Configuration;
+using System.Net;
 
 namespace Identity.Application.Command.Logout
 {
@@ -18,15 +19,16 @@ namespace Identity.Application.Command.Logout
 
             var accessToken = request.AccessToken;
             var refreshToken = request.RefreshToken;
-
-            var ipAuthentication = _configuration.GetConnectionString("SERVER_IP");
+            var ipAddress = Dns.GetHostAddresses("identity.api").FirstOrDefault()?.ToString();
+            var serverIp = $"http://{ipAddress}:8080/";
+            var ipAuthentication = _configuration["SERVER_IP"];
             var handler = new HttpClientHandler
             {
                 ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) => true
             };
             var client = new HttpClient(handler);
 
-            var token = new HttpRequestMessage(HttpMethod.Post, $"{ipAuthentication}connect/revocation")
+            var token = new HttpRequestMessage(HttpMethod.Post, $"{serverIp}connect/revocation")
             {
                 Content = new FormUrlEncodedContent(new[]
                 {   new KeyValuePair<string, string>("client_id", "magic"),
