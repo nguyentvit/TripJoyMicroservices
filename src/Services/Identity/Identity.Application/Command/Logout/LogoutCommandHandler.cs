@@ -26,7 +26,7 @@ namespace Identity.Application.Command.Logout
             };
             var client = new HttpClient(handler);
 
-            var token = new HttpRequestMessage(HttpMethod.Post, $"{ipAuthentication}/connect/revocation")
+            var token = new HttpRequestMessage(HttpMethod.Post, $"{ipAuthentication}connect/revocation")
             {
                 Content = new FormUrlEncodedContent(new[]
                 {   new KeyValuePair<string, string>("client_id", "magic"),

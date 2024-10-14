@@ -25,7 +25,7 @@ namespace Identity.Application.Command.Login
             var client = new HttpClient(handler);
             var ipAuthentication = _configuration.GetConnectionString("SERVER_IP");
 
-            var token = new HttpRequestMessage(HttpMethod.Post, $"{ipAuthentication}/connect/token")
+            var token = new HttpRequestMessage(HttpMethod.Post, $"{ipAuthentication}connect/token")
             {
                 Content = new FormUrlEncodedContent(new[]
                 {

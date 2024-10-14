@@ -1,4 +1,5 @@
-﻿using Identity.API.Common.Attributes;
+﻿using BuildingBlocks.Exceptions.Handler;
+using Identity.API.Common.Attributes;
 using Identity.API.Common.Errors;
 using Identity.API.Common.Mapping;
 using Microsoft.AspNetCore.Authorization;
@@ -13,6 +14,7 @@ namespace Identity.API
             services.AddControllers();
             services.AddMappings();
 
+            services.AddExceptionHandler<CustomExceptionHandler>();
             services.AddSingleton<ProblemDetailsFactory, ProblemDetailFactory>();
             services.AddTransient<IAuthorizationHandler, TokenBlacklistHandler>();
             services.AddHttpContextAccessor();
