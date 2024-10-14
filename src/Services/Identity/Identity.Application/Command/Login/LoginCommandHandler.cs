@@ -2,6 +2,7 @@
 using Identity.Domain.Common.Errors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using System.Net;
 
 namespace Identity.Application.Command.Login
 {
@@ -23,9 +24,10 @@ namespace Identity.Application.Command.Login
                 ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) => true
             };
             var client = new HttpClient(handler);
-            var ipAuthentication = _configuration.GetConnectionString("SERVER_IP");
-
-            var token = new HttpRequestMessage(HttpMethod.Post, $"{ipAuthentication}/connect/token")
+            var ipAuthentication = _configuration["SERVER_IP"];
+            var ipAddress = Dns.GetHostAddresses("identity.api").FirstOrDefault()?.ToString();
+            var serverIp = $"http://{ipAddress}:8080/";
+            var token = new HttpRequestMessage(HttpMethod.Post, $"{serverIp}connect/token")
             {
                 Content = new FormUrlEncodedContent(new[]
                 {

@@ -24,6 +24,8 @@ app.UseIdentityServer();
 
 app.MapControllers();
 
+app.UseExceptionHandler(options => { });
+
 app.Run();
 
 
