@@ -59,7 +59,7 @@ namespace Identity.Application.Queries.ConfirmForgetPwOtp
 
             var key = await _userManager.GeneratePasswordResetTokenAsync(user);
             await _unitOfWork.SaveChangesAsync();
-            var confirmUrl = $"/api/v1/Account/change-password/?key={key}&userId={userIdHashed}";
+            var confirmUrl = $"/change-password/?key={key}&userId={userIdHashed}";
 
             var message = "OTP verification successful. Please use the link below to reset your password.";
             ForgetPasswordResult forgetPwResult = new("success", message, user.Email, confirmUrl);

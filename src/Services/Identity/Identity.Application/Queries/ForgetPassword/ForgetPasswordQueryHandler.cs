@@ -48,7 +48,7 @@ namespace Identity.Application.Queries.ForgetPassword
             int count = await _unitOfWork.SaveChangesAsync();
 
             var key = _tokenProvider.GenerateEmailConfirmationToken(user);
-            var forgetUrl = $"/api/v1/Account/confirm-forget-pw/?key={key}";
+            var forgetUrl = $"/confirm-forget-pw/?key={key}";
 
             var message = "A link to reset your password has been sent to your email.";
 
