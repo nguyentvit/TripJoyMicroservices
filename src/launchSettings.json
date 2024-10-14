@@ -4,7 +4,8 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
-        "provincevietnam.api": "StartDebugging"
+        "provincevietnam.api": "StartDebugging",
+        "yarpapigateway": "StartDebugging"
       }
     }
   }

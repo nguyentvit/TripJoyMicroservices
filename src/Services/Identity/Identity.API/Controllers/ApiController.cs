@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 namespace Identity.API.Controllers
 {
     [ApiController]
-    [Route("api/v{v:apiVersion}/[controller]")]
     public class ApiController : ControllerBase
     {
         protected IActionResult Problem(List<Error> errors)

@@ -9,7 +9,7 @@ services:
       - POSTGRES_DB=ProvinceDb
     restart: always
     ports:
-      - "5432:5432"
+      - "5432:5433"
     volumes:
       - postgres_province:/var/lib/postgresql/data/
       - ./Services/ProvinceVietNam/ProvinceVietNam.API/Database/CreateTables.sql:/docker-entrypoint-initdb.d/CreateTables.sql
@@ -21,30 +21,35 @@ services:
     ports:
      - "6379:6379"
 
-  sqlserveridentity:
-    container_name: sqlserveridentity
+  identitydb:
+    container_name: identitydb
     environment:
-        - ACCEPT_EULA=Y
-        - SA_PASSWORD=Nguyenqb242
-        - MSSQL_PID=Express
-    hostname: mssql
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Nguyenqb242
     ports:
-     - "1433:1433"
+      - "1433:1433"
     restart: always
-    volumes:
-        -  mssqlvolume:/var/opt/mssql/data
+
+  userdb:
+    container_name: userdb
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Nguyenqb242
+    ports:
+      - "1432:1433"
+    restart: always
 
   provincevietnam.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8180
-      #- ASPNETCORE_HTTPS_PORTS=8181
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
       - ConnectionStrings__Database=Server=provincedb;Port=5432;Database=ProvinceDb;User Id=postgres;Password=nguyenqb242;Include Error Detail=true
     depends_on:
       - provincedb
     ports:
-      - "6100:8180"
-      #- "6160:8181"
+      - "6100:8080"
+      - "6160:8081"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
@@ -52,39 +57,53 @@ services:
   identity.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8280
-      #- ASPNETCORE_HTTPS_PORTS=8281
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
       - ConnectionStrings__Redis=identityredis:6379
-      - ConnectionStrings__DefaultConnection=Server=sqlserveridentity,1433;Database=IdentityDb;User Id=sa;Password=Nguyenqb242;TrustServerCertificate=True;
-      - ConnectionStrings__SqlConnection=Server=sqlserveridentity,1433;Database=IdentityDb;User Id=sa;Password=Nguyenqb242;TrustServerCertificate=True;
-      - ConnectionStrings__SERVER_IP=http://192.168.30.120:6200
+      - ConnectionStrings__DefaultConnection=Server=identitydb,1433;Database=IdentityDb;User Id=sa;Password=Nguyenqb242;TrustServerCertificate=True;
+      - ConnectionStrings__SqlConnection=Server=identitydb,1433;Database=IdentityDb;User Id=sa;Password=Nguyenqb242;TrustServerCertificate=True;
     depends_on:
       - identityredis
-      - sqlserveridentity
+      - identitydb
     ports:
-      - "6200:8280"
-      #- "6260:8281"
+      - "6200:8080"
+      - "6260:8081"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-    restart: always
-    
-  # user.api:
-  #   environment:
-  #     - ASPNETCORE_ENVIRONMENT=Development
-  #     - ASPNETCORE_HTTP_PORTS=8380
-  #     #- ASPNETCORE_HTTPS_PORTS=8381
-  #     - SERVER_IP=http://192.168.30.120:6200
-  #   ports:
-  #     - "6300:8380"
-  #   #- "6360:8381"
-  #   volumes:
-  #     - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-  #     - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-  #   depends_on:
-  #     - identity.api
-  #   restart: always
+
+  useraccess.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ConnectionStrings__Database=Server=userdb,1433;Database=UserDb;User Id=sa;Password=Nguyenqb242;Encrypt=False;TrustServerCertificate=True
+    ports:
+      - "6300:8080"
+      - "6360:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+    depends_on:
+      - userdb
+  yarpapigateway:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+    ports:
+      - "6000:8080"
+      - "6060:8081"
+    depends_on:
+      - provincevietnam.api
+      - identity.api
+      - useraccess.api
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
 networks:
   default:
    driver: bridge
+
+
 
