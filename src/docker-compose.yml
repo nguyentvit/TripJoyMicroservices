@@ -1,36 +1,47 @@
 version: '3.4'
 
 services:
- provincedb:
-  image: postgres
+  provincedb:
+   image: postgres
 
- identityredis:
-   image: redis
+  identityredis:
+    image: redis
 
- sqlserveridentity:
-  image: mcr.microsoft.com/mssql/server:2017-latest
+  identitydb:
+   image: mcr.microsoft.com/mssql/server
 
- provincevietnam.api:
-  image: ${DOCKER_REGISTRY-}provincevietnamapi
-  build:
-   context: .
-   dockerfile: Services/ProvinceVietNam/ProvinceVietNam.API/Dockerfile
+  userdb:
+   image: mcr.microsoft.com/mssql/server
 
- identity.api:
-   image: ${DOCKER_REGISTRY-}identityapi
+  provincevietnam.api:
+   image: ${DOCKER_REGISTRY-}provincevietnamapi
    build:
-     context: .
-     dockerfile: Services/Identity/Identity.API/Dockerfile
+    context: .
+    dockerfile: Services/ProvinceVietNam/ProvinceVietNam.API/Dockerfile
 
- # user.api:
- #    image: ${DOCKER_REGISTRY-}userapi
- #    build:
- #      context: .
- #      dockerfile: Services/User/User.API/Dockerfile
+  identity.api:
+    image: ${DOCKER_REGISTRY-}identityapi
+    build:
+      context: .
+      dockerfile: Services/Identity/Identity.API/Dockerfile
+
+  useraccess.api:
+    image: ${DOCKER_REGISTRY-}useraccessapi
+    build:
+      context: .
+      dockerfile: Services/UserAccess/UserAccess.API/Dockerfile
+
+  yarpapigateway:
+    image: ${DOCKER_REGISTRY-}yarpapigateway
+    build:
+      context: .
+      dockerfile: ApiGateways/YarpApiGateway/Dockerfile
 
 volumes:
   postgres_province:
   mssqlvolume:
+
+
 
 
 

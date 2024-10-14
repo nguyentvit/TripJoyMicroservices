@@ -15,23 +15,12 @@ System.Net.ServicePointManager.ServerCertificateValidationCallback =
 var app = builder.Build();
 await app.UseMigration();
 
-app.UseCors("AllowFrontendLocalhost");
-
 InitializeDatabase(app);
 
 
-app.UseSwagger();
-app.UseSwaggerUI(options =>
-{
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", "1.0");
-    options.SwaggerEndpoint("/swagger/v2/swagger.json", "2.0");
-});
-
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseIdentityServer();
-app.UseAuthentication();
 
 app.MapControllers();
 

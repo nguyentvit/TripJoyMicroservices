@@ -16,7 +16,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.API.Controllers.v1
 {
-    [ApiVersion(1.0)]
     public class AccountController : ApiController
     {
         private readonly ISender _mediator;
