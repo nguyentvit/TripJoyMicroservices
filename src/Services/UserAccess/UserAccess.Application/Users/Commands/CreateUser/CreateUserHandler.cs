@@ -19,7 +19,8 @@
                 id: UserId.Of(Guid.NewGuid()),
                 userName: UserName.Of(userDto.UserName),
                 emailAddress: Email.Of(userDto.Email),
-                phone: PhoneNumber.Of(userDto.PhoneNumber)
+                phone: PhoneNumber.Of(userDto.PhoneNumber),
+                accountId: AccountId.Of(userDto.AccountId)
                 );
 
             return newUser;

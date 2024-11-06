@@ -11,6 +11,9 @@ services:
   userdb:
    image: mcr.microsoft.com/mssql/server
 
+  messagebroker:
+   image: rabbitmq:management
+
   provincevietnam.api:
    image: ${DOCKER_REGISTRY-}provincevietnamapi
    build:
@@ -22,6 +25,8 @@ services:
     build:
       context: .
       dockerfile: Services/Identity/Identity.API/Dockerfile
+    volumes:
+      - ./Certificates:/etc/ssl/certs
 
   useraccess.api:
     image: ${DOCKER_REGISTRY-}useraccessapi
@@ -29,19 +34,16 @@ services:
       context: .
       dockerfile: Services/UserAccess/UserAccess.API/Dockerfile
 
+
   yarpapigateway:
     image: ${DOCKER_REGISTRY-}yarpapigateway
     build:
       context: .
       dockerfile: ApiGateways/YarpApiGateway/Dockerfile
+    volumes:
+      - ./Certificates:/etc/ssl/certs
 
 volumes:
   postgres_province:
-  mssqlvolume:
-
-
-
-
-
-
-
+  identitydb_data:
+  userdb_data:

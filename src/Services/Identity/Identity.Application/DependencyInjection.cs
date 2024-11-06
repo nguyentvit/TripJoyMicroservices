@@ -1,10 +1,13 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using BuildingBlocks.Messaging.MassTransit;
+using Microsoft.Extensions.Configuration;
 
 namespace Identity.Application
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddApplication(this IServiceCollection services)
+        public static IServiceCollection AddApplication(
+            this IServiceCollection services,
+            IConfiguration configuration)
         {
             services.AddMediatR(cfg =>
             {
@@ -13,6 +16,8 @@ namespace Identity.Application
             });
 
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            services.AddMessageBroker(configuration);
+
             return services;
         }
     }

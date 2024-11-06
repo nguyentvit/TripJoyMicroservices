@@ -18,7 +18,10 @@
             ArgumentException.ThrowIfNullOrWhiteSpace(district);
             ArgumentException.ThrowIfNullOrWhiteSpace(ward);
             ArgumentException.ThrowIfNullOrWhiteSpace(province);
-            ArgumentException.ThrowIfNullOrWhiteSpace(country);
+            if (string.IsNullOrWhiteSpace(country))
+            {
+                country = "Việt Nam";
+            }
 
             return new Address(district, ward, province, country);
         }

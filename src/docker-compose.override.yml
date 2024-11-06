@@ -1,4 +1,4 @@
-﻿services:
+services:
   provincedb:
     container_name: provincedb
     environment:
@@ -27,6 +27,8 @@
     ports:
       - "1433:1433"
     restart: always
+    volumes:
+      - identitydb_data:/var/opt/mssql
 
   userdb:
     container_name: userdb
@@ -36,72 +38,81 @@
     ports:
       - "1432:1433"
     restart: always
+    volumes:
+      - userdb_data:/var/opt/mssql
 
+  messagebroker:
+    container_name: messagebroker
+    hostname: tripjoy-mq
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  
   provincevietnam.api:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
       - ConnectionStrings__Database=Server=provincedb;Port=5432;Database=ProvinceDb;User Id=postgres;Password=nguyenqb242;Include Error Detail=true
     depends_on:
       - provincedb
     ports:
       - "6100:8080"
-      - "6160:8081"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
 
   identity.api:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
       - ConnectionStrings__Redis=identityredis:6379
       - ConnectionStrings__DefaultConnection=Server=identitydb,1433;Database=IdentityDb;User Id=sa;Password=Nguyenqb242;TrustServerCertificate=True;
+      - PORT=8080
       - ConnectionStrings__SqlConnection=Server=identitydb,1433;Database=IdentityDb;User Id=sa;Password=Nguyenqb242;TrustServerCertificate=True;
     depends_on:
       - identityredis
       - identitydb
     ports:
       - "6200:8080"
-      - "6260:8081"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
 
   useraccess.api:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
+      - PORT=8080
       - ConnectionStrings__Database=Server=userdb,1433;Database=UserDb;User Id=sa;Password=Nguyenqb242;Encrypt=False;TrustServerCertificate=True
+      - ConnectionStrings__Redis=identityredis:6379
     ports:
       - "6300:8080"
-      - "6360:8081"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
     depends_on:
       - userdb
+      - identityredis
+
   yarpapigateway:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_HTTPS_PORTS=8081
     ports:
-      - "6000:8080"
-      - "6060:8081"
-    depends_on:
-      - provincevietnam.api
-      - identity.api
-      - useraccess.api
+      - "6000:8081"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+    depends_on:
+      - identity.api
 networks:
   default:
    driver: bridge
+
 
 
 

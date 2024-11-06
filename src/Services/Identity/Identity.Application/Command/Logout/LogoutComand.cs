@@ -4,5 +4,5 @@
         string Status,
         string Message
         );
-    public record LogoutCommand(string AccessToken, string RefreshToken) : IRequest<ErrorOr<LogoutResult>>;
+    public record LogoutCommand(string RefreshToken) : IRequest<ErrorOr<LogoutResult>>;
 }

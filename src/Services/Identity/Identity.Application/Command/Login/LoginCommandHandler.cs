@@ -9,25 +9,29 @@ namespace Identity.Application.Command.Login
     public class LoginCommandHandler : IRequestHandler<LoginCommand, ErrorOr<LoginResult>>
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ITokenWhitelistService _whiteList;
         private readonly IConfiguration _configuration;
-        public LoginCommandHandler(UserManager<ApplicationUser> userManager, ITokenWhitelistService whiteList, IConfiguration configuration)
+        public LoginCommandHandler(UserManager<ApplicationUser> userManager, IConfiguration configuration)
         {
             _userManager = userManager;
-            _whiteList = whiteList;
             _configuration = configuration;
         }
         public async Task<ErrorOr<LoginResult>> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
-            var handler = new HttpClientHandler
+            var url = "";
+            var environment = _configuration["ASPNETCORE_ENVIRONMENT"];
+            if (environment == "Development")
             {
-                ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) => true
-            };
-            var client = new HttpClient(handler);
-            var ipAuthentication = _configuration["SERVER_IP"];
-            var ipAddress = Dns.GetHostAddresses("identity.api").FirstOrDefault()?.ToString();
-            var serverIp = $"http://{ipAddress}:8080/";
-            var token = new HttpRequestMessage(HttpMethod.Post, $"{serverIp}connect/token")
+                url = "http://localhost:5032/";
+            }
+
+            else if (environment == "Production")
+            {
+                var port = Environment.GetEnvironmentVariable("PORT") ?? "80";
+                url = $"http://identity.api:{port}/";
+            }
+            
+            var client = new HttpClient();
+            var token = new HttpRequestMessage(HttpMethod.Post, $"{url}connect/token")
             {
                 Content = new FormUrlEncodedContent(new[]
                 {
@@ -54,12 +58,6 @@ namespace Identity.Application.Command.Login
             var tokenContent = await tokenResponse.Content.ReadAsStringAsync();
             var tokenResult = JsonConvert.DeserializeObject<TokenResult>(tokenContent);
 
-            var obj = new Dictionary<string, string>();
-            obj.Add("userId", user.Id);
-            obj.Add("accessToken", tokenResult!.AccessToken);
-            obj.Add("refreshToken", tokenResult.RefreshToken);
-
-            await _whiteList.SetCacheReponseAsync(user.Id, tokenResult.AccessToken, obj, TimeSpan.FromSeconds(tokenResult.ExpiresIn));
 
             LoginUserResult loginUserResult = new(user.Id, user.UserName, user.Email, user.Name);
             LoginResult loginResult = new(tokenResult.AccessToken, tokenResult.RefreshToken, tokenResult.ExpiresIn, tokenResult.TokenType, tokenResult.IdToken, loginUserResult);

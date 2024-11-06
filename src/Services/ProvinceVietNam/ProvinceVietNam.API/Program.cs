@@ -1,11 +1,22 @@
 var builder = WebApplication.CreateBuilder(args);
 
-System.Net.ServicePointManager.ServerCertificateValidationCallback =
-    (sender, certificate, chain, sslPolicyErrors) => true;
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+var url = $"http://0.0.0.0:{port}";
+builder.WebHost.UseUrls(url);
 
 var assembly = typeof(Program).Assembly;
 
 builder.Services.AddCarter();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins", builder =>
+    {
+        builder.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
 builder.Services.AddMediatR(config =>
 {
@@ -24,6 +35,8 @@ builder.Services.AddHealthChecks()
     .AddNpgSql(builder.Configuration.GetConnectionString("Database")!);
 
 var app = builder.Build();
+
+app.UseCors("AllowAllOrigins");
 
 app.MapCarter();
 

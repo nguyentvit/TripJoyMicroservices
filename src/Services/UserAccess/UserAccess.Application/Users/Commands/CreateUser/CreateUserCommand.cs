@@ -6,13 +6,22 @@
     {
         public CreateUserCommandValidator()
         {
-            RuleFor(x => x.User.UserName).NotEmpty().WithMessage("Name is required");
-            RuleFor(x => x.User.Email)
-                .NotEmpty()
-                .EmailAddress().WithMessage("Invalid email format");
-            RuleFor(x => x.User.PhoneNumber).NotEmpty()
-                .Matches(@"^\+?[0-9]\d{1,14}$").WithMessage("Invalid phone number format");
+            RuleFor(u => u.User.Email)
+                .NotEmpty().WithMessage("Email cannot be empty.")
+                .EmailAddress().WithMessage("Invalid email format.");
+
+            RuleFor(u => u.User.UserName)
+                .NotEmpty().WithMessage("Username cannot be empty.")
+                .Length(3, 50).WithMessage("Username must be between 3 and 50 characters.");
+
+            RuleFor(u => u.User.PhoneNumber)
+                .NotEmpty().WithMessage("Phone number cannot be empty.")
+                .Matches(@"^\d{9,11}$").WithMessage("Phone number must be between 9 and 11 digits.")
+                .Length(9, 11).WithMessage("Phone number must be between 9 and 11 digits.");
+
+            RuleFor(u => u.User.AccountId)
+                .NotEmpty().WithMessage("Account ID cannot be empty.");
+
         }
     }
-    
 }
