@@ -28,6 +28,10 @@ namespace UserAccess.Infrastructure.Data.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("AccountId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -76,6 +80,111 @@ namespace UserAccess.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("UserAccess.Domain.Models.User", b =>
                 {
+                    b.OwnsMany("UserAccess.Domain.Entities.Friend", "Friends", b1 =>
+                        {
+                            b1.Property<Guid>("Id")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("UserFriendId");
+
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<DateTime?>("CreatedAt")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<string>("CreatedBy")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<Guid>("FriendUserId")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("FriendUserId");
+
+                            b1.Property<DateTime?>("LastModified")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<string>("LastModifiedBy")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("Id", "UserId");
+
+                            b1.HasIndex("UserId");
+
+                            b1.ToTable("UserFriends", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
+                    b.OwnsMany("UserAccess.Domain.Entities.FriendRequest", "FriendRequests", b1 =>
+                        {
+                            b1.Property<Guid>("Id")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("UserFriendRequestId");
+
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<DateTime?>("CreatedAt")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<string>("CreatedBy")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<DateTime?>("LastModified")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<string>("LastModifiedBy")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<Guid>("UserSenderId")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("UserSenderId");
+
+                            b1.HasKey("Id", "UserId");
+
+                            b1.HasIndex("UserId");
+
+                            b1.ToTable("UserFriendRequest", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
+                    b.OwnsMany("UserAccess.Domain.Entities.SentFriendRequest", "SentFriendRequests", b1 =>
+                        {
+                            b1.Property<Guid>("Id")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("UserSentFriendRequestId");
+
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<DateTime?>("CreatedAt")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<string>("CreatedBy")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<DateTime?>("LastModified")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<string>("LastModifiedBy")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<Guid>("UserReceiverId")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("UserReceiverId");
+
+                            b1.HasKey("Id", "UserId");
+
+                            b1.HasIndex("UserId");
+
+                            b1.ToTable("UserSentFriendRequest", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
                     b.OwnsOne("UserAccess.Domain.ValueObject.Address", "Address", b1 =>
                         {
                             b1.Property<Guid>("UserId")
@@ -132,31 +241,6 @@ namespace UserAccess.Infrastructure.Data.Migrations
                                 .HasForeignKey("UserId");
                         });
 
-                    b.OwnsMany("UserAccess.Domain.ValueObject.FriendId", "FriendIds", b1 =>
-                        {
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
-
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
-
-                            b1.Property<Guid>("UserId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<Guid>("Value")
-                                .HasColumnType("uniqueidentifier")
-                                .HasColumnName("FriendId");
-
-                            b1.HasKey("Id");
-
-                            b1.HasIndex("UserId");
-
-                            b1.ToTable("UserFriendIds", (string)null);
-
-                            b1.WithOwner()
-                                .HasForeignKey("UserId");
-                        });
-
                     b.OwnsOne("UserAccess.Domain.ValueObject.Image", "Avatar", b1 =>
                         {
                             b1.Property<Guid>("UserId")
@@ -205,9 +289,14 @@ namespace UserAccess.Infrastructure.Data.Migrations
 
                     b.Navigation("DateOfBirth");
 
-                    b.Navigation("FriendIds");
+                    b.Navigation("FriendRequests");
 
-                    b.Navigation("Phone");
+                    b.Navigation("Friends");
+
+                    b.Navigation("Phone")
+                        .IsRequired();
+
+                    b.Navigation("SentFriendRequests");
                 });
 #pragma warning restore 612, 618
         }

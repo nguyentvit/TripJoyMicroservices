@@ -1,7 +1,7 @@
-﻿using Asp.Versioning;
-using Identity.Application.Command.ChangePw;
+﻿using Identity.Application.Command.ChangePw;
 using Identity.Application.Command.Login;
 using Identity.Application.Command.Logout;
+using Identity.Application.Command.RefreshToken;
 using Identity.Application.Command.RegisterUserWithOtp;
 using Identity.Application.Command.SendOtp;
 using Identity.Application.Command.VerifyOtpEmail;
@@ -12,6 +12,7 @@ using Identity.Contract.Authentication.Request;
 using Identity.Contract.Authentication.Response;
 using MapsterMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.API.Controllers.v1
@@ -118,6 +119,18 @@ namespace Identity.API.Controllers.v1
 
             return result.Match(
                 result => Ok(_mapper.Map<LogoutResponse>(result)),
+                errors => Problem(errors)
+                );
+        }
+        [HttpPost("refresh")]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
+        {
+            var command = _mapper.Map<RefreshTokenCommand>(request);
+
+            var result = await _mediator.Send(command);
+
+            return result.Match(
+                result => Ok(_mapper.Map<RefreshTokenReponse>(result)),
                 errors => Problem(errors)
                 );
         }

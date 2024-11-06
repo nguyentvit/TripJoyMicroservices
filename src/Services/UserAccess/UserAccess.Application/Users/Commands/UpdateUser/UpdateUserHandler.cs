@@ -6,12 +6,12 @@
     {
         public async Task<UpdateUserResult> Handle(UpdateUserCommand command, CancellationToken cancellationToken)
         {
-            var userId = UserId.Of(command.User.Id);
-            var user = await dbContext.Users.FindAsync([userId], cancellationToken: cancellationToken);
+            var accountId = AccountId.Of(command.User.AccountId);
+            var user = await dbContext.Users.SingleOrDefaultAsync(u => u.AccountId == accountId, cancellationToken);
 
             if (user == null)
             {
-                throw new UserNotFoundException(command.User.Id);
+                throw new UserNotFoundException(command.User.AccountId);
             }
 
             UpdateUserWithNewValues(user, command.User);
@@ -29,16 +29,35 @@
                 userUpdateDto.PhoneNumber
                 );
 
-            var updatedAddress = Address.Of(
-                userUpdateDto.Address.District,
-                userUpdateDto.Address.Ward,
-                userUpdateDto.Address.Province,
-                userUpdateDto.Address.Country
+            Date updatedDateOfBirth = null!;
+            Address updatedAddress = null!;
+            Image updatedAvatar = null!;
+            UserGender? updatedGender = null!;
+
+            if (userUpdateDto.Address != null)
+            {
+                updatedAddress = Address.Of(
+                    userUpdateDto.Address.District,
+                    userUpdateDto.Address.Ward,
+                    userUpdateDto.Address.Province,
+                    userUpdateDto.Address.Country
                 );
+            }
 
-            var updatedDateOfBirth = Date.Of(userUpdateDto.DateOfBirth);
+            if (userUpdateDto.DateOfBirth != null)
+            {
+                updatedDateOfBirth = Date.Of(userUpdateDto.DateOfBirth);
+            }
 
-            var updatedAvatar = Image.Of(userUpdateDto.Avatar.Url, userUpdateDto.Avatar.Format);
+            if (userUpdateDto.Avatar != null)
+            {
+                updatedAvatar = Image.Of(userUpdateDto.Avatar.Url, userUpdateDto.Avatar.Format);
+            }
+
+            if (userUpdateDto.Gender != null)
+            {
+                updatedGender = userUpdateDto.Gender;
+            }
 
             user.Update(
                 userName: updatedUserName,
@@ -46,9 +65,8 @@
                 dateOfBirth: updatedDateOfBirth,
                 avatar: updatedAvatar,
                 address: updatedAddress,
-                gender: userUpdateDto.Gender
+                gender: updatedGender
                 );
-
         }
     }
 }

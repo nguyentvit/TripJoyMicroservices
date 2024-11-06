@@ -1,5 +1,4 @@
 ﻿using UserAccess.Application.Users.Commands.CreateUser;
-
 namespace UserAccess.API.Endpoints
 {
     public record CreateUserRequest(UserAddDto User);

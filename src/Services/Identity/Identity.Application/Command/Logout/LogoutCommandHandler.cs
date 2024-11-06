@@ -7,28 +7,28 @@ namespace Identity.Application.Command.Logout
 {
     public class LogoutCommandHandler : IRequestHandler<LogoutCommand, ErrorOr<LogoutResult>>
     {
-        private readonly ITokenBlacklistService _blackList;
         private readonly IConfiguration _configuration;
-        public LogoutCommandHandler(ITokenBlacklistService blackList, IConfiguration configuration)
+        public LogoutCommandHandler(IConfiguration configuration)
         {
-            _blackList = blackList;
-            _configuration = configuration;
+            _configuration=configuration;
         }
         public async Task<ErrorOr<LogoutResult>> Handle(LogoutCommand request, CancellationToken cancellationToken)
         {
-
-            var accessToken = request.AccessToken;
-            var refreshToken = request.RefreshToken;
-            var ipAddress = Dns.GetHostAddresses("identity.api").FirstOrDefault()?.ToString();
-            var serverIp = $"http://{ipAddress}:8080/";
-            var ipAuthentication = _configuration["SERVER_IP"];
-            var handler = new HttpClientHandler
+            var url = "";
+            var environment = _configuration["ASPNETCORE_ENVIRONMENT"];
+            if (environment == "Development")
             {
-                ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) => true
-            };
-            var client = new HttpClient(handler);
+                url = "http://localhost:5032/";
+            }
 
-            var token = new HttpRequestMessage(HttpMethod.Post, $"{serverIp}connect/revocation")
+            else if (environment == "Production")
+            {
+                var port = Environment.GetEnvironmentVariable("PORT") ?? "80";
+                url = $"http://identity.api:{port}/";
+            }
+            var client = new HttpClient();
+
+            var token = new HttpRequestMessage(HttpMethod.Post, $"{url}connect/revocation")
             {
                 Content = new FormUrlEncodedContent(new[]
                 {   new KeyValuePair<string, string>("client_id", "magic"),
@@ -43,11 +43,6 @@ namespace Identity.Application.Command.Logout
             {
                 return Errors.Authentication.InvalidCredentials;
             }
-
-            var timespan = TimeSpan.FromSeconds(3600);
-
-            await _blackList.SetCacheReponseAsync(accessToken, accessToken, timespan);
-
 
             LogoutResult logoutResult = new("success", "Log out success");
 

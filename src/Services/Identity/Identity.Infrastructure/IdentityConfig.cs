@@ -18,22 +18,12 @@ namespace Identity.Infrastructure
         public static IEnumerable<ApiScope> ApiScopes =>
             new List<ApiScope>()
             {
-                new ApiScope(name: "read", displayName: "Read your data"),
-                new ApiScope(name: "write", displayName: "Write your data"),
-                new ApiScope(name: "delete", displayName: "Delete your data"),
                 new ApiScope("magic", "Magic Server")
             };
 
         public static IEnumerable<Client> Get =>
             new List<Client>()
             {
-                new Client
-                {
-                    ClientId = "service.client",
-                    ClientSecrets = {new Secret("secret".Sha256()) },
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    AllowedScopes = {"api1", "api2.read_only"}
-                },
                 new Client
                 {
                     ClientId = "magic",
@@ -51,19 +41,8 @@ namespace Identity.Infrastructure
                     SlidingRefreshTokenLifetime = 1296000,
                     RefreshTokenUsage = TokenUsage.OneTimeOnly,
                     RefreshTokenExpiration = TokenExpiration.Sliding,
-                    RedirectUris = { "https://localhost:7100/signin-oidc" },
-                    PostLogoutRedirectUris = { "https://localhost:7100/signout-callback-oidc" },
-
-                },
-                new Client
-                {
-                    ClientId = "web-client",
-                    ClientSecrets = { new Secret("web-client-secret".Sha256()) },
-                    AllowedGrantTypes = GrantTypes.Code,
-                    RedirectUris = { "https://localhost:7100/user/signin-google" },
-                    PostLogoutRedirectUris = { "https://localhost:7100/signout-callback-oidc" },
-                    AllowedScopes = { "openid", "profile", "email", "offline_access", "magic" },
-                    AllowOfflineAccess = true // Cấp refresh token nếu cần
+                    RedirectUris = { "/signin-oidc" },
+                    PostLogoutRedirectUris = { "/signout-callback-oidc" },
                 }
             };
     }

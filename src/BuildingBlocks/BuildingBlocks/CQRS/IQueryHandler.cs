@@ -2,9 +2,10 @@
 
 namespace BuildingBlocks.CQRS
 {
-    public interface IQueryHandler<in TQuery, TReponse> : IRequestHandler<TQuery, TReponse>
-        where TQuery : IQuery<TReponse>
-        where TReponse : notnull
+    public interface IQueryHandler<in TQuery, TResponse>
+    : IRequestHandler<TQuery, TResponse>
+    where TQuery : IQuery<TResponse>
+    where TResponse : notnull
     {
     }
 }

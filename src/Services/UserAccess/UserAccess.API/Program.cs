@@ -5,13 +5,15 @@ using UserAccess.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true);
+
 builder.Services
-    .AddApplicationServices()
+    .AddApplicationServices(builder.Configuration)
     .AddInfrastructure(builder.Configuration)
     .AddApiService(builder.Configuration);
-
-System.Net.ServicePointManager.ServerCertificateValidationCallback =
-    (sender, certificate, chain, sslPolicyErrors) => true;
 
 var app = builder.Build();
 

@@ -1,12 +1,8 @@
-﻿using Dapper;
-using ErrorOr;
-using Identity.Application.Common.Persistence;
-using Identity.Application.Common.Results;
-using Identity.Application.DomainEvents;
+﻿using Identity.Application.DomainEvents;
 using Identity.Application.Services.Interfaces;
 using Identity.Domain.Common.Errors;
 using Identity.Domain.Common.Models;
-using MediatR;
+using Microsoft.AspNetCore.Identity;
 
 namespace Identity.Application.Queries.ForgetPassword
 {
@@ -15,24 +11,24 @@ namespace Identity.Application.Queries.ForgetPassword
         private readonly ITokenProvider _tokenProvider;
         private IPublisher _mediator;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IApplicationUserQueryRepository _applicationUserQueryRepository;
+        private readonly UserManager<ApplicationUser> _userManager;
         public ForgetPasswordQueryHandler(
             ITokenProvider tokenProvider,
             IMediator mediator,
             IUnitOfWork unitOfWork,
-            IApplicationUserQueryRepository applicationUserQueryRepository
+            UserManager<ApplicationUser> userManager
             )
         {
             _tokenProvider = tokenProvider;
             _mediator = mediator;
             _unitOfWork = unitOfWork;
-            _applicationUserQueryRepository = applicationUserQueryRepository;
+            _userManager = userManager;
         }
 
         public async Task<ErrorOr<ForgetPasswordResult>> Handle(ForgetPasswordQuery request, CancellationToken cancellationToken)
         {
 
-            var user = _applicationUserQueryRepository.GetUserByEmail(request.Email);
+            var user = await _userManager.FindByEmailAsync(request.Email);
 
             if (user == null)
             {

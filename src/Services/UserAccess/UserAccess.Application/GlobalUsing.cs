@@ -9,3 +9,5 @@ global using UserAccess.Application.Exceptions;
 global using MediatR;
 global using Microsoft.Extensions.Logging;
 global using UserAccess.Domain.Events;
+global using Microsoft.EntityFrameworkCore;
+global using UserAccess.Application.Extensions;

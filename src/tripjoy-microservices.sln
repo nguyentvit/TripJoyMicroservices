@@ -45,7 +45,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuildingBlocks.Messaging", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiGateways", "ApiGateways", "{A7C52CE4-6FE8-4F52-9CD2-69154CBE49D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YarpApiGateway", "ApiGateways\YarpApiGateway\YarpApiGateway.csproj", "{2C5F1AFF-E4F3-4E03-B9C4-31692CC4C756}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YarpApiGateway", "ApiGateways\YarpApiGateway\YarpApiGateway.csproj", "{2C5F1AFF-E4F3-4E03-B9C4-31692CC4C756}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Certificates", "Certificates", "{A003A1E2-8934-4BA5-987D-7937EFF764D1}"
+	ProjectSection(SolutionItems) = preProject
+		Services\Identity\Identity.API\Certificates\tls.crt = Services\Identity\Identity.API\Certificates\tls.crt
+		Services\Identity\Identity.API\Certificates\tls.key = Services\Identity\Identity.API\Certificates\tls.key
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

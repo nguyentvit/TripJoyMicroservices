@@ -1,5 +1,14 @@
-﻿using Identity.Infrastructure.Persistence;
+﻿using System.Net;
+using System.Net.Mail;
+using System.Security.Cryptography.X509Certificates;
+using FluentEmail.Smtp;
+using Identity.Infrastructure.Persistence;
 using Identity.Infrastructure.Persistence.Repository;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
+
 namespace Identity.Infrastructure
 {
     public static class DependencyInjection
@@ -47,8 +56,27 @@ namespace Identity.Infrastructure
             ConfigurationManager configuration
             )
         {
+            var environment = configuration["ASPNETCORE_ENVIRONMENT"];
             var connection = configuration.GetConnectionString("DefaultConnection");
             var migrationsAssembly = typeof(DependencyInjection).Assembly.GetName().FullName;
+
+            var certPath = "";
+            var keyPath = "";
+
+            if (environment == "Development")
+            {
+                var baseDir = Directory.GetCurrentDirectory();
+                certPath = Path.Combine(baseDir, "Certificates", "tls.crt");
+                keyPath = Path.Combine(baseDir, "Certificates", "tls.key");
+            }
+
+            else if (environment == "Production")
+            {
+                certPath = Path.Combine("/etc/ssl/certs", "tls.crt");
+                keyPath = Path.Combine("/etc/ssl/certs", "tls.key");
+            }
+            
+            var cert = X509Certificate2.CreateFromPemFile(certPath, keyPath);
 
             services.AddDbContext<Persistence.IdentityDbContext>(options =>
             {
@@ -62,10 +90,6 @@ namespace Identity.Infrastructure
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
-                // configure token
-                //options.Tokens.PasswordResetTokenProvider = TokenOptions.DefaultProvider;
-                //options.Tokens.EmailConfirmationTokenProvider = TokenOptions.DefaultProvider;
-
 
                 // configure password
                 options.Password.RequireDigit = true;
@@ -90,7 +114,7 @@ namespace Identity.Infrastructure
                 options.Events.RaiseFailureEvents = true;
                 options.Events.RaiseSuccessEvents = true;
                 options.EmitStaticAudienceClaim = true;
-                
+
             })
                 .AddConfigurationStore(options =>
                 {
@@ -107,7 +131,7 @@ namespace Identity.Infrastructure
                 .AddAspNetIdentity<ApplicationUser>()
                 .AddExtensionGrantValidator<TokenExchangeGrantValidator>()
                 .AddProfileService<CustomProfileService>()
-                .AddDeveloperSigningCredential()
+                .AddSigningCredential(cert)
                 ;
 
             services.AddTransient<UserManager<ApplicationUser>, CustomUserManager>();
@@ -121,8 +145,16 @@ namespace Identity.Infrastructure
             configuration.Bind(SmtpSettings.SectionName, smtpSettings);
             services.AddSingleton(Options.Create(smtpSettings));
 
+            var smtpClient = new SmtpClient(smtpSettings.Host, smtpSettings.Port)
+            {
+                Credentials = new NetworkCredential(smtpSettings.UserName, smtpSettings.Password),
+                EnableSsl = true
+            };
+
+            ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
+
             services.AddFluentEmail(smtpSettings.FromEmail, smtpSettings.FromName)
-               .AddSmtpSender(smtpSettings.Host, smtpSettings.Port, smtpSettings.UserName, smtpSettings.Password)
+               .AddSmtpSender(smtpClient)
                .AddRazorRenderer();
 
             return services;
@@ -133,7 +165,6 @@ namespace Identity.Infrastructure
             var redisConfiguration = configuration.GetConnectionString("Redis");
             var options = ConfigurationOptions.Parse(redisConfiguration!);
             options.AbortOnConnectFail = false;
-
 
             if (true)
             {

@@ -1,16 +1,39 @@
 ﻿using UserAccess.Application.Users.Commands.UpdateUser;
-
 namespace UserAccess.API.Endpoints
 {
-    public record UpdateUserRequest(UserUpdateDto User);
+    public record UpdateUserRequest(
+        string UserName, 
+        string PhoneNumber, 
+        string? DateOfBirth, 
+        ImageDto? Avatar, 
+        AddressDto? Address, 
+        UserGender? Gender
+        );
     public record UpdateUserResponse(bool IsSuccess);
     public class UpdateUser : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPut("/users", async (UpdateUserRequest request, ISender sender) =>
+            app.MapPut("/users", async (UpdateUserRequest request, ISender sender, IHttpContextAccessor httpContext) =>
             {
-                var command = request.Adapt<UpdateUserCommand>();
+                var accountId = httpContext.HttpContext?.GetAccountIdFromJwt()!;
+
+                UserUpdateDto userUpdateDto = new(
+                    AccountId: accountId,
+                    UserName: request.UserName,
+                    PhoneNumber: request.PhoneNumber,
+                    DateOfBirth: request.DateOfBirth,
+                    Avatar: request.Avatar,
+                    Address: request.Address,
+                    Gender: request.Gender
+                    );
+
+                var userUpdateDtoRequest = new
+                {
+                    User = userUpdateDto
+                };
+
+                var command = userUpdateDtoRequest.Adapt<UpdateUserCommand>();
 
                 var result = await sender.Send(command);
 

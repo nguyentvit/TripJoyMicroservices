@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using UserAccess.Application.Data;
 using UserAccess.Infrastructure.Data;
 using UserAccess.Infrastructure.Data.Interceptors;
+using UserAccess.Infrastructure.Data.Repositories;
 
 namespace UserAccess.Infrastructure
 {
@@ -14,9 +15,15 @@ namespace UserAccess.Infrastructure
             IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("Database");
+            var redisConnectionString = configuration.GetConnectionString("Redis");
 
             services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
             services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
+
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = redisConnectionString;
+            });
 
             services.AddDbContext<ApplicationDbContext>((sp, options) =>
             {
@@ -25,6 +32,8 @@ namespace UserAccess.Infrastructure
             });
 
             services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.Decorate<IUserRepository, CachedUserRepository>();
 
             return services;
         }

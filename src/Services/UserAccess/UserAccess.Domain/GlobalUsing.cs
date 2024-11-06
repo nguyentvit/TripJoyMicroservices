@@ -4,3 +4,4 @@ global using UserAccess.Domain.ValueObject;
 global using UserAccess.Domain.Enums;
 global using UserAccess.Domain.Models;
 global using UserAccess.Domain.Events;
+global using UserAccess.Domain.Entities;

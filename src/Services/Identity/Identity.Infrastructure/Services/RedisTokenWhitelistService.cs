@@ -6,19 +6,24 @@
         private readonly IConnectionMultiplexer _connectionMultiplexer;
         private readonly IServer _server;
         private readonly IRefreshTokenHasher _refreshTokenHasher;
-        public RedisTokenWhitelistService(IDistributedCache distributedCache, IConnectionMultiplexer connectionMultiplexer, IRefreshTokenHasher refreshTokenHasher)
+        private readonly IConfiguration _configuration;
+        public RedisTokenWhitelistService(IDistributedCache distributedCache, IConnectionMultiplexer connectionMultiplexer, IRefreshTokenHasher refreshTokenHasher, IConfiguration configuration)
         {
             _distributedCache = distributedCache;
             _connectionMultiplexer = connectionMultiplexer;
             _refreshTokenHasher = refreshTokenHasher;
+            _configuration=configuration;
 
+            var connectionString = _configuration.GetConnectionString("Redis");
+            var host = connectionString!.Split(":")[0];
+            var port = connectionString!.Split(":")[1];
             if (!_connectionMultiplexer.IsConnected)
             {
                 throw new Exception("Could not connect to Redis.");
             }
 
-            _server = _connectionMultiplexer.GetServer("identityredis", 6379);
-
+            _server = _connectionMultiplexer.GetServer(host, port);
+            
         }
         public async Task SetCacheReponseAsync(string userId, string accessToken, object response, TimeSpan timeOut)
         {

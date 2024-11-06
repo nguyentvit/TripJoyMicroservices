@@ -1,6 +1,7 @@
 ﻿using Identity.Application.Command.ChangePw;
 using Identity.Application.Command.Login;
 using Identity.Application.Command.Logout;
+using Identity.Application.Command.RefreshToken;
 using Identity.Application.Command.RegisterUserWithOtp;
 using Identity.Application.Command.SendOtp;
 using Identity.Application.Command.VerifyOtpEmail;
@@ -93,12 +94,21 @@ namespace Identity.API.Common.Mapping
                 .Map(dest => dest.IdToken, src => src.IdToken);
 
             config.NewConfig<LogoutRequest, LogoutCommand>()
-                .Map(dest => dest.AccessToken, src => src.AccessToken)
                 .Map(dest => dest.RefreshToken, src => src.RefreshToken);
 
             config.NewConfig<LogoutResult, LogoutResponse>()
                 .Map(dest => dest.Status, src => src.Status)
                 .Map(dest => dest.Message, src => src.Message);
+
+            config.NewConfig<RefreshTokenRequest, RefreshTokenCommand>()
+                .Map(dest => dest.RefreshToken, src => src.RefreshToken);
+
+            config.NewConfig<RefreshTokenResult, RefreshTokenReponse>()
+                .Map(dest => dest.AccessToken, src => src.AccessToken)
+                .Map(dest => dest.RefreshToken, src => src.RefreshToken)
+                .Map(dest => dest.ExpiresIn, src => src.ExpiresIn)
+                .Map(dest => dest.TokenType, src => src.TokenType)
+                .Map(dest => dest.IdToken, src => src.IdToken);
         }
     }
 }

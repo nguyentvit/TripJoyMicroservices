@@ -1,15 +1,13 @@
-﻿using ErrorOr;
+﻿using BuildingBlocks.Messaging.Events.Event;
+using ErrorOr;
 using Identity.Application.Command.VerifyOtpEmail;
 using Identity.Application.Common;
-using Identity.Application.Common.Results;
 using Identity.Application.Services.Interfaces;
 using Identity.Domain.Common.Errors;
 using Identity.Domain.Common.Models;
-using Identity.Domain.Identity;
-using MediatR;
+using MassTransit;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
-using System.Text.Json;
 
 namespace Identity.Application.Command.RegisterUserWithOtp
 {
@@ -19,12 +17,19 @@ namespace Identity.Application.Command.RegisterUserWithOtp
         private readonly IUnitOfWork _unitOfWork;
         private readonly IOTPService _oTPService;
         private readonly ISendOtpService _sendOtpService;
-        public RegisterUserWithOtpCommandHandler(UserManager<ApplicationUser> userManager, IUnitOfWork unitOfWork, IOTPService oTPService, ISendOtpService sendOtpService)
+        private IPublishEndpoint _publishEndpoint;
+        public RegisterUserWithOtpCommandHandler(
+            UserManager<ApplicationUser> userManager, 
+            IUnitOfWork unitOfWork, 
+            IOTPService oTPService, 
+            ISendOtpService sendOtpService,
+            IPublishEndpoint publishEndpoint)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _oTPService = oTPService;
             _sendOtpService = sendOtpService;
+            _publishEndpoint = publishEndpoint;
         }
         public async Task<ErrorOr<RegisterUserWithOtpResult>> Handle(RegisterUserWithOtpCommand request, CancellationToken cancellationToken)
         {
@@ -42,11 +47,6 @@ namespace Identity.Application.Command.RegisterUserWithOtp
             }
 
             var otpVerify = System.Text.Json.JsonSerializer.Deserialize<OtpVerify>(otpHasher);
-
-            //if (otpVerify.status != "true")
-            //{
-            //    return Errors.Otp.OtpInvalid;
-            //}
 
             if (!_oTPService.VerifyOTP(request.Otp, otpVerify.otpHasher))
             {
@@ -78,6 +78,16 @@ namespace Identity.Application.Command.RegisterUserWithOtp
 
                 RegisterUserDataWithOtpResult data = new(user.Id, user.UserName, user.Email);
                 RegisterUserWithOtpResult registerResult = new(true, "Registration successful", data);
+
+                var eventMessage = new AccountCreatedEvent
+                {
+                    AccountId = user.Id,
+                    Email = request.Email,
+                    Name = request.Name,
+                    PhoneNumber= request.PhoneNumber
+                };
+
+                await _publishEndpoint.Publish(eventMessage, cancellationToken);
 
                 return registerResult;
             }
