@@ -8,6 +8,12 @@
             Id = id;
             FriendUserId = friendUserId;
         }
+        [JsonConstructor]
+        private Friend(UserId friendUserId)
+        {
+            FriendUserId=friendUserId;
+        }
+
         private Friend() { }
         public static Friend Of(UserId friendUserId)
         {

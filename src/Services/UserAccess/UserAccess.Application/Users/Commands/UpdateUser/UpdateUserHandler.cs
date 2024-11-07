@@ -6,12 +6,12 @@
     {
         public async Task<UpdateUserResult> Handle(UpdateUserCommand command, CancellationToken cancellationToken)
         {
-            var accountId = AccountId.Of(command.User.AccountId);
-            var user = await dbContext.Users.SingleOrDefaultAsync(u => u.AccountId == accountId, cancellationToken);
+            var userId = UserId.Of(command.User.UserId);
+            var user = await dbContext.Users.FindAsync([userId], cancellationToken);
 
             if (user == null)
             {
-                throw new UserNotFoundException(command.User.AccountId);
+                throw new UserNotFoundException(command.User.UserId);
             }
 
             UpdateUserWithNewValues(user, command.User);

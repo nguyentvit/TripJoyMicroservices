@@ -8,6 +8,7 @@ namespace UserAccess.Domain.ValueObject
         private const int MaxLength = 15;
         private const int MinLength = 10;
         public string Value { get; }
+        [JsonConstructor]
         private PhoneNumber(string value) => Value = value;
         public static PhoneNumber Of(string value)
         {

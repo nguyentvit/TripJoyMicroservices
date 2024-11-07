@@ -1,4 +1,4 @@
-﻿namespace UserAccess.Application.Users.EventHandlers
+﻿namespace UserAccess.Application.Users.EventHandlers.Domain
 {
     public class UserRemoveFriendEventHandler
         (ILogger<UserRemoveFriendEventHandler> logger,
@@ -16,7 +16,7 @@
 
             if (friend == null)
             {
-                throw new UserNotFoundException(friendId.Value.ToString());
+                throw new UserNotFoundException(friendId.Value);
             }
 
             friend.RemoveFriend(userId, false);

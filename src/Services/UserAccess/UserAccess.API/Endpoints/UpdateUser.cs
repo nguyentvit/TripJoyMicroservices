@@ -16,10 +16,10 @@ namespace UserAccess.API.Endpoints
         {
             app.MapPut("/users", async (UpdateUserRequest request, ISender sender, IHttpContextAccessor httpContext) =>
             {
-                var accountId = httpContext.HttpContext?.GetAccountIdFromJwt()!;
+                var userId = httpContext.HttpContext!.GetUserIdFromJwt()!;
 
                 UserUpdateDto userUpdateDto = new(
-                    AccountId: accountId,
+                    UserId: userId,
                     UserName: request.UserName,
                     PhoneNumber: request.PhoneNumber,
                     DateOfBirth: request.DateOfBirth,

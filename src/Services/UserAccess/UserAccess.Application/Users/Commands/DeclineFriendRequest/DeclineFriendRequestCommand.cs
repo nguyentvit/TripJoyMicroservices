@@ -8,7 +8,7 @@
         {
             RuleFor(r => r.Request).NotNull().WithMessage("Receiver information cannot be null.");
 
-            RuleFor(r => r.Request.AccountId)
+            RuleFor(r => r.Request.UserId)
                 .NotNull().WithMessage("Unauthorized")
                 .NotEmpty().WithMessage("Unauthorized");
 

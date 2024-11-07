@@ -3,6 +3,7 @@
     public record Date
     {
         public DateTime Value { get; }
+        [JsonConstructor]
         private Date(DateTime value) => Value = value;
         public static Date Of(string value)
         {

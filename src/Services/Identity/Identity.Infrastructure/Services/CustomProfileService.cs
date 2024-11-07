@@ -18,7 +18,7 @@ namespace Identity.Infrastructure.Services
 
 
             var user = (string.IsNullOrEmpty(email)) ? await _userManager.FindByIdAsync(sub) : await _userManager.FindByEmailAsync(email);
-
+            var userId = user!.UserId;
             // Lấy các claims của người dùng từ UserManager
             var claims = await _userManager.GetClaimsAsync(user);
 
@@ -27,6 +27,7 @@ namespace Identity.Infrastructure.Services
             foreach (var role in roles)
             {
                 claims.Add(new Claim(JwtClaimTypes.Role, role));
+                claims.Add(new Claim(JwtClaimTypes.Id, userId.ToString()));
             }
 
             // Cung cấp các claims cho token

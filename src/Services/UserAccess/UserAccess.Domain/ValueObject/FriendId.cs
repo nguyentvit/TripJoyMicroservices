@@ -3,6 +3,7 @@
     public record FriendId
     {
         public Guid Value { get; }
+        [JsonConstructor]
         private FriendId(Guid value) => Value = value;
         public static FriendId Of(Guid value)
         {

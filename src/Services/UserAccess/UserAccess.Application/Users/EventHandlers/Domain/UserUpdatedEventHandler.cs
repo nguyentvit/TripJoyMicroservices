@@ -1,4 +1,4 @@
-﻿namespace UserAccess.Application.Users.EventHandlers
+﻿namespace UserAccess.Application.Users.EventHandlers.Domain
 {
     public class UserUpdatedEventHandler
         (ILogger<UserUpdatedEventHandler> logger)

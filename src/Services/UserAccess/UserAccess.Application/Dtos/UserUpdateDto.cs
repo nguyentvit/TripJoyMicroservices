@@ -1,7 +1,7 @@
 ﻿namespace UserAccess.Application.Dtos
 {
     public record UserUpdateDto(
-        string AccountId,
+        Guid UserId,
         string UserName,
         string PhoneNumber,
         string? DateOfBirth,

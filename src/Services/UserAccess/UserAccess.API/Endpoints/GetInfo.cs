@@ -2,16 +2,16 @@
 
 namespace UserAccess.API.Endpoints
 {
-    public record GetInfoResponse(UserDto User);
+    public record GetInfoResponse(UserInfoDto User);
     public class GetInfo : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapGet("/users", async (ISender sender, IHttpContextAccessor httpContext) =>
+            app.MapGet("/users/info", async (ISender sender, IHttpContextAccessor httpContext) =>
             {
-                var accountId = httpContext.HttpContext?.GetAccountIdFromJwt()!;
+                var userId = httpContext.HttpContext!.GetUserIdFromJwt()!;
 
-                var result = await sender.Send(new GetInfoQuery(accountId));
+                var result = await sender.Send(new GetInfoQuery(userId));
 
                 var response = result.Adapt<GetInfoResponse>();
 

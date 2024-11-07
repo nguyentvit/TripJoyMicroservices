@@ -10,10 +10,10 @@ namespace UserAccess.API.Endpoints
         {
             app.MapPost("/users/friends/revoke", async (RevokeFriendRequestRequest request, ISender sender, IHttpContextAccessor httpContext) =>
             {
-                var accountId = httpContext.HttpContext?.GetAccountIdFromJwt()!;
+                var userId = httpContext.HttpContext!.GetUserIdFromJwt()!;
 
                 RevokeFriendRequestDto revokeFriendRequestDto = new(
-                    AccountId: accountId,
+                    UserId: userId,
                     ReceiverId: request.UserId
                     );
 

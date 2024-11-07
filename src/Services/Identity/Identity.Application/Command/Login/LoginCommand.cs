@@ -9,10 +9,11 @@
         LoginUserResult User
         );
     public record LoginUserResult(
-        string Id,
+        Guid? UserId,
         string UserName,
         string Email,
-        string Name
+        string Name,
+        string AccountId
         );
     public record LoginCommand(string Email, string Password) : IRequest<ErrorOr<LoginResult>>;
     public class LoginCommandValidator : AbstractValidator<LoginCommand>

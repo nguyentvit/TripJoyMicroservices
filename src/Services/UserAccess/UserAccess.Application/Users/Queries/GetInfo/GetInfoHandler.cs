@@ -4,18 +4,18 @@
         (IUserRepository repository)
         : IQueryHandler<GetInfoQuery, GetInfoResult>
     {
-        public async Task<GetInfoResult> Handle(GetInfoQuery request, CancellationToken cancellationToken)
+        public async Task<GetInfoResult> Handle(GetInfoQuery query, CancellationToken cancellationToken)
         {
-            var accountId = AccountId.Of(request.AccountId);
+            var userId = UserId.Of(query.UserId);
 
-            var user = await repository.Users.FirstOrDefaultAsync(u => u.AccountId == accountId);
+            var user = await repository.GetUserById(userId);
 
             if (user == null)
             {
-                throw new UserNotFoundException(request.AccountId);
+                throw new UserNotFoundException(query.UserId);
             }
 
-            var userDto = user.ToUserDto();
+            var userDto = await user.ToUserDto(repository);
 
             return new GetInfoResult(userDto);
         }

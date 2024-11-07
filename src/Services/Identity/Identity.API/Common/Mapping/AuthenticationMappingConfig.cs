@@ -81,9 +81,10 @@ namespace Identity.API.Common.Mapping
 
             config.NewConfig<LoginUserResult, LoginUserReponse>()
                 .Map(dest => dest.Email, src => src.Email)
-                .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.UserId, src => src.UserId)
                 .Map(dest => dest.Name, src => src.Name)
-                .Map(dest => dest.UserName, src => src.UserName);
+                .Map(dest => dest.UserName, src => src.UserName)
+                .Map(dest => dest.AccountId, src => src.AccountId);
 
             config.NewConfig<LoginResult, LoginResponse>()
                 .Map(dest => dest.User, src => src.User)

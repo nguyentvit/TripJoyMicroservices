@@ -16,7 +16,7 @@ namespace Identity.Application
             });
 
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-            services.AddMessageBroker(configuration);
+            services.AddMessageBroker(configuration, Assembly.GetExecutingAssembly());
 
             return services;
         }

@@ -5,6 +5,7 @@
         private const int MinLength = 3;
         private const int MaxLength = 50;
         public string Value { get; }
+        [JsonConstructor]
         private UserName(string value) => Value = value;
         public static UserName Of(string value)
         {

@@ -1,5 +1,5 @@
 ﻿namespace UserAccess.Application.Users.Queries.GetInfo
 {
-    public record GetInfoQuery(string AccountId) : IQuery<GetInfoResult>;
-    public record GetInfoResult(UserDto User);
+    public record GetInfoQuery(Guid UserId) : IQuery<GetInfoResult>;
+    public record GetInfoResult(UserInfoDto User);
 }

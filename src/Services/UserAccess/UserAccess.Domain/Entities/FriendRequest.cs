@@ -3,10 +3,16 @@
     public class FriendRequest : Entity<FriendRequestId>
     {
         public UserId UserSenderId { get; private set; } = default!;
+        
         private FriendRequest(FriendRequestId id, UserId userSenderId)
         {
             Id = id;
             UserSenderId = userSenderId;
+        }
+        [JsonConstructor]
+        private FriendRequest(UserId userSenderId)
+        {
+            UserSenderId = UserSenderId;
         }
         private FriendRequest() { }
         public static FriendRequest Of(UserId userSenderId)

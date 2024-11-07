@@ -1,7 +1,10 @@
-﻿namespace UserAccess.Application.Users.Commands.CreateUser
+﻿using MassTransit;
+
+namespace UserAccess.Application.Users.Commands.CreateUser
 {
     public class CreateUserHandler
-        (IApplicationDbContext dbContext)
+        (IApplicationDbContext dbContext,
+        IPublishEndpoint publish)
         : ICommandHandler<CreateUserCommand, CreateUserResult>
     {
         public async Task<CreateUserResult> Handle(CreateUserCommand command, CancellationToken cancellationToken)
@@ -10,6 +13,14 @@
 
             dbContext.Users.Add(user);
             await dbContext.SaveChangesAsync(cancellationToken);
+
+            var eventMessage = new BuildingBlocks.Messaging.Events.Event.UserCreatedEvent
+            {
+                AccountId = user.AccountId.Value,
+                UserId = user.Id.Value
+            };
+
+            await publish.Publish(eventMessage, cancellationToken);
 
             return new CreateUserResult(user.Id.Value);
         }

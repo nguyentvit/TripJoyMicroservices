@@ -58,8 +58,8 @@ namespace Identity.Application.Command.Login
             var tokenContent = await tokenResponse.Content.ReadAsStringAsync();
             var tokenResult = JsonConvert.DeserializeObject<TokenResult>(tokenContent);
 
-
-            LoginUserResult loginUserResult = new(user.Id, user.UserName, user.Email, user.Name);
+            
+            LoginUserResult loginUserResult = new(user.UserId, user.UserName, user.Email, user.Name, user.Id);
             LoginResult loginResult = new(tokenResult.AccessToken, tokenResult.RefreshToken, tokenResult.ExpiresIn, tokenResult.TokenType, tokenResult.IdToken, loginUserResult);
 
             return loginResult;
