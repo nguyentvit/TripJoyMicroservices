@@ -3,6 +3,7 @@
     public record AccountId
     {
         public string Value { get; }
+        [JsonConstructor]
         private AccountId(string value) => Value = value;
         public static AccountId Of(string value)
         {

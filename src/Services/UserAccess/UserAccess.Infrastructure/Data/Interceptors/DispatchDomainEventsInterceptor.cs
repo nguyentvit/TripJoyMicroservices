@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Caching.Distributed;
-using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace UserAccess.Infrastructure.Data.Interceptors
 {
@@ -68,7 +68,8 @@ namespace UserAccess.Infrastructure.Data.Interceptors
 
             foreach (var entry in context.ChangeTracker.Entries<User>())
             {
-                await cache.SetStringAsync(entry.Entity.Id.Value.ToString(), JsonSerializer.Serialize(entry.Entity), cancellationToken);
+                var userJson = JsonConvert.SerializeObject(entry.Entity);
+                await cache.SetStringAsync(entry.Entity.Id.Value.ToString(), userJson, cancellationToken);
             }
         }
     }

@@ -18,7 +18,7 @@ namespace UserAccess.Infrastructure.Data.Repositories
         public async Task<User> GetUserById(UserId UserId, CancellationToken cancellationToken = default)
         {
             var user = await dbContext.Users.FindAsync([UserId], cancellationToken);
-            return user is null ? throw new UserNotFoundException(UserId.Value.ToString()) : user;
+            return user is null ? throw new UserNotFoundException(UserId.Value) : user;
         }
 
         public async Task<User> UpdateUserAsync(User user, CancellationToken cancellationToken = default)

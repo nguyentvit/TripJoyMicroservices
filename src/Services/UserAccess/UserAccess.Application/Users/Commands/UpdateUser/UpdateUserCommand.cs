@@ -6,7 +6,7 @@
     {
         public UpdateUserCommandValidator()
         {
-            RuleFor(u => u.User.AccountId)
+            RuleFor(u => u.User.UserId)
                 .NotNull().WithMessage("Unauthorized")
                 .NotEmpty().WithMessage("Unauthorized");
 

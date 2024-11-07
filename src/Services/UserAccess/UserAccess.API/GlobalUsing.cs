@@ -5,3 +5,4 @@ global using MediatR;
 global using Mapster;
 global using BuildingBlocks.Extensions;
 global using UserAccess.Domain.Enums;
+global using BuildingBlocks.Pagination;

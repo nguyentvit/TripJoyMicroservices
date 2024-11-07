@@ -10,10 +10,10 @@ namespace UserAccess.API.Endpoints
         {
             app.MapPost("/users/friends/decline", async (DeclineFriendRequestRequest request, ISender sender, IHttpContextAccessor httpContext) =>
             {
-                var accountId = httpContext.HttpContext?.GetAccountIdFromJwt()!;
+                var userId = httpContext.HttpContext!.GetUserIdFromJwt()!;
 
                 DeclineFriendRequestDto declineFriendRequestDto = new(
-                    AccountId: accountId,
+                    UserId: userId,
                     SenderId: request.UserId
                     );
 

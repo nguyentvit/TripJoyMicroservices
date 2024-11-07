@@ -10,10 +10,10 @@ namespace UserAccess.API.Endpoints
         {
             app.MapPost("/users/friends/send", async (SendFriendRequestRequest request, ISender sender, IHttpContextAccessor httpContext) =>
             {
-                var accountId = httpContext.HttpContext?.GetAccountIdFromJwt()!;
+                var userId = httpContext.HttpContext!.GetUserIdFromJwt()!;
 
                 SentFriendRequestDto sentFriendRequestDto = new(
-                    AccountId: accountId,
+                    UserId: userId,
                     ReceiverId: request.UserId
                     );
 

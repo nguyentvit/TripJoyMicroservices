@@ -10,10 +10,10 @@ namespace UserAccess.API.Endpoints
         {
             app.MapPost("/users/friends/remove", async (RemoveFriendRequest request, ISender sender, IHttpContextAccessor httpContext) =>
             {
-                var accountId = httpContext.HttpContext?.GetAccountIdFromJwt()!;
+                var userId = httpContext.HttpContext!.GetUserIdFromJwt()!;
 
                 RemoveFriendDto removeFriendDto = new(
-                    AccountId: accountId,
+                    UserId: userId,
                     FriendId: request.UserId
                     );
 

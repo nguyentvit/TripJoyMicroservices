@@ -1,6 +1,6 @@
 ﻿namespace UserAccess.Application.Dtos
 {
-    public record UserDto(
+    public record UserResponseDto(
         Guid Id,
         string UserName,
         string Email,
@@ -8,9 +8,6 @@
         string? DateOfBirth,
         ImageDto? Avatar,
         AddressDto? Address,
-        UserGender? Gender,
-        List<Guid> FriendIds,
-        List<Guid> FriendRequestIds,
-        List<Guid> SentFriendRequestIds
+        UserGender? Gender
         );
 }

@@ -7,6 +7,9 @@
         {
             _dbContext = dbContext;
         }
+
+        public DbSet<ApplicationUser> Users => _dbContext.ApplicationUsers;
+
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             return _dbContext.SaveChangesAsync(cancellationToken);

@@ -1,4 +1,4 @@
-﻿namespace UserAccess.Application.Users.EventHandlers
+﻿namespace UserAccess.Application.Users.EventHandlers.Domain
 {
     public class UserAcceptFriendRequestEventHandler
         (ILogger<UserAcceptFriendRequestEventHandler> logger,
@@ -16,7 +16,7 @@
 
             if (Sender == null)
             {
-                throw new UserNotFoundException(userSenderId.Value.ToString());
+                throw new UserNotFoundException(userSenderId.Value);
             }
 
             Sender.ReceiveAcceptFriendRequest(userReceiverId);

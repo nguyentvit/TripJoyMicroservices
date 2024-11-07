@@ -74,6 +74,9 @@ namespace Identity.Infrastructure.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -178,13 +181,13 @@ namespace Identity.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "75ecda09-88a1-4af8-aa55-7cc93e5cf50a",
+                            Id = "ede46cea-d444-4636-b643-7b412932dcee",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "fce39955-2269-4cb3-b9da-46b46f0f5861",
+                            Id = "8ca4a188-ce5c-4fd2-9732-fe8718c07c34",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         });

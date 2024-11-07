@@ -4,6 +4,7 @@
     {
         public string Url { get; } = default!;
         public ImageFormat Format { get; } = default!;
+        [JsonConstructor]
         private Image(string url, ImageFormat format)
         {
             Url = url;

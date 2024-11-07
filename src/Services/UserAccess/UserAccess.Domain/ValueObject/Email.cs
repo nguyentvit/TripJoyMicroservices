@@ -7,6 +7,7 @@ namespace UserAccess.Domain.ValueObject
         private const string PatternEmail = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
         private const int MaxLength = 255;
         public string Value { get; }
+        [JsonConstructor]
         private Email(string value) => Value = value;
         public static Email Of(string value)
         {

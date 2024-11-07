@@ -6,12 +6,12 @@
     {
         public async Task<RemoveFriendResult> Handle(RemoveFriendCommand command, CancellationToken cancellationToken)
         {
-            var accountId = AccountId.Of(command.Request.AccountId);
-            var user = await dbContext.Users.SingleOrDefaultAsync(u => u.AccountId == accountId, cancellationToken);
+            var userId = UserId.Of(command.Request.UserId);
+            var user = await dbContext.Users.FindAsync([userId], cancellationToken);
 
             if (user == null)
             {
-                throw new UserNotFoundException(command.Request.AccountId);
+                throw new UserNotFoundException(command.Request.UserId);
             }
 
             var friendId = UserId.Of(command.Request.FriendId);
@@ -19,7 +19,7 @@
 
             if (friend == null)
             {
-                throw new UserNotFoundException(command.Request.FriendId.ToString());
+                throw new UserNotFoundException(command.Request.FriendId);
             }
 
             user.RemoveFriend(friendId);

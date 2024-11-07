@@ -1,7 +1,7 @@
 ﻿namespace UserAccess.Application.Dtos
 {
     public record AcceptFriendRequestDto(
-        string AccountId,
+        Guid UserId,
         Guid SenderId
         );
 }

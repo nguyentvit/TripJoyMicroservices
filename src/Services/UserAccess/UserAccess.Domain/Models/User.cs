@@ -17,16 +17,48 @@
         public Address? Address { get; private set; }
         public UserGender? Gender { get; private set; }
         public AccountStatus Status { get; private set; } = AccountStatus.Active;
+        private User() { }
+        
+        private User(UserId id,UserName userName, Email emailAddress, PhoneNumber phone, AccountId accountId)
+        {
+            Id = id;
+            UserName = userName;
+            EmailAddress = emailAddress;
+            Phone = phone;
+            AccountId = accountId;
+        }
+        [JsonConstructor]
+        private User(UserId id,
+            UserName userName,
+            Email emailAddress,
+            PhoneNumber phone,
+            AccountId accountId,
+            Date? dateOfBirth,
+            Image? avatar,
+            Address? address,
+            UserGender? gender,
+            AccountStatus status,
+            List<Friend> friends,
+            List<FriendRequest> friendRequests,
+            List<SentFriendRequest> sentFriendRequests)
+        {
+            Id = id;
+            UserName = userName;
+            EmailAddress = emailAddress;
+            Phone = phone;
+            AccountId = accountId;
+            DateOfBirth = dateOfBirth;
+            Avatar = avatar;
+            Address = address;
+            Gender = gender;
+            Status = status;
+            _friends = friends ?? new List<Friend>();
+            _friendRequests = friendRequests ?? new List<FriendRequest>();
+            _sentFriendRequests = sentFriendRequests ?? new List<SentFriendRequest>();
+        }
         public static User Create(UserId id, UserName userName, Email emailAddress, PhoneNumber phone, AccountId accountId)
         {
-            var user = new User
-            {
-                Id = id,
-                UserName = userName,
-                EmailAddress = emailAddress,
-                Phone = phone,
-                AccountId = accountId
-            };
+            var user = new User(id, userName, emailAddress, phone, accountId);
 
             user.AddDomainEvent(new UserCreatedEvent(user));
 

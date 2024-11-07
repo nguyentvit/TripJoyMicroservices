@@ -4,7 +4,7 @@ namespace UserAccess.Application.Exceptions
 {
     public class UserNotFoundException : NotFoundException
     {
-        public UserNotFoundException(string Id) : base("User with AccountId", Id)
+        public UserNotFoundException(Guid Id) : base("User with AccountId", Id)
         {
 
         }

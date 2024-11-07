@@ -12,7 +12,7 @@
                 .NotEmpty().WithMessage("Receiver ID cannot be empty.")
                 .NotEqual(Guid.Empty).WithMessage("Receiver ID must be a valid GUID.");
 
-            RuleFor(r => r.Request.AccountId)
+            RuleFor(r => r.Request.UserId)
                 .NotNull().WithMessage("Unauthorized")
                 .NotEmpty().WithMessage("Unauthorized");
         }

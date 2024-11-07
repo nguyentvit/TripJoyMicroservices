@@ -9,9 +9,10 @@
         LoginUserReponse User
         );
     public record LoginUserReponse(
-        string Id,
+        Guid? UserId,
         string UserName,
         string Email,
-        string Name
+        string Name,
+        string AccountId
         );
 }

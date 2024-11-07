@@ -6,13 +6,18 @@ namespace BuildingBlocks.Extensions
 {
     public static class JwtExtensions
     {
-        public static string GetAccountIdFromJwt(this HttpContext httpContext)
+        public static Guid GetUserIdFromJwt(this HttpContext httpContext)
         {
             var token = httpContext.GetJwtToken();
-            if (string.IsNullOrEmpty(token)) return null!;
+            if (string.IsNullOrEmpty(token)) return Guid.Empty;
             
             var jwtToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
-            return jwtToken.Claims.FirstOrDefault(claim => claim.Type == JwtRegisteredClaimNames.Sub)?.Value!;
+            var userIdClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "id")?.Value;
+            if (Guid.TryParse(userIdClaim, out Guid userId))
+            {
+                return userId;
+            }
+            return Guid.Empty;
         }
         public static string GetUserRoleFromJwt(this HttpContext httpContext)
         {

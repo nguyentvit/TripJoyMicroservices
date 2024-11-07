@@ -6,6 +6,7 @@
         public string Ward { get; } = default!;
         public string Province { get; } = default!;
         public string Country { get; } = default!;
+        [JsonConstructor]
         private Address(string district, string ward, string province, string country)
         {
             District = district;
