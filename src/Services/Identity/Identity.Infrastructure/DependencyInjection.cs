@@ -20,6 +20,7 @@ namespace Identity.Infrastructure
             services.AddIdentity(configuration);
             services.AddEmailSender(configuration);
             services.AddRedis(configuration);
+            services.AddAuth(configuration);
 
             services.AddHttpContextAccessor();
             services.AddScoped<IEmailSender, EmailSender>();
@@ -178,6 +179,78 @@ namespace Identity.Infrastructure
                 services.AddScoped<ITokenWhitelistService, RedisTokenWhitelistService>();
                 services.AddScoped<ISendOtpService, SendOtpService>();
             }
+
+            return services;
+        }
+        public static IServiceCollection AddAuth(this IServiceCollection services, ConfigurationManager configuration)
+        {
+            services.AddAuthentication(
+                options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                }
+            )
+                .AddJwtBearer(options =>
+                {
+                    options.SaveToken = true;
+                    options.Authority = "http://localhost:5032";
+                    options.RequireHttpsMetadata = false;
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                    };
+                })
+                .AddCookie()
+                .AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
+                {
+                    options.ClientId = "54512677689-2fi560s0sleddn285cmaaa7vjr6fcrhl.apps.googleusercontent.com";
+                    options.ClientSecret = "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";
+                    options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+
+                    options.AccessType = "offline";
+
+                    options.CallbackPath = new PathString("/signin-google");
+
+                    options.AuthorizationEndpoint = "https://accounts.google.com/o/oauth2/auth";
+                    options.TokenEndpoint = "https://accounts.google.com/o/oauth2/token";
+                    options.UserInformationEndpoint = "https://www.googleapis.com/oauth2/v3/userinfo";
+
+                    options.Scope.Add("openid");
+                    options.Scope.Add("profile");
+                    options.Scope.Add("email");
+
+                    options.SaveTokens = true;
+
+                    options.Events.OnRedirectToAuthorizationEndpoint = context =>
+                    {
+                        var uriBuilder = new UriBuilder(context.RedirectUri);
+                        var query = System.Web.HttpUtility.ParseQueryString(uriBuilder.Query);
+
+                        query["access_type"] = "offline";
+                        query["response_type"] = "code";
+                        uriBuilder.Query = query.ToString();
+
+                        context.Response.Redirect(uriBuilder.ToString());
+                        return Task.CompletedTask;
+                    };
+                })
+                .AddOpenIdConnect("oidc", options =>
+                {
+                    options.Authority = "http://localhost:5032";
+                    options.RequireHttpsMetadata = false;
+                    options.ClientId = "web-client";
+                    options.ClientSecret = "web-client-secret";
+                    options.ResponseType = "code";
+                    options.SaveTokens = true;
+                    options.CallbackPath = "/signin-google";
+                    options.Scope.Add("openid");
+                    options.Scope.Add("profile");
+                    options.Scope.Add("email");
+
+                });
 
             return services;
         }
