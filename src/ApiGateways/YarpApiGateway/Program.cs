@@ -49,17 +49,17 @@ if (environment == "Production")
                 });
 
 
-    var httpsConnectionAdapterOptions = new HttpsConnectionAdapterOptions
-    {
-        SslProtocols = System.Security.Authentication.SslProtocols.Tls12,
-        ClientCertificateMode = ClientCertificateMode.AllowCertificate,
-        ServerCertificate = cert
+    //var httpsConnectionAdapterOptions = new HttpsConnectionAdapterOptions
+    //{
+    //    SslProtocols = System.Security.Authentication.SslProtocols.Tls12,
+    //    ClientCertificateMode = ClientCertificateMode.AllowCertificate,
+    //    ServerCertificate = cert
 
-    };
+    //};
 
-    builder.WebHost.ConfigureKestrel(options =>
-    options.ConfigureEndpointDefaults(listenOptions =>
-        listenOptions.UseHttps(httpsConnectionAdapterOptions)));
+    //builder.WebHost.ConfigureKestrel(options =>
+    //options.ConfigureEndpointDefaults(listenOptions =>
+    //    listenOptions.UseHttps(httpsConnectionAdapterOptions)));
 }
 
 else if (environment == "Development")
