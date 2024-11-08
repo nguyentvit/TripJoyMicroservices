@@ -3,10 +3,14 @@
     public class SentFriendRequest : Entity<SendFriendRequestId>
     {
         public UserId UserReceiverId { get; private set; } = default!;
-        [JsonConstructor]
         private SentFriendRequest(SendFriendRequestId id, UserId userReceiverId)
         {
             Id = id;
+            UserReceiverId = userReceiverId;
+        }
+        [JsonConstructor]
+        private SentFriendRequest(UserId userReceiverId)
+        {
             UserReceiverId = userReceiverId;
         }
         private SentFriendRequest() { }
