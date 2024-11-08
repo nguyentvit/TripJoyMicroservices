@@ -11,7 +11,7 @@
         [JsonConstructor]
         private Friend(UserId friendUserId)
         {
-            FriendUserId=friendUserId;
+            FriendUserId = friendUserId;
         }
 
         private Friend() { }

@@ -12,7 +12,7 @@
         [JsonConstructor]
         private FriendRequest(UserId userSenderId)
         {
-            UserSenderId = UserSenderId;
+            UserSenderId = userSenderId;
         }
         private FriendRequest() { }
         public static FriendRequest Of(UserId userSenderId)

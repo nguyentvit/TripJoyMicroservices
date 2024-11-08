@@ -42,6 +42,7 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 });
 
 app.UseIdentityServer();
+app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
 

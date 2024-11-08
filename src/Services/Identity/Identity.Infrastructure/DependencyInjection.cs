@@ -202,9 +202,7 @@ namespace Identity.Infrastructure
                         ValidateIssuer = false,
                         ValidateAudience = false,
                     };
-                })
-                .AddCookie()
-                .AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
+                }).AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
                 {
                     options.ClientId = "54512677689-2fi560s0sleddn285cmaaa7vjr6fcrhl.apps.googleusercontent.com";
                     options.ClientSecret = "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";
@@ -236,16 +234,14 @@ namespace Identity.Infrastructure
                         context.Response.Redirect(uriBuilder.ToString());
                         return Task.CompletedTask;
                     };
-                })
-                .AddOpenIdConnect("oidc", options =>
+                }).AddOpenIdConnect("oidc", options =>
                 {
                     options.Authority = "http://localhost:5032";
                     options.RequireHttpsMetadata = false;
-                    options.ClientId = "web-client";
-                    options.ClientSecret = "web-client-secret";
+                    options.ClientId = "magic";
+                    options.ClientSecret = "secret";
                     options.ResponseType = "code";
                     options.SaveTokens = true;
-                    options.CallbackPath = "/signin-google";
                     options.Scope.Add("openid");
                     options.Scope.Add("profile");
                     options.Scope.Add("email");

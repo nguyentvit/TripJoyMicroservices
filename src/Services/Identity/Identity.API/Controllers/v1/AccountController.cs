@@ -154,7 +154,7 @@ namespace Identity.API.Controllers.v1
             }
 
             var clientId = "54512677689-2fi560s0sleddn285cmaaa7vjr6fcrhl.apps.googleusercontent.com";
-            var redirectUri = $"{url}signin-google";
+            var redirectUri = $"{url}gg/signin-google";
             var urlgg = $"https://accounts.google.com/o/oauth2/auth" +
                       $"?response_type=code" +
                       $"&client_id={clientId}" +
@@ -164,7 +164,7 @@ namespace Identity.API.Controllers.v1
 
             return Redirect(urlgg);
         }
-        [HttpGet("signin-google")]
+        [HttpGet("gg/signin-google")]
         public async Task<IActionResult> Callback()
         {
             var authorizationCode = HttpContext.Request.Query["code"].ToString();
