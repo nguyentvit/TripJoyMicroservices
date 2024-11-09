@@ -2,14 +2,16 @@
 
 namespace UserAccess.API.Endpoints
 {
-    public record GetUserByIdResponse(UserResponseDto User);
+    public record GetUserByIdResponse(UserResponseOtherDto User);
     public class GetUserById : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapGet("/users/{userId}", async (Guid userId, ISender sender) =>
+            app.MapGet("/users/{userId}", async (Guid userId, ISender sender, IHttpContextAccessor httpContext) =>
             {
-                var result = await sender.Send(new GetUserByIdQuery(userId));
+                var myId = httpContext.HttpContext!.GetUserIdFromJwt();
+
+                var result = await sender.Send(new GetUserByIdQuery(myId, userId));
 
                 var response = result.Adapt<GetUserByIdResponse>();
 

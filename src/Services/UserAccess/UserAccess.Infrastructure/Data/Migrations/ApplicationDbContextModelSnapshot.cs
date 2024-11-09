@@ -293,8 +293,7 @@ namespace UserAccess.Infrastructure.Data.Migrations
 
                     b.Navigation("Friends");
 
-                    b.Navigation("Phone")
-                        .IsRequired();
+                    b.Navigation("Phone");
 
                     b.Navigation("SentFriendRequests");
                 });

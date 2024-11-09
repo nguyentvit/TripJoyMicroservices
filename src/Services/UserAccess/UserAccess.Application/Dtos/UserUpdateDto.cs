@@ -3,7 +3,7 @@
     public record UserUpdateDto(
         Guid UserId,
         string UserName,
-        string PhoneNumber,
+        string? PhoneNumber,
         string? DateOfBirth,
         ImageDto? Avatar,
         AddressDto? Address,

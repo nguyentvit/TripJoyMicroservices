@@ -11,7 +11,7 @@
         public UserName UserName { get; private set; } = default!;
         public Email EmailAddress { get; private set; } = default!;
         public AccountId AccountId { get; private set; } = default!;
-        public PhoneNumber Phone { get; private set; } = default!;
+        public PhoneNumber? Phone { get; private set; }
         public Date? DateOfBirth { get; private set; }
         public Image? Avatar { get; private set; }
         public Address? Address { get; private set; }
@@ -19,12 +19,11 @@
         public AccountStatus Status { get; private set; } = AccountStatus.Active;
         private User() { }
         
-        private User(UserId id,UserName userName, Email emailAddress, PhoneNumber phone, AccountId accountId)
+        private User(UserId id,UserName userName, Email emailAddress, AccountId accountId)
         {
             Id = id;
             UserName = userName;
             EmailAddress = emailAddress;
-            Phone = phone;
             AccountId = accountId;
         }
         [JsonConstructor]
@@ -56,9 +55,9 @@
             _friendRequests = friendRequests ?? new List<FriendRequest>();
             _sentFriendRequests = sentFriendRequests ?? new List<SentFriendRequest>();
         }
-        public static User Create(UserId id, UserName userName, Email emailAddress, PhoneNumber phone, AccountId accountId)
+        public static User Create(UserId id, UserName userName, Email emailAddress, AccountId accountId)
         {
-            var user = new User(id, userName, emailAddress, phone, accountId);
+            var user = new User(id, userName, emailAddress, accountId);
 
             user.AddDomainEvent(new UserCreatedEvent(user));
 

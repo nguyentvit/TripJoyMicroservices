@@ -3,7 +3,6 @@
     public record UserAddDto(
         string UserName,
         string Email,
-        string PhoneNumber,
         string AccountId
         );
 }

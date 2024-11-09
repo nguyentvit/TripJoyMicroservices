@@ -21,7 +21,6 @@ namespace UserAccess.Application.Users.EventHandlers.Integration
             var userDto = new UserAddDto(
                 UserName: message.Name,
                 Email: message.Email,
-                PhoneNumber: message.PhoneNumber,
                 AccountId: message.AccountId
                 );
 
