@@ -210,7 +210,7 @@ namespace Identity.Infrastructure
 
                     options.AccessType = "offline";
 
-                    options.CallbackPath = new PathString("/signin-google");
+                    //options.CallbackPath = new PathString("/gg/signin-google");
 
                     options.AuthorizationEndpoint = "https://accounts.google.com/o/oauth2/auth";
                     options.TokenEndpoint = "https://accounts.google.com/o/oauth2/token";
@@ -245,7 +245,8 @@ namespace Identity.Infrastructure
                     options.Scope.Add("openid");
                     options.Scope.Add("profile");
                     options.Scope.Add("email");
-
+                    options.CallbackPath = new PathString("/gg/signin-google");
+                    options.SkipUnrecognizedRequests = true;
                 });
 
             return services;

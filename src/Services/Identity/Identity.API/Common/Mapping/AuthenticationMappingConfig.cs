@@ -36,7 +36,6 @@ namespace Identity.API.Common.Mapping
 
             config.NewConfig<RegisterUserWithOtpRequest, RegisterUserWithOtpCommand>()
                 .Map(dest => dest.Email, src => src.Email)
-                .Map(dest => dest.PhoneNumber, src => src.PhoneNumber)
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.Password, src => src.Password)
                 .Map(dest => dest.ConfirmPassword, src => src.ConfirmPassword)

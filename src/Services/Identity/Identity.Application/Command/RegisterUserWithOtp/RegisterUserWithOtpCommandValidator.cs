@@ -21,9 +21,6 @@ namespace Identity.Application.Command.RegisterUserWithOtp
             RuleFor(x => x.ConfirmPassword)
                 .Equal(x => x.Password).WithMessage("Passwords do not match");
 
-            RuleFor(x => x.PhoneNumber)
-                .NotEmpty()
-                .Matches(@"^\+?[0-9]\d{1,14}$").WithMessage("Invalid phone number format");
 
             RuleFor(x => x.Otp)
                 .NotEmpty()

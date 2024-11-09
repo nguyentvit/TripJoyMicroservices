@@ -8,6 +8,7 @@
         {
             var pageIndex = query.PaginationRequest.PageIndex;
             var pageSize = query.PaginationRequest.PageSize;
+            var myId = UserId.Of(query.MyId);
 
             var keyNameSearch = query.KeySearch.Name;
 
@@ -22,9 +23,9 @@
                 .Where(user => user.UserName.Value.ToLower().StartsWith(keyNameSearch.ToLower()))
                 .LongCountAsync(cancellationToken);
 
-            var usersResponse = users.Select(u => u.ToUserProfileDto()).ToList();
+            var usersResponse = users.Select(u => u.ToUserProfileOtherDto(myId)).ToList();
 
-            return new GetUsersBySearchResult(new PaginationResult<UserResponseDto>(
+            return new GetUsersBySearchResult(new PaginationResult<UserResponseOtherDto>(
                 pageIndex,
                 pageSize,
                 totalCount,

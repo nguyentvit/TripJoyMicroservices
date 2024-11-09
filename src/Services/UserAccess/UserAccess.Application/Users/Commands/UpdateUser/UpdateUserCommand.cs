@@ -1,4 +1,6 @@
-﻿namespace UserAccess.Application.Users.Commands.UpdateUser
+﻿using System.Text.RegularExpressions;
+
+namespace UserAccess.Application.Users.Commands.UpdateUser
 {
     public record UpdateUserCommand(UserUpdateDto User) : ICommand<UpdateUserResult>;
     public record UpdateUserResult(bool IsSuccess);
@@ -16,9 +18,7 @@
                 .Length(3, 50).WithMessage("Username must be between 3 and 50 characters");
 
             RuleFor(u => u.User.PhoneNumber)
-                .NotEmpty().WithMessage("Phone number cannot be empty.")
-                .Matches(@"^\d{9,11}$").WithMessage("Phone number must be between 9 and 11 digits.")
-                .Length(9, 11).WithMessage("Phone number must be between 9 and 11 digits.");
+                .Must(PhoneNumberIsValid).WithMessage("If PhoneNumber is provided, PhoneNumber must be specified");
 
             RuleFor(u => u.User.DateOfBirth)
                 .Must(DateOfBirthIsValid).WithMessage("If DateOfBirth is provided, DateOfBirth must be specified");
@@ -68,6 +68,20 @@
             if (address != null)
             {
                 return !string.IsNullOrWhiteSpace(address.Province) && !string.IsNullOrWhiteSpace(address.Ward) && !string.IsNullOrWhiteSpace(address.District);
+            }
+            return true;
+        }
+
+        private bool PhoneNumberIsValid(string?  phoneNumber)
+        {
+            if (!string.IsNullOrEmpty(phoneNumber))
+            {
+                if (phoneNumber.Length < 9 || phoneNumber.Length > 11)
+                {
+                    return false;
+                }
+                var regex = new Regex(@"^\d+$");
+                return regex.IsMatch(phoneNumber);
             }
             return true;
         }

@@ -25,14 +25,18 @@
         {
             var updatedUserName = UserName.Of(userUpdateDto.UserName);
 
-            var updatedPhoneNumber = PhoneNumber.Of(
-                userUpdateDto.PhoneNumber
-                );
-
+            PhoneNumber phoneNumber = null!;
             Date updatedDateOfBirth = null!;
             Address updatedAddress = null!;
             Image updatedAvatar = null!;
             UserGender? updatedGender = null!;
+
+            if (userUpdateDto.PhoneNumber != null)
+            {
+                phoneNumber = PhoneNumber.Of(
+                userUpdateDto.PhoneNumber
+                );
+            }
 
             if (userUpdateDto.Address != null)
             {
@@ -61,7 +65,7 @@
 
             user.Update(
                 userName: updatedUserName,
-                phone: updatedPhoneNumber,
+                phone: phoneNumber,
                 dateOfBirth: updatedDateOfBirth,
                 avatar: updatedAvatar,
                 address: updatedAddress,

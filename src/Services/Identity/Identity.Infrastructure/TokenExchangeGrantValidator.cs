@@ -1,5 +1,7 @@
-﻿using Duende.IdentityServer.Models;
+﻿using BuildingBlocks.Messaging.Events.Event;
+using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
+using MassTransit;
 
 namespace Identity.Infrastructure
 {
@@ -9,10 +11,12 @@ namespace Identity.Infrastructure
         private const string clientSecret = "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";
         private readonly ITokenService _tokenService;
         private readonly UserManager<ApplicationUser> _userManager;
-        public TokenExchangeGrantValidator(ITokenService tokenService, UserManager<ApplicationUser> userManager)
+        private IPublishEndpoint _publishEndpoint;
+        public TokenExchangeGrantValidator(ITokenService tokenService, UserManager<ApplicationUser> userManager, IPublishEndpoint publishEndpoint)
         {
             _tokenService = tokenService;
             _userManager = userManager;
+            _publishEndpoint = publishEndpoint;
         }
         public string GrantType => OidcConstants.GrantTypes.TokenExchange;
 
@@ -49,7 +53,7 @@ namespace Identity.Infrastructure
                 {
                 new KeyValuePair<string, string>("grant_type", "authorization_code"),
                 new KeyValuePair<string, string>("code", subjectToken),
-                new KeyValuePair<string, string>("redirect_uri", "https://localhost:7100/api/v1/Account/signin-google"),
+                new KeyValuePair<string, string>("redirect_uri", "http://localhost:5032/gg/signin-google"),
                 new KeyValuePair<string, string>("client_id", clientId),
                 new KeyValuePair<string, string>("client_secret", clientSecret),
                 })
@@ -99,6 +103,15 @@ namespace Identity.Infrastructure
 
                     await _userManager.AddToRoleAsync(user, IdentityConfig.Customer);
                     await _userManager.AddClaimsAsync(user, claimsToAdd);
+
+                    var eventMessage = new AccountCreatedEvent
+                    {
+                        AccountId = user.Id,
+                        Email = user.Email,
+                        Name = user.Name
+                    };
+
+                    await _publishEndpoint.Publish(eventMessage);
                 }
                 else
                 {

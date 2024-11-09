@@ -4,7 +4,7 @@
         Guid Id,
         string UserName,
         string Email,
-        string PhoneNumber,
+        string? PhoneNumber,
         string? DateOfBirth,
         ImageDto? Avatar,
         AddressDto? Address,

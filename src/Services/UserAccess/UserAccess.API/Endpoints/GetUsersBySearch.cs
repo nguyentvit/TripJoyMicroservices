@@ -2,14 +2,16 @@
 
 namespace UserAccess.API.Endpoints
 {
-    public record GetUsersBySearchResponse(PaginationResult<UserResponseDto> Users);
+    public record GetUsersBySearchResponse(PaginationResult<UserResponseOtherDto> Users);
     public class GetUsersBySearch : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapGet("/users/search", async ([AsParameters] PaginationRequest request, [AsParameters] KeySearch keySearch, ISender sender) =>
+            app.MapGet("/users/search", async ([AsParameters] PaginationRequest request, [AsParameters] KeySearch keySearch, ISender sender, IHttpContextAccessor httpContext) =>
             {
-                var result = await sender.Send(new GetUsersBySearchQuery(keySearch, request));
+                var myId = httpContext.HttpContext!.GetUserIdFromJwt();
+
+                var result = await sender.Send(new GetUsersBySearchQuery(myId, keySearch, request));
 
                 var response = result.Adapt<GetUsersBySearchResponse>();
 

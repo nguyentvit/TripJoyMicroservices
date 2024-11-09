@@ -57,7 +57,6 @@ namespace Identity.Application.Command.RegisterUserWithOtp
             {
                 Email = request.Email,
                 UserName = request.Email,
-                PhoneNumber = request.PhoneNumber,
                 Name = request.Name,
             };
 
@@ -83,8 +82,7 @@ namespace Identity.Application.Command.RegisterUserWithOtp
                 {
                     AccountId = user.Id,
                     Email = request.Email,
-                    Name = request.Name,
-                    PhoneNumber= request.PhoneNumber
+                    Name = request.Name
                 };
 
                 await _publishEndpoint.Publish(eventMessage, cancellationToken);
