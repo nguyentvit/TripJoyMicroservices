@@ -1,0 +1,13 @@
+﻿global using LocationAttraction.Domain.Models;
+global using Microsoft.EntityFrameworkCore;
+global using BuildingBlocks.CQRS;
+global using FluentValidation;
+global using LocationAttraction.Application.Dtos;
+global using LocationAttraction.Application.Data;
+global using LocationAttraction.Domain.ValueObjects;
+global using LocationAttraction.Application.Exceptions;
+global using MediatR;
+global using LocationAttraction.Domain.Events;
+global using BuildingBlocks.Abstractions;
+global using LocationAttraction.Domain.Entities;
+global using LocationAttraction.Application.Extensions;

@@ -5,7 +5,9 @@
       "commandVersion": "1.0",
       "serviceActions": {
         "provincevietnam.api": "StartDebugging",
-        "yarpapigateway": "StartDebugging"
+        "yarpapigateway": "StartDebugging",
+        "locationattraction.api": "StartDebugging",
+        "locationattraction.grpc": "StartDebugging"
       }
     }
   }

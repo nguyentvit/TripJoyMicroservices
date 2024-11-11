@@ -11,6 +11,9 @@ services:
   userdb:
    image: mcr.microsoft.com/mssql/server
 
+  locationdb:
+   image: mcr.microsoft.com/mssql/server
+
   messagebroker:
    image: rabbitmq:management
 
@@ -43,7 +46,22 @@ services:
     volumes:
       - ./Certificates:/etc/ssl/certs
 
+  locationattraction.api:
+    image: ${DOCKER_REGISTRY-}locationattractionapi
+    build:
+      context: .
+      dockerfile: Services/Location/LocationAttraction.API/Dockerfile
+
+  locationattraction.grpc:
+    image: ${DOCKER_REGISTRY-}locationattractiongrpc
+    build:
+      context: .
+      dockerfile: Services/Location/LocationAttraction.Grpc/Dockerfile
+
 volumes:
   postgres_province:
   identitydb_data:
   userdb_data:
+  locationdb_data:
+
+
