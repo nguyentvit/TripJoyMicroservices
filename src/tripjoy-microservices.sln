@@ -55,13 +55,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Certificates", "Certificate
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Location", "Location", "{3EEA6145-83A7-4511-9452-2B1AE68EB8A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Location.Grpc", "Services\Location\Location.Grpc\Location.Grpc.csproj", "{853208A0-DF0E-489C-AEE5-A6F94AA757E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocationAttraction.Grpc", "Services\Location\LocationAttraction.Grpc\LocationAttraction.Grpc.csproj", "{853208A0-DF0E-489C-AEE5-A6F94AA757E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Location.Application", "Services\Location\Location.Application\Location.Application.csproj", "{A856C32E-678D-4AA4-A8F2-91645A1922BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocationAttraction.Application", "Services\Location\LocationAttraction.Application\LocationAttraction.Application.csproj", "{A856C32E-678D-4AA4-A8F2-91645A1922BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Location.Domain", "Services\Location\Location.Domain\Location.Domain.csproj", "{ECA02B0D-F360-47BE-A2C1-95A8E71E2B1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocationAttraction.Domain", "Services\Location\LocationAttraction.Domain\LocationAttraction.Domain.csproj", "{ECA02B0D-F360-47BE-A2C1-95A8E71E2B1F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Location.Infrastructure", "Services\Location\Location.Infrastructure\Location.Infrastructure.csproj", "{C6C26616-F1E7-42D6-8404-7482827A2F43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocationAttraction.Infrastructure", "Services\Location\LocationAttraction.Infrastructure\LocationAttraction.Infrastructure.csproj", "{C6C26616-F1E7-42D6-8404-7482827A2F43}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocationAttraction.API", "Services\Location\LocationAttraction.API\LocationAttraction.API.csproj", "{CEEB3725-BE72-47F1-84CD-5A3EEFBC5FA7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -145,6 +147,10 @@ Global
 		{C6C26616-F1E7-42D6-8404-7482827A2F43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6C26616-F1E7-42D6-8404-7482827A2F43}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6C26616-F1E7-42D6-8404-7482827A2F43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEEB3725-BE72-47F1-84CD-5A3EEFBC5FA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEEB3725-BE72-47F1-84CD-5A3EEFBC5FA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEEB3725-BE72-47F1-84CD-5A3EEFBC5FA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEEB3725-BE72-47F1-84CD-5A3EEFBC5FA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -173,6 +179,7 @@ Global
 		{A856C32E-678D-4AA4-A8F2-91645A1922BD} = {3EEA6145-83A7-4511-9452-2B1AE68EB8A8}
 		{ECA02B0D-F360-47BE-A2C1-95A8E71E2B1F} = {3EEA6145-83A7-4511-9452-2B1AE68EB8A8}
 		{C6C26616-F1E7-42D6-8404-7482827A2F43} = {3EEA6145-83A7-4511-9452-2B1AE68EB8A8}
+		{CEEB3725-BE72-47F1-84CD-5A3EEFBC5FA7} = {3EEA6145-83A7-4511-9452-2B1AE68EB8A8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A3E24053-2FFA-479B-A57B-0C926C4E6910}

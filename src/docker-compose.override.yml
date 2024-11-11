@@ -41,6 +41,17 @@ services:
     volumes:
       - userdb_data:/var/opt/mssql
 
+  locationdb:
+    container_name: locationdb
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Nguyenqb242
+    ports:
+      - "1431:1433"
+    restart: always
+    volumes:
+      - locationdb_data:/var/opt/mssql
+
   messagebroker:
     container_name: messagebroker
     hostname: tripjoy-mq
@@ -109,9 +120,41 @@ services:
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
     depends_on:
       - identity.api
+      - locationattraction.api
+      - useraccess.api
+
+  locationattraction.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ConnectionStrings__Database=Server=locationdb,1433;Database=LocationDb;User Id=sa;Password=Nguyenqb242;Encrypt=False;TrustServerCertificate=True
+    ports:
+      - "6400:8080"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+    depends_on:
+      - locationdb
+
+  locationattraction.grpc:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ConnectionStrings__Database=Server=locationdb,1433;Database=LocationDb;User Id=sa;Password=Nguyenqb242;Encrypt=False;TrustServerCertificate=True
+    ports:
+      - "6500:8080"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+    depends_on:
+      - locationdb
+
+
 networks:
   default:
    driver: bridge
+
+
 
 
 
