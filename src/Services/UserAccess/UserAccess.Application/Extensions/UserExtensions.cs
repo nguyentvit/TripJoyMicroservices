@@ -16,7 +16,12 @@
         }
         public static async Task<List<UserResponseDto>> ToFriendRequests(this User user, int PageIndex, int PageSize, IUserRepository repository)
         {
-            var friendRequestIds = user.FriendRequests.Select(fr => fr.UserSenderId).Skip(PageIndex * PageSize).Take(PageSize).ToList();
+            var friendRequestIds = user.FriendRequests
+                .OrderByDescending(fr => fr.CreatedAt)
+                .Select(fr => fr.UserSenderId)
+                .Skip(PageIndex * PageSize)
+                .Take(PageSize)
+                .ToList();
             List<UserResponseDto> friendRequests = new();
 
             foreach (var userId in friendRequestIds)
@@ -32,6 +37,7 @@
         public static async Task<List<UserResponseDto>> ToSentFriendRequests(this User user, int PageIndex, int PageSize, IUserRepository repository)
         {
             var sentFriendRequestIds = user.SentFriendRequests
+                .OrderByDescending(sfr => sfr.CreatedAt)
                 .Select(sfr => sfr.UserReceiverId)
                 .Skip(PageIndex * PageSize)
                 .Take(PageSize)
@@ -52,6 +58,7 @@
         public static async Task<List<UserResponseDto>> ToFriends(this User user, int PageIndex, int PageSize, IUserRepository repository)
         {
             var friendIds = user.Friends
+                .OrderByDescending(f => f.CreatedAt)
                 .Select(f => f.FriendUserId)
                 .Skip(PageIndex * PageSize)
                 .Take(PageSize)
