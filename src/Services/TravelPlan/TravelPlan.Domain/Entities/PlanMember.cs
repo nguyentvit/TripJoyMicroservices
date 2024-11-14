@@ -20,11 +20,16 @@
 
             return new PlanMember(PlanMemberId.Of(Guid.NewGuid()), memberId, role);
         }
-        public void ChangeRole(MemberRole role)
+        public void ChangeRole()
         {
-            if (!Enum.IsDefined(typeof(MemberRole), role))
-                throw new DomainException("Invalid role");
-            Role = role;
+            if (Role == MemberRole.Member)
+            {
+                Role = MemberRole.CoLead;
+            }
+            else
+            {
+                Role = MemberRole.Member;
+            }
         }
 
     }

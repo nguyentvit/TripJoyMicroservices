@@ -52,6 +52,17 @@ services:
     volumes:
       - locationdb_data:/var/opt/mssql
 
+  travelplandb:
+    container_name: travelplandb
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Nguyenqb242
+    ports:
+      - "1430:1433"
+    restart: always
+    volumes:
+      - travelplandb_data:/var/opt/mssql
+
   messagebroker:
     container_name: messagebroker
     hostname: tripjoy-mq
@@ -122,6 +133,7 @@ services:
       - identity.api
       - locationattraction.api
       - useraccess.api
+      - travelplan.api
 
   locationattraction.api:
     environment:
@@ -149,10 +161,22 @@ services:
     depends_on:
       - locationdb
 
-
+  travelplan.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ConnectionStrings__Database=Server=travelplandb,1433;Database=TravelPlanDb;User Id=sa;Password=Nguyenqb242;Encrypt=False;TrustServerCertificate=True
+    ports:
+      - "6600:8080"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+    depends_on:
+      - travelplandb
 networks:
   default:
    driver: bridge
+
 
 
 

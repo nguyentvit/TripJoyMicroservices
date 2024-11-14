@@ -14,6 +14,9 @@ services:
   locationdb:
    image: mcr.microsoft.com/mssql/server
 
+  travelplandb:
+   image: mcr.microsoft.com/mssql/server
+  
   messagebroker:
    image: rabbitmq:management
 
@@ -58,10 +61,18 @@ services:
       context: .
       dockerfile: Services/Location/LocationAttraction.Grpc/Dockerfile
 
+  travelplan.api:
+    image: ${DOCKER_REGISTRY-}travelplanapi
+    build:
+      context: .
+      dockerfile: Services/TravelPlan/TravelPlan.API/Dockerfile
+
 volumes:
   postgres_province:
   identitydb_data:
   userdb_data:
   locationdb_data:
+  travelplandb_data:
+
 
 

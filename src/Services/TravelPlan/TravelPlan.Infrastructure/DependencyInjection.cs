@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using TravelPlan.Application.Data;
 using TravelPlan.Infrastructure.Data;
 using TravelPlan.Infrastructure.Data.Interceptors;
 
@@ -23,6 +24,8 @@ namespace TravelPlan.Infrastructure
                 options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
                 options.UseSqlServer(connectionString);
             });
+
+            services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
             return services;
         }
 

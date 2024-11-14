@@ -1,11 +1,12 @@
-﻿namespace TravelPlan.Application.Plans.Commands.CreatePlan
+﻿namespace TravelPlan.Application.Plans.Commands.UpdatePlan
 {
-    public record CreatePlanCommand(PlanCreateDto Plan, Guid UserId) : ICommand<CreatePlanResult>;
-    public record CreatePlanResult(Guid Id);
-    public class CreatePlanCommandValidator : AbstractValidator<CreatePlanCommand>
+    public record UpdatePlanCommand(PlanUpdateDto Plan, Guid UserId, Guid PlanId) : ICommand<UpdatePlanResult>;
+    public record UpdatePlanResult(bool IsSuccess);
+    public class UpdatePlanCommandValidator : AbstractValidator<UpdatePlanCommand>
     {
-        public CreatePlanCommandValidator()
+        public UpdatePlanCommandValidator()
         {
+
             RuleFor(x => x.Plan)
                 .NotNull()
                 .WithMessage("Plan cannot be null");
@@ -44,27 +45,20 @@
                 .Must(VisibilityIsValid)
                 .WithMessage("Visibility must be a valid value (Private, Friend, Public).");
 
-            RuleFor(x => x.Plan.Method)
-                .Must(CreationMethodIsValid)
-                .WithMessage("Method must be a valid value (Manual, AI).");
-
             RuleFor(x => x.UserId)
                 .NotNull()
                 .NotEmpty()
                 .WithMessage("Unauthorized");
-            
-        }
 
+            RuleFor(x => x.PlanId)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage("PlanId cannot be null");
+        }
         private bool VisibilityIsValid(Visibility visibility)
         {
             return Enum.IsDefined(typeof(Visibility), visibility);
         }
-
-        private bool CreationMethodIsValid(CreationMethod creationMethod)
-        {
-            return Enum.IsDefined(typeof(CreationMethod), creationMethod);
-        }
-
         private bool AvatarIsValid(string? avatar)
         {
             if (avatar != null)
