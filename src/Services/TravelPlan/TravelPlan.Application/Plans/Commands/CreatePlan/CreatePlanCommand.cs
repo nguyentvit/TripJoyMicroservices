@@ -40,29 +40,36 @@
                 .GreaterThanOrEqualTo(0)
                 .WithMessage("Estimated budget must be a positive number.");
 
-            RuleFor(x => x.Plan.Visibility)
-                .Must(VisibilityIsValid)
-                .WithMessage("Visibility must be a valid value (Private, Friend, Public).");
-
             RuleFor(x => x.Plan.Method)
                 .Must(CreationMethodIsValid)
                 .WithMessage("Method must be a valid value (Manual, AI).");
+
+            RuleFor(x => x.Plan.Vehicle)
+                .Must(VehicleIsValid)
+                .WithMessage("Vehicle must be a valid value (Car, Plane, Train, Walk, Bicycle, Motorbike)");
 
             RuleFor(x => x.UserId)
                 .NotNull()
                 .NotEmpty()
                 .WithMessage("Unauthorized");
-            
-        }
 
-        private bool VisibilityIsValid(Visibility visibility)
-        {
-            return Enum.IsDefined(typeof(Visibility), visibility);
+            RuleFor(x => x.Plan.ProvinceEndId)
+                .NotNull()
+                .WithMessage("ProvinceEndId can not be null");
+
+            RuleFor(x => x.Plan.ProvinceStartId)
+                .NotNull()
+                .WithMessage("ProvinceStartId can not be null");
+
         }
 
         private bool CreationMethodIsValid(CreationMethod creationMethod)
         {
             return Enum.IsDefined(typeof(CreationMethod), creationMethod);
+        }
+        private bool VehicleIsValid(PlanVehicle vehicle)
+        {
+            return Enum.IsDefined(typeof(PlanVehicle), vehicle);
         }
 
         private bool AvatarIsValid(string? avatar)

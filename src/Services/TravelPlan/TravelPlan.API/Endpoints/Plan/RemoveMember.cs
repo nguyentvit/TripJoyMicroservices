@@ -7,7 +7,7 @@ namespace TravelPlan.API.Endpoints.Plan
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapDelete("/plan/{planId}/member/{targetUserId}", async (Guid planId, Guid targetUserId, ISender sender, IHttpContextAccessor httpContext) =>
+            app.MapDelete("/plans/{planId}/members/{targetUserId}", async (Guid planId, Guid targetUserId, ISender sender, IHttpContextAccessor httpContext) =>
             {
                 var userId = httpContext.HttpContext!.GetUserIdFromJwt();
                 var command = new RemoveMemberCommand(planId, userId, targetUserId);

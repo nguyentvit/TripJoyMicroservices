@@ -8,7 +8,7 @@ namespace TravelPlan.API.Endpoints.Plan
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPost("/plan", async (CreatePlanRequest request, ISender sender, IHttpContextAccessor httpContext) =>
+            app.MapPost("/plans", async (CreatePlanRequest request, ISender sender, IHttpContextAccessor httpContext) =>
             {
                 var userId = httpContext.HttpContext!.GetUserIdFromJwt();
                 var command = new CreatePlanCommand(request.Plan, userId);

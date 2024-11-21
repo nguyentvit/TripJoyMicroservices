@@ -1,6 +1,6 @@
 ﻿namespace TravelPlan.Domain.Enums
 {
-    public enum Vehicle
+    public enum PlanVehicle
     {
         Car = 0,
         Plane = 1,

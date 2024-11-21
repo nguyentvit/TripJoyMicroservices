@@ -1,6 +1,5 @@
 ﻿using BuildingBlocks.Abstractions;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace TravelPlan.Infrastructure.Data.Interceptors

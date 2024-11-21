@@ -6,6 +6,19 @@
     {
         public async Task<CreatePlanResult> Handle(CreatePlanCommand command, CancellationToken cancellationToken)
         {
+            var provinceStartId = ProvinceId.Of(command.Plan.ProvinceStartId);
+            var provinceEndId = ProvinceId.Of(command.Plan.ProvinceEndId);
+
+            var provinceStart = await dbContext.Provinces.FindAsync([provinceStartId], cancellationToken);
+
+            if (provinceStart == null)
+                throw new ProvinceNotFoundException(provinceStartId.Value);
+
+            var provinceEnd = await dbContext.Provinces.FindAsync([provinceEndId], cancellationToken);
+
+            if (provinceEnd == null)
+                throw new ProvinceNotFoundException(provinceEndId.Value);
+
             var newPlan = CreateNewPlan(command);
 
             dbContext.Plans.Add(newPlan);
@@ -22,9 +35,11 @@
                 startDate: Date.Of(command.Plan.StartDate),
                 endDate: Date.Of(command.Plan.EndDate),
                 estimatedBudget: Money.Of(command.Plan.EstimatedBudget),
-                visibility: command.Plan.Visibility,
                 method: command.Plan.Method,
-                userId: UserId.Of(command.UserId)
+                provinceStartId: ProvinceId.Of(command.Plan.ProvinceStartId),
+                provinceEndId: ProvinceId.Of(command.Plan.ProvinceEndId),
+                userId: UserId.Of(command.UserId),
+                vehicle: command.Plan.Vehicle
                 );
         }
     }

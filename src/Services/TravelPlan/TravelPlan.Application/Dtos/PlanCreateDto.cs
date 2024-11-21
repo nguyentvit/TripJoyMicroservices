@@ -5,7 +5,9 @@
         string? Avatar, 
         DateTime StartDate,
         DateTime EndDate,
-        decimal EstimatedBudget, 
-        Visibility Visibility, 
-        CreationMethod Method);
+        decimal EstimatedBudget,
+        Guid ProvinceStartId,
+        Guid ProvinceEndId,
+        CreationMethod Method,
+        PlanVehicle Vehicle);
 }

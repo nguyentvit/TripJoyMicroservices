@@ -4,7 +4,7 @@
     {
         AccessPlan,
         UpdatePlan,
-        AddMember,
+        InviteMember,
         RemoveMember,
         ChangePermission,
         EditNote
