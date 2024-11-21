@@ -7,7 +7,7 @@ namespace TravelPlan.API.Endpoints.Plan
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPatch("/plan/{planId}/member/{targetUserId}/permission", async (Guid planId, Guid targetUserId, ISender sender, IHttpContextAccessor httpContext) =>
+            app.MapPatch("/plans/{planId}/members/{targetUserId}/permission", async (Guid planId, Guid targetUserId, ISender sender, IHttpContextAccessor httpContext) =>
             {
                 var userId = httpContext.HttpContext!.GetUserIdFromJwt();
 

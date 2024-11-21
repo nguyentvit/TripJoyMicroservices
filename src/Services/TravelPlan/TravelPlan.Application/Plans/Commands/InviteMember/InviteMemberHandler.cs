@@ -1,10 +1,10 @@
-﻿namespace TravelPlan.Application.Plans.Commands.AddMember
+﻿namespace TravelPlan.Application.Plans.Commands.InviteMember
 {
-    public class AddMemberHandler
+    public class InviteMemberHandler
         (IApplicationDbContext dbContext)
-        : ICommandHandler<AddMemberCommand, AddMemberResult>
+        : ICommandHandler<InviteMemberCommand, AddMemberResult>
     {
-        public async Task<AddMemberResult> Handle(AddMemberCommand command, CancellationToken cancellationToken)
+        public async Task<AddMemberResult> Handle(InviteMemberCommand command, CancellationToken cancellationToken)
         {
             var planId = PlanId.Of(command.PlanId);
             var plan = await dbContext.Plans.FindAsync([planId], cancellationToken);
@@ -14,7 +14,7 @@
             var userId = UserId.Of(command.UserId);
             var targetUserId = UserId.Of(command.TargetUserId);
 
-            plan.AddMember(userId, targetUserId);
+            plan.InviteMember(userId, targetUserId);
             await dbContext.SaveChangesAsync(cancellationToken);
 
             return new AddMemberResult(true);

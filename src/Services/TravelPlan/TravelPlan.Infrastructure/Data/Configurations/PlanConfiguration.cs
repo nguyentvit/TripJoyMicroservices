@@ -7,8 +7,8 @@
             ConfigurePlanTable(builder);
             ConfigurePlanPlanMemberTable(builder);
             ConfigurePlanPlanInvitationTable(builder);
-            ConfigurePlanPlanVehicleTable(builder);
             ConfigurePlanLocationRelation(builder);
+            ConfigureProvinceRelation(builder);
         }
         private void ConfigurePlanTable(EntityTypeBuilder<Plan> builder)
         {
@@ -60,18 +60,19 @@
                 dbBudget => Money.Of(dbBudget)
                 );
 
-            builder.Property(p => p.Visibility)
-                .HasColumnName(nameof(Plan.Visibility))
-                .HasConversion(
-                visibility => visibility.ToString(),
-                dbVisibility => (Visibility)Enum.Parse(typeof(Visibility), dbVisibility)
-                );
 
             builder.Property(p => p.Status)
                 .HasColumnName(nameof(Plan.Status))
                 .HasConversion(
                 status => status.ToString(),
                 dbStatus => (PlanStatus)Enum.Parse(typeof(PlanStatus), dbStatus)
+                );
+
+            builder.Property(p => p.Vehicle)
+                .HasColumnName(nameof(Plan.Vehicle))
+                .HasConversion(
+                vehicle => vehicle.ToString(),
+                dbVehicle => (PlanVehicle)Enum.Parse(typeof(PlanVehicle), dbVehicle)
                 );
 
             builder.Property(p => p.Method)
@@ -83,7 +84,7 @@
         }
         private void ConfigurePlanPlanMemberTable(EntityTypeBuilder<Plan> builder)
         {
-            builder.OwnsMany(p => p.Members, pm =>
+            builder.OwnsMany(p => p.PlanMembers, pm =>
             {
                 pm.ToTable("PlanMember");
                 pm.WithOwner().HasForeignKey("PlanId");
@@ -106,15 +107,18 @@
 
                 pm.Property(m => m.MemberId)
                     .HasColumnName(nameof(PlanMember.MemberId))
+                    .ValueGeneratedNever()
                     .HasConversion(
                     memberId => memberId.Value,
                     dbId => UserId.Of(dbId)
                     );
             });
+
+            builder.Metadata.FindNavigation(nameof(Plan.PlanMembers))!.SetPropertyAccessMode(PropertyAccessMode.Field);
         }
         private void ConfigurePlanPlanInvitationTable(EntityTypeBuilder<Plan> builder)
         {
-            builder.OwnsMany(p => p.Invitations, pi =>
+            builder.OwnsMany(p => p.PlanInvitations, pi =>
             {
                 pi.ToTable("PlanInvitation");
                 pi.WithOwner().HasForeignKey("PlanId");
@@ -142,31 +146,7 @@
                     dbInviteeId => UserId.Of(dbInviteeId)
                     );
             });
-        }
-        private void ConfigurePlanPlanVehicleTable(EntityTypeBuilder<Plan> builder)
-        {
-            builder.OwnsMany(p => p.Vehicles, pv =>
-            {
-                pv.ToTable("PlanVehicle");
-                pv.WithOwner().HasForeignKey("PlanId");
-                pv.HasKey("Id", "PlanId");
-
-                pv.Property(v => v.Id)
-                    .HasColumnName("PlanVehicleId")
-                    .ValueGeneratedNever()
-                    .HasConversion(
-                    id => id.Value,
-                    dbId => PlanVehicleId.Of(dbId)
-                    );
-
-                pv.Property(v => v.Vehicle)
-                    .HasColumnName(nameof(PlanVehicle.Vehicle))
-                    .HasConversion(
-                    vehicle => vehicle.ToString(),
-                    dbVehicle => (Vehicle)Enum.Parse(typeof(Vehicle), dbVehicle)
-                    );
-
-            });
+            builder.Metadata.FindNavigation(nameof(Plan.PlanInvitations))!.SetPropertyAccessMode(PropertyAccessMode.Field);
         }
         private void ConfigurePlanLocationRelation(EntityTypeBuilder<Plan> builder)
         {
@@ -184,6 +164,20 @@
             });
 
             builder.Metadata.FindNavigation(nameof(Plan.PlanLocationIds))!.SetPropertyAccessMode(PropertyAccessMode.Field);
+        }
+        private void ConfigureProvinceRelation(EntityTypeBuilder<Plan> builder)
+        {
+            builder.Property(p => p.ProvinceEndId)
+                .HasConversion(
+                id => id.Value,
+                dbId => ProvinceId.Of(dbId)
+                );
+
+            builder.Property(p => p.ProvinceStartId)
+                .HasConversion(
+                id => id.Value,
+                dbId => ProvinceId.Of(dbId)
+                );
         }
     }
 }

@@ -41,10 +41,6 @@
                 .GreaterThanOrEqualTo(0)
                 .WithMessage("Estimated budget must be a positive number.");
 
-            RuleFor(x => x.Plan.Visibility)
-                .Must(VisibilityIsValid)
-                .WithMessage("Visibility must be a valid value (Private, Friend, Public).");
-
             RuleFor(x => x.UserId)
                 .NotNull()
                 .NotEmpty()
@@ -54,10 +50,22 @@
                 .NotNull()
                 .NotEmpty()
                 .WithMessage("PlanId cannot be null");
+
+            RuleFor(x => x.Plan.ProvinceEndId)
+                .NotNull()
+                .WithMessage("ProvinceEndId can not be null");
+
+            RuleFor(x => x.Plan.ProvinceStartId)
+                .NotNull()
+                .WithMessage("ProvinceStartId can not be null");
+
+            RuleFor(x => x.Plan.Vehicle)
+                .Must(VehicleIsValid)
+                .WithMessage("Vehicle must be a valid value (Car, Plane, Train, Walk, Bicycle, Motorbike)");
         }
-        private bool VisibilityIsValid(Visibility visibility)
+        private bool VehicleIsValid(PlanVehicle vehicle)
         {
-            return Enum.IsDefined(typeof(Visibility), visibility);
+            return Enum.IsDefined(typeof(PlanVehicle), vehicle);
         }
         private bool AvatarIsValid(string? avatar)
         {

@@ -4,6 +4,7 @@
     {
         DbSet<Plan> Plans { get; }
         DbSet<PlanLocation> PlanLocations { get; }
+        DbSet<Province> Provinces { get; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

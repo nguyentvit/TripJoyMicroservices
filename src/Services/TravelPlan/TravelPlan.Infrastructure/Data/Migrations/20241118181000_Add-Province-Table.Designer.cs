@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TravelPlan.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using TravelPlan.Infrastructure.Data;
 namespace TravelPlan.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241118181000_Add-Province-Table")]
+    partial class AddProvinceTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,11 +79,6 @@ namespace TravelPlan.Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("Title");
-
-                    b.Property<string>("Vehicle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Vehicle");
 
                     b.HasKey("Id");
 
@@ -155,328 +153,11 @@ namespace TravelPlan.Infrastructure.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Provinces");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("4525dec2-9e41-42ec-8085-a173b3b78eb9"),
-                            Name = "An Giang"
-                        },
-                        new
-                        {
-                            Id = new Guid("d62eebf8-8f09-4d53-b032-60b5d2225ef2"),
-                            Name = "Bà Rịa-Vũng Tàu"
-                        },
-                        new
-                        {
-                            Id = new Guid("2e9ba341-ac8c-4901-b896-a74785b394cc"),
-                            Name = "Bắc Giang"
-                        },
-                        new
-                        {
-                            Id = new Guid("a437e556-2af2-4619-a706-5e9795acb1b3"),
-                            Name = "Bắc Kạn"
-                        },
-                        new
-                        {
-                            Id = new Guid("2322126c-e5e2-4e55-ae80-2c5c75d6a630"),
-                            Name = "Bạc Liêu"
-                        },
-                        new
-                        {
-                            Id = new Guid("927c29c6-fb8f-4548-9b71-0df0a6794363"),
-                            Name = "Bắc Ninh"
-                        },
-                        new
-                        {
-                            Id = new Guid("06dc0b6e-fdb7-45e9-abe1-3c9de0b1c4b4"),
-                            Name = "Bến Tre"
-                        },
-                        new
-                        {
-                            Id = new Guid("f2802717-ba5f-415b-be01-3ca02e4f73cf"),
-                            Name = "Bình Định"
-                        },
-                        new
-                        {
-                            Id = new Guid("cbd8da7a-4093-48cb-93da-eef88c107237"),
-                            Name = "Bình Dương"
-                        },
-                        new
-                        {
-                            Id = new Guid("023b6d60-bfed-4341-ae6d-d2be39936393"),
-                            Name = "Bình Phước"
-                        },
-                        new
-                        {
-                            Id = new Guid("06c86f7e-920a-4870-ad2d-a411e55bff13"),
-                            Name = "Bình Thuận"
-                        },
-                        new
-                        {
-                            Id = new Guid("232f47d0-13b3-4f56-ad48-f41216e7e841"),
-                            Name = "Cà Mau"
-                        },
-                        new
-                        {
-                            Id = new Guid("69e3feea-c93b-4c3e-ba00-9336f93a5a49"),
-                            Name = "Cần Thơ"
-                        },
-                        new
-                        {
-                            Id = new Guid("84708191-afbf-423f-b694-8efe59ccb9f0"),
-                            Name = "Cao Bằng"
-                        },
-                        new
-                        {
-                            Id = new Guid("2fdf1706-e2f2-41bf-97d9-4a74fbb1d9c2"),
-                            Name = "Đà Nẵng"
-                        },
-                        new
-                        {
-                            Id = new Guid("a4e984bc-dffd-4ec3-ad37-b66cce9b0063"),
-                            Name = "Đắk Lắk"
-                        },
-                        new
-                        {
-                            Id = new Guid("f36cc496-dc5c-4a3b-8035-410730b390fb"),
-                            Name = "Đắk Nông"
-                        },
-                        new
-                        {
-                            Id = new Guid("87e80c31-c0a9-48a7-803e-ec2aea0e141a"),
-                            Name = "Điện Biên"
-                        },
-                        new
-                        {
-                            Id = new Guid("2bbbe956-a75d-42e9-bdfa-db25f3fb3380"),
-                            Name = "Đồng Nai"
-                        },
-                        new
-                        {
-                            Id = new Guid("c5016461-dc39-4473-9d24-00be5f7ba187"),
-                            Name = "Đồng Tháp"
-                        },
-                        new
-                        {
-                            Id = new Guid("74ebaf2b-536c-4877-bb17-85968d44dbe5"),
-                            Name = "Gia Lai"
-                        },
-                        new
-                        {
-                            Id = new Guid("f7c5355a-0b15-4267-9d2d-4ca1428f358e"),
-                            Name = "Hà Giang"
-                        },
-                        new
-                        {
-                            Id = new Guid("bb385fa9-6608-40ad-894f-57ef83d888fb"),
-                            Name = "Hà Nam"
-                        },
-                        new
-                        {
-                            Id = new Guid("7a9b2108-a453-4386-9394-6d6894d97577"),
-                            Name = "Hà Nội"
-                        },
-                        new
-                        {
-                            Id = new Guid("a6eb3efd-e82e-4ff0-8a1d-7d7d3eb19c63"),
-                            Name = "Hà Tĩnh"
-                        },
-                        new
-                        {
-                            Id = new Guid("ef494aa5-13ec-4950-8a12-da9d3b6f5b32"),
-                            Name = "Hải Dương"
-                        },
-                        new
-                        {
-                            Id = new Guid("c0ecaf21-e989-427d-8530-4eeb98f6c327"),
-                            Name = "Hải Phòng"
-                        },
-                        new
-                        {
-                            Id = new Guid("335206b3-ccf1-4ce1-97aa-3bc12c286f43"),
-                            Name = "Hậu Giang"
-                        },
-                        new
-                        {
-                            Id = new Guid("76ddd145-73de-4303-bfb0-e131f21ca13c"),
-                            Name = "TP. Hồ Chí Minh"
-                        },
-                        new
-                        {
-                            Id = new Guid("27589e3a-5287-4902-843d-58c43aefc613"),
-                            Name = "Hòa Bình"
-                        },
-                        new
-                        {
-                            Id = new Guid("a1d213e2-46d5-482e-87d2-72cbea2dec52"),
-                            Name = "Hưng Yên"
-                        },
-                        new
-                        {
-                            Id = new Guid("517c62c0-43b9-42af-b5d2-dad067428c89"),
-                            Name = "Khánh Hòa"
-                        },
-                        new
-                        {
-                            Id = new Guid("ceb29c8b-315c-4ab3-b697-a95e2d04ea60"),
-                            Name = "Kiên Giang"
-                        },
-                        new
-                        {
-                            Id = new Guid("a54ebbb8-8792-42b5-9c55-7886fdb471c4"),
-                            Name = "Kon Tum"
-                        },
-                        new
-                        {
-                            Id = new Guid("e2269799-f471-411b-ae01-d75ae4709edb"),
-                            Name = "Lai Châu"
-                        },
-                        new
-                        {
-                            Id = new Guid("41c1287d-e049-430c-9fab-34142a7dbe30"),
-                            Name = "Lâm Đồng"
-                        },
-                        new
-                        {
-                            Id = new Guid("3c8a35e5-71ba-4503-8f5d-ad1902f37e69"),
-                            Name = "Lạng Sơn"
-                        },
-                        new
-                        {
-                            Id = new Guid("9b2e27f7-e813-4cb6-aeca-08197b89cdd8"),
-                            Name = "Lào Cai"
-                        },
-                        new
-                        {
-                            Id = new Guid("32808712-e8f6-415a-914b-ae31cc98ef5e"),
-                            Name = "Long An"
-                        },
-                        new
-                        {
-                            Id = new Guid("f441f1a1-da09-4223-9bee-109c693738ac"),
-                            Name = "Nam Định"
-                        },
-                        new
-                        {
-                            Id = new Guid("2e5ce031-7bc8-404a-afd9-0ec731211304"),
-                            Name = "Nghệ An"
-                        },
-                        new
-                        {
-                            Id = new Guid("ebc6d613-f03c-4a11-a7bd-5e68d506c49a"),
-                            Name = "Ninh Bình"
-                        },
-                        new
-                        {
-                            Id = new Guid("71487798-49a9-444b-ad7e-34acbae52526"),
-                            Name = "Ninh Thuận"
-                        },
-                        new
-                        {
-                            Id = new Guid("b4c5df8a-eb62-475c-a1c0-9749afd076e2"),
-                            Name = "Phú Thọ"
-                        },
-                        new
-                        {
-                            Id = new Guid("be879eef-7a11-4bd2-a9ca-1e741cd8f844"),
-                            Name = "Phú Yên"
-                        },
-                        new
-                        {
-                            Id = new Guid("4914d92e-2407-46c0-a1ef-149016ad4379"),
-                            Name = "Quảng Bình"
-                        },
-                        new
-                        {
-                            Id = new Guid("a90cb483-2251-48d2-8737-45ce7162ae2d"),
-                            Name = "Quảng Nam"
-                        },
-                        new
-                        {
-                            Id = new Guid("d6433a86-0758-4c50-ab08-49b191e6fe4f"),
-                            Name = "Quảng Ngãi"
-                        },
-                        new
-                        {
-                            Id = new Guid("ecba8a6a-990a-4e77-9c09-1c2e210bfe86"),
-                            Name = "Quảng Ninh"
-                        },
-                        new
-                        {
-                            Id = new Guid("51c7b821-8b75-496c-8f12-b826575f65d3"),
-                            Name = "Quảng Trị"
-                        },
-                        new
-                        {
-                            Id = new Guid("50b4de03-6c98-4470-9633-ea13c7438d1b"),
-                            Name = "Sóc Trăng"
-                        },
-                        new
-                        {
-                            Id = new Guid("89ef0213-d57f-41dc-b6cc-bef4ee012478"),
-                            Name = "Sơn La"
-                        },
-                        new
-                        {
-                            Id = new Guid("0584f923-46c1-4d10-b31b-f029a7d02515"),
-                            Name = "Tây Ninh"
-                        },
-                        new
-                        {
-                            Id = new Guid("cdb2c932-1ca5-40c8-916c-f599c8948264"),
-                            Name = "Thái Bình"
-                        },
-                        new
-                        {
-                            Id = new Guid("cb4bfbfd-61c1-4174-9209-64e07f9e702a"),
-                            Name = "Thái Nguyên"
-                        },
-                        new
-                        {
-                            Id = new Guid("7b8b184f-af5c-4ecf-8328-10bda331e872"),
-                            Name = "Thanh Hóa"
-                        },
-                        new
-                        {
-                            Id = new Guid("77ac3a25-6efc-49dd-b82a-cac70316fb60"),
-                            Name = "Thừa Thiên - Huế"
-                        },
-                        new
-                        {
-                            Id = new Guid("103b7404-43c5-4425-9f37-6f0d1304cce0"),
-                            Name = "Tiền Giang"
-                        },
-                        new
-                        {
-                            Id = new Guid("b15b066e-ea59-41d5-8be4-f0dcf3828fee"),
-                            Name = "Trà Vinh"
-                        },
-                        new
-                        {
-                            Id = new Guid("49e1e6ee-9dfa-43c5-921a-fa5fd348d540"),
-                            Name = "Tuyên Quang"
-                        },
-                        new
-                        {
-                            Id = new Guid("d1a75184-c1d2-4ee9-8b98-6450e30bfc6f"),
-                            Name = "Vĩnh Long"
-                        },
-                        new
-                        {
-                            Id = new Guid("cd6f3c27-c2c7-49b7-9872-1736fd716f6c"),
-                            Name = "Vĩnh Phúc"
-                        },
-                        new
-                        {
-                            Id = new Guid("9511d2fa-e1be-4daa-b009-5e4e4d4e27f6"),
-                            Name = "Yên Bái"
-                        });
                 });
 
             modelBuilder.Entity("TravelPlan.Domain.Models.Plan", b =>
                 {
-                    b.OwnsMany("TravelPlan.Domain.Entities.PlanInvitation", "PlanInvitations", b1 =>
+                    b.OwnsMany("TravelPlan.Domain.Entities.PlanInvitation", "Invitations", b1 =>
                         {
                             b1.Property<Guid>("Id")
                                 .HasColumnType("uniqueidentifier")
@@ -515,7 +196,7 @@ namespace TravelPlan.Infrastructure.Data.Migrations
                                 .HasForeignKey("PlanId");
                         });
 
-                    b.OwnsMany("TravelPlan.Domain.Entities.PlanMember", "PlanMembers", b1 =>
+                    b.OwnsMany("TravelPlan.Domain.Entities.PlanMember", "Members", b1 =>
                         {
                             b1.Property<Guid>("Id")
                                 .HasColumnType("uniqueidentifier")
@@ -550,6 +231,42 @@ namespace TravelPlan.Infrastructure.Data.Migrations
                             b1.HasIndex("PlanId");
 
                             b1.ToTable("PlanMember", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("PlanId");
+                        });
+
+                    b.OwnsMany("TravelPlan.Domain.Entities.PlanVehicle", "Vehicles", b1 =>
+                        {
+                            b1.Property<Guid>("Id")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("PlanVehicleId");
+
+                            b1.Property<Guid>("PlanId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<DateTime?>("CreatedAt")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<string>("CreatedBy")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<DateTime?>("LastModified")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<string>("LastModifiedBy")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Vehicle")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Vehicle");
+
+                            b1.HasKey("Id", "PlanId");
+
+                            b1.HasIndex("PlanId");
+
+                            b1.ToTable("PlanVehicle", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("PlanId");
@@ -600,11 +317,13 @@ namespace TravelPlan.Infrastructure.Data.Migrations
 
                     b.Navigation("Avatar");
 
-                    b.Navigation("PlanInvitations");
+                    b.Navigation("Invitations");
+
+                    b.Navigation("Members");
 
                     b.Navigation("PlanLocationIds");
 
-                    b.Navigation("PlanMembers");
+                    b.Navigation("Vehicles");
                 });
 
             modelBuilder.Entity("TravelPlan.Domain.Models.PlanLocation", b =>

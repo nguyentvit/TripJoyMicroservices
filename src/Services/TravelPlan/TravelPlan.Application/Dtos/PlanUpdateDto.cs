@@ -6,5 +6,7 @@
         DateTime StartDate,
         DateTime EndDate,
         decimal EstimatedBudget,
-        Visibility Visibility);
+        Guid ProvinceStartId,
+        Guid ProvinceEndId,
+        PlanVehicle Vehicle);
 }

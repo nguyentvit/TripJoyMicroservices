@@ -1,8 +1,8 @@
-﻿namespace TravelPlan.Application.Plans.Commands.AddMember
+﻿namespace TravelPlan.Application.Plans.Commands.InviteMember
 {
-    public record AddMemberCommand(Guid PlanId, Guid UserId, Guid TargetUserId) : ICommand<AddMemberResult>;
+    public record InviteMemberCommand(Guid PlanId, Guid UserId, Guid TargetUserId) : ICommand<AddMemberResult>;
     public record AddMemberResult(bool IsSuccess);
-    public class AddMemberCommandValidator : AbstractValidator<AddMemberCommand>
+    public class AddMemberCommandValidator : AbstractValidator<InviteMemberCommand>
     {
         public AddMemberCommandValidator()
         {
