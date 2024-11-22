@@ -1,9 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Diagnostics;
+﻿using LocationAttraction.Grpc;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TravelPlan.Application.Data;
+using TravelPlan.Application.Grpc;
 using TravelPlan.Infrastructure.Data;
 using TravelPlan.Infrastructure.Data.Interceptors;
+using TravelPlan.Infrastructure.Grpc;
 
 namespace TravelPlan.Infrastructure
 {
@@ -24,7 +27,13 @@ namespace TravelPlan.Infrastructure
                 options.UseSqlServer(connectionString);
             });
 
+            services.AddGrpcClient<LocationAttractionProtoService.LocationAttractionProtoServiceClient>(options =>
+            {
+                options.Address = new Uri(configuration["GrpcSettings:LocationUrl"]!);
+            });
+
             services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
+            services.AddScoped<ILocationGrpcService, LocationGrpcService>();
             return services;
         }
 

@@ -47,6 +47,15 @@
                 dbStatus => (PlanLocationStatus)Enum.Parse(typeof(PlanLocationStatus), dbStatus)
                 );
 
+            builder.ComplexProperty(pl => pl.Coordinates, coordinatesBuilder =>
+            {
+                coordinatesBuilder.Property(c => c.Latitude)
+                    .HasColumnName(nameof(Coordinates.Latitude));
+
+                coordinatesBuilder.Property(c => c.Longitude)
+                    .HasColumnName(nameof(Coordinates.Longitude));
+            });
+
         }
         private void ConfigurePlanLocationPlanLocationImageTable(EntityTypeBuilder<PlanLocation> builder)
         {
