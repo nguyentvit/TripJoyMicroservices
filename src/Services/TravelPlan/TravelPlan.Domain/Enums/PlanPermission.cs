@@ -7,6 +7,8 @@
         InviteMember,
         RemoveMember,
         ChangePermission,
-        EditNote
+        EditNote,
+        AddPlanLocation,
+        ChangeOrderPlanLocation
     }
 }

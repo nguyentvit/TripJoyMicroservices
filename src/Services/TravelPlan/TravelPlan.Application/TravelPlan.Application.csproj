@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="PlanLocations\Commands\" />
     <Folder Include="PlanLocations\EventHandlers\" />
     <Folder Include="PlanLocations\Queries\" />
     <Folder Include="Plans\EventHandlers\" />

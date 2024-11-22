@@ -14,14 +14,17 @@
             foreach (var planLocationId in planLocationIds)
             {
                 var planLocation = await dbContext.PlanLocations.FindAsync([planLocationId]);
-                planResponseLocationDto.Add(new PlanResponseLocationDto("123", 123, 123, 1));
+                if (planLocation == null)
+                    throw new PlanLocationNotFoundException(planLocationId.Value);
+                planResponseLocationDto.Add(new PlanResponseLocationDto(planLocation.Id.Value, planLocation.Coordinates.Latitude, planLocation.Coordinates.Longitude, planLocation.Order.Value));
             }
-
+            planResponseLocationDto = planResponseLocationDto.OrderBy(p => p.Order).ToList();
             var leadUserId = plan.PlanMembers.Where(pm => pm.Role == MemberRole.Lead).FirstOrDefault();
             if (leadUserId == null)
                 throw new LeaderNotFoundException();
 
             var planResponseDto = new PlanResponseDto(
+                Id: plan.Id.Value,
                 LeadUserId: leadUserId.MemberId.Value,
                 Title: plan.Title.Value,
                 Avatar: (plan.Avatar != null) ? plan.Avatar.Url : null,

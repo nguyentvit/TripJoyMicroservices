@@ -1,6 +1,7 @@
 ﻿namespace LocationAttraction.Application.Dtos
 {
     public record LocationResponseDto(
+        string Id,
         string Name,
         string Address,
         LocationCoordinatesResponseDto Coordinates,

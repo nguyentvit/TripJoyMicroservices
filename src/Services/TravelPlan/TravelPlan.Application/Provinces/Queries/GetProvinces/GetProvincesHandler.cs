@@ -8,14 +8,24 @@
         {
             var pageIndex = query.PaginationRequest.PageIndex;
             var pageSize = query.PaginationRequest.PageSize;
+            var keySearchName = query.KeySearch.Name;
 
-            var totalCount = await dbContext.Provinces.CountAsync(cancellationToken);
-            var provinces = await dbContext.Provinces
-                .OrderBy(p => p.Name)
+            var provincesQuery = await dbContext.Provinces.ToListAsync(cancellationToken);
+
+            if (!string.IsNullOrEmpty(keySearchName))
+            {
+                provincesQuery = provincesQuery.Where(p => p.Name.Value.ToLower().StartsWith(keySearchName.ToLower())).ToList();
+            }
+
+            var totalCount = provincesQuery.Count;
+
+            var provinces = provincesQuery
+                .OrderBy(p => p.Name.Value)
                 .Skip(pageIndex * pageSize)
                 .Take(pageSize)
-                .Select(p => new ProvinceResponseDto(p.Id.Value, p.Name.Value))
-                .ToListAsync(cancellationToken);
+                .Select(province => new ProvinceResponseDto(province.Id.Value, province.Name.Value))
+                .ToList();
+
 
             return new GetProvincesResult(new PaginationResult<ProvinceResponseDto>(
                 pageIndex,

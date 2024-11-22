@@ -37,6 +37,7 @@
                 throw new LocationCategoryNotFoundException(locationCategoryId.Value);
 
             var locationResponseDto = new LocationResponseDto(
+                Id: location.Id.Value.ToString(),
                 Name: location.Name.Value,
                 Address: (location.Address == null) ? "" : location.Address.Value,
                 Coordinates: new LocationCoordinatesResponseDto(location.Coordinates.Longitude, location.Coordinates.Latitude),

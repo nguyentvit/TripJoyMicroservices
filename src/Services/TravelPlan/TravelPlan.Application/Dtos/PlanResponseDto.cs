@@ -1,6 +1,7 @@
 ﻿namespace TravelPlan.Application.Dtos
 {
     public record PlanResponseDto(
+        Guid Id,
         Guid LeadUserId,
         string Title,
         string? Avatar,
@@ -14,7 +15,7 @@
         );
 
     public record PlanResponseLocationDto(
-        string Name,
+        Guid Id,
         double Latitude,
         double Longitude,
         int Order

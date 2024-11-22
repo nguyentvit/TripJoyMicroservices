@@ -92,6 +92,7 @@ message Location {
 	Coordinates coordinates = 3;
 	AverageRating averageRating = 4;
 	LocationCategory locationCategory = 5;
+	string id = 6;
 }
 
 message Image {

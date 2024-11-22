@@ -167,6 +167,18 @@
 
             Note = note;
         }
+        public void AddPlanLocation(UserId userId, PlanLocationId planLocationId)
+        {
+            if (!HasPermission(userId, PlanPermission.AddPlanLocation))
+                throw new DomainException("You do not have permission to manage notes.");
+
+            _planLocationIds.Add(planLocationId);
+        }
+        public void ChangeOrderPlanLocation(UserId userId)
+        {
+            if (!HasPermission(userId, PlanPermission.ChangeOrderPlanLocation))
+                throw new DomainException("You do not have permission to change order planlocation.");
+        }
         private bool HasPermission(UserId userId, PlanPermission permission, UserId? targetMemberId = null)
         {
             var member = _planMembers.FirstOrDefault(m => m.MemberId == userId);
@@ -180,6 +192,8 @@
                 PlanPermission.RemoveMember => CanRemoveMember(member, targetMemberId),
                 PlanPermission.ChangePermission => member.Role == MemberRole.Lead,
                 PlanPermission.EditNote => member.Role == MemberRole.Lead || member.Role == MemberRole.CoLead,
+                PlanPermission.AddPlanLocation => member.Role == MemberRole.Lead,
+                PlanPermission.ChangeOrderPlanLocation => member.Role == MemberRole.Lead,
                 _ => false
             };
         }

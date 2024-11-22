@@ -13,10 +13,10 @@ using LocationAttraction.Application.Locations.Queries.GetRatingsByLocationId;
 namespace LocationAttraction.Grpc.Services
 {
     public class LocationAttractionService
-        (ISender sender): LocationAttractionProtoService.LocationAttractionProtoServiceBase
+        (ISender sender) : LocationAttractionProtoService.LocationAttractionProtoServiceBase
     {
         // LocationCategory
-        
+
         // CreateLocationCategory
         public override async Task<CreateLocationCategoryResponse> CreateLocationCategory(CreateLocationCategoryRequest request, ServerCallContext context)
         {
