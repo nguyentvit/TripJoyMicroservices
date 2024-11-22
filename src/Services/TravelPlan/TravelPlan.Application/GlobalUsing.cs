@@ -10,3 +10,4 @@ global using BuildingBlocks.Exceptions;
 global using TravelPlan.Application.Exceptions;
 global using BuildingBlocks.Pagination;
 global using TravelPlan.Application.Grpc;
+global using TravelPlan.Application.Extensions;

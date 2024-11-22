@@ -47,6 +47,18 @@
                 dbStatus => (PlanLocationStatus)Enum.Parse(typeof(PlanLocationStatus), dbStatus)
                 );
 
+            builder.OwnsOne(p => p.PayerId, payerIdBuilder =>
+            {
+                payerIdBuilder.Property(p => p.Value)
+                    .HasColumnName(nameof(PlanLocation.PayerId));
+            });
+
+            builder.OwnsOne(p => p.Amount, amountBuilder =>
+            {
+                amountBuilder.Property(a => a.Value)
+                    .HasColumnName(nameof(PlanLocation.Amount));
+            });
+
             builder.ComplexProperty(pl => pl.Coordinates, coordinatesBuilder =>
             {
                 coordinatesBuilder.Property(c => c.Latitude)
@@ -99,41 +111,30 @@
         }
         private void ConfigurePlanLocationPlanLocationExpenseTable(EntityTypeBuilder<PlanLocation> builder)
         {
-            builder.OwnsMany(pl => pl.Expenses, ple =>
+            builder.OwnsMany(pl => pl.PlanLocationUserSpenders, us =>
             {
-                ple.ToTable("PlanLocationExpense");
-                ple.WithOwner().HasForeignKey("PlanLocationId");
-                ple.HasKey("Id", "PlanLocationId");
+                us.ToTable("PlanLocationUserSpender");
+                us.WithOwner().HasForeignKey("PlanLocationId");
+                us.HasKey("Id", "PlanLocationId");
 
-                ple.Property(pe => pe.Id)
-                    .HasColumnName("PlanLocationExpenseId")
+                us.Property(u => u.Id)
+                    .HasColumnName("PlanLocationUserSpenderId")
                     .ValueGeneratedNever()
                     .HasConversion(
-                    id => id.Value,
-                    dbId => PlanLocationExpenseId.Of(dbId)
+                        id => id.Value,
+                        value => PlanLocationUserSpenderId.Of(value)
                     );
 
-                ple.Property(pe => pe.Title)
-                    .HasColumnName(nameof(PlanLocationExpense.Title))
+                us.Property(u => u.UserSpenderId)
+                    .HasColumnName("UserSpenderId")
+                    .ValueGeneratedNever()
                     .HasConversion(
-                    title => title.Value,
-                    dbTitle => Title.Of(dbTitle)
-                    );
-
-                ple.Property(pe => pe.Note)
-                    .HasColumnName(nameof(PlanLocationExpense.Note))
-                    .HasConversion(
-                    note => note.Value,
-                    dbNote => Note.Of(dbNote)
-                    );
-
-                ple.Property(pe => pe.Amount)
-                    .HasColumnName(nameof(PlanLocationExpense.Amount))
-                    .HasConversion(
-                    amount => amount.Value,
-                    dbAmount => Money.Of(dbAmount)
+                        id => id.Value,
+                        value => UserId.Of(value)
                     );
             });
+
+            builder.Metadata.FindNavigation(nameof(PlanLocation.PlanLocationUserSpenders))!.SetPropertyAccessMode(PropertyAccessMode.Field);
         }
         private void ConfigurePlanRelation(EntityTypeBuilder<PlanLocation> builder)
         {
