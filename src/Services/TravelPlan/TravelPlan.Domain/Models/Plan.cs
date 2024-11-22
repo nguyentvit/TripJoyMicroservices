@@ -179,6 +179,11 @@
             if (!HasPermission(userId, PlanPermission.ChangeOrderPlanLocation))
                 throw new DomainException("You do not have permission to change order planlocation.");
         }
+        public void AccessPlan(UserId userId)
+        {
+            if (!HasPermission(userId, PlanPermission.AccessPlan))
+                throw new DomainException("You do not have access to this plan.");
+        }
         private bool HasPermission(UserId userId, PlanPermission permission, UserId? targetMemberId = null)
         {
             var member = _planMembers.FirstOrDefault(m => m.MemberId == userId);

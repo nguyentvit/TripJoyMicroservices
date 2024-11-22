@@ -31,7 +31,7 @@ namespace TravelPlan.Application.Plans.Queries.GetPlans
             var totalCount = plansQuery.Count;
 
             var plans = plansQuery
-                .OrderByDescending(p => p.StartDate)
+                .OrderByDescending(p => p.StartDate.Value)
                 .Skip(pageIndex * pageSize)
                 .Take(pageSize)
                 .ToList();

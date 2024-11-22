@@ -3,15 +3,17 @@
     public class PlanLocation : Aggregate<PlanLocationId>
     {
         private readonly List<PlanLocationImage> _images = new();
-        private readonly List<PlanLocationExpense> _expenses = new();
+        private readonly List<PlanLocationUserSpender> _planLocationUserSpenders = new();
         public IReadOnlyList<PlanLocationImage> Images => _images.AsReadOnly();
-        public IReadOnlyList<PlanLocationExpense> Expenses => _expenses.AsReadOnly();
+        public IReadOnlyList<PlanLocationUserSpender> PlanLocationUserSpenders => _planLocationUserSpenders.AsReadOnly();
         public LocationId LocationId { get; private set; } = default!;
         public Coordinates Coordinates { get; private set; } = default!;
         public PlanId PlanId { get; private set; } = default!;
         public Note Note { get; private set; } = default!;
         public PlanLocationOrder Order { get; private set; } = default!;
         public PlanLocationStatus Status { get; private set; } = default!;
+        public UserId? PayerId { get; private set; }
+        public Money? Amount { get; private set; }
         private PlanLocation() { }
         private PlanLocation(
             PlanLocationId id,
