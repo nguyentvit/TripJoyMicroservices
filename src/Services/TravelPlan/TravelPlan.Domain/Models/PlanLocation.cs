@@ -45,5 +45,20 @@
         {
             Order = order;
         }
+        public void AddPlanLocationExpense(List<UserId> planLocationUserSpenders, UserId payerId, Money amount)
+        {
+            _planLocationUserSpenders.Clear();
+            foreach (var planLocationUserSpender in  planLocationUserSpenders)
+            {
+                _planLocationUserSpenders.Add(PlanLocationUserSpender.Of(planLocationUserSpender));
+            }
+
+            PayerId = payerId;
+            Amount = amount;
+        }
+        public bool ExistUserIdInUserSpender(UserId userId)
+        {
+            return _planLocationUserSpenders.Any(spender => spender.UserSpenderId == userId);
+        }
     }
 }

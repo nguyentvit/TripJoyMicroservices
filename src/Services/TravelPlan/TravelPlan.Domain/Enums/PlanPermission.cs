@@ -9,6 +9,7 @@
         ChangePermission,
         EditNote,
         AddPlanLocation,
-        ChangeOrderPlanLocation
+        ChangeOrderPlanLocation,
+        AddPlanLocationExpense
     }
 }

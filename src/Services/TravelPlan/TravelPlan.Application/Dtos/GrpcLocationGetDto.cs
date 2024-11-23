@@ -6,7 +6,8 @@
         double Latitude,
         double Longitude,
         GrpcLocationAverageRatingDto AverageRating,
-        GrpcLocationLocationCategoryDto LocationCategory
+        GrpcLocationLocationCategoryDto LocationCategory,
+        string Address
         );
     public record GrpcLocationAverageRatingDto(
         double Value,
