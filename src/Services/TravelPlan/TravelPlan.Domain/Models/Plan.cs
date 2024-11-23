@@ -104,8 +104,6 @@
         }
         public void InviteMember(UserId userId, UserId targetUserId)
         {
-            if (!HasPermission(userId, PlanPermission.AccessPlan))
-                throw new DomainException("You do not have access to this plan.");
             if (!HasPermission(userId, PlanPermission.InviteMember))
                 throw new DomainException("You are not allowed to add member to the plan.");
 
@@ -134,8 +132,6 @@
         }
         public void RemoveMember(UserId userId, UserId targetMemberId)
         {
-            if (!HasPermission(userId, PlanPermission.AccessPlan))
-                throw new DomainException("You do not have access to this plan.");
             if (!HasPermission(userId, PlanPermission.RemoveMember, targetMemberId))
                 throw new DomainException("You are not allowed to remove member from the plan.");
 
@@ -145,8 +141,6 @@
         }
         public void ChangePermission(UserId userId, UserId targetUserId)
         {
-            if (!HasPermission(userId, PlanPermission.AccessPlan))
-                throw new DomainException("You do not have access to this plan.");
             if (!HasPermission(userId, PlanPermission.ChangePermission))
                 throw new DomainException("You are not allowed to grant permission. Only Lead can grant permission.");
 
@@ -160,8 +154,6 @@
         }
         public void EditNote(UserId userId, Note note)
         {
-            if (!HasPermission(userId, PlanPermission.AccessPlan))
-                throw new DomainException("You do not have access to this plan.");
             if (!HasPermission(userId, PlanPermission.EditNote))
                 throw new DomainException("You do not have permission to manage notes.");
 
@@ -177,12 +169,24 @@
         public void ChangeOrderPlanLocation(UserId userId)
         {
             if (!HasPermission(userId, PlanPermission.ChangeOrderPlanLocation))
-                throw new DomainException("You do not have permission to change order planlocation.");
+                throw new DomainException("You do not have permission to change order plan location.");
         }
         public void AccessPlan(UserId userId)
         {
             if (!HasPermission(userId, PlanPermission.AccessPlan))
                 throw new DomainException("You do not have access to this plan.");
+        }
+        public void AddPlanLocationExpense(UserId userId, List<UserId> addPlanLocationExpenseIds)
+        {
+            if (!HasPermission(userId, PlanPermission.AddPlanLocationExpense))
+                throw new DomainException("You do not have permission to add plan location expense");
+
+
+            var memberIds = _planMembers.Select(pm => pm.MemberId).ToList();
+            var invalidIds = addPlanLocationExpenseIds.Where(id => !memberIds.Contains(id)).ToList();
+
+            if (invalidIds.Any())
+                throw new DomainException($"The following users are not members of the plan: {string.Join(", ", invalidIds)}");
         }
         private bool HasPermission(UserId userId, PlanPermission permission, UserId? targetMemberId = null)
         {
@@ -199,6 +203,7 @@
                 PlanPermission.EditNote => member.Role == MemberRole.Lead || member.Role == MemberRole.CoLead,
                 PlanPermission.AddPlanLocation => member.Role == MemberRole.Lead,
                 PlanPermission.ChangeOrderPlanLocation => member.Role == MemberRole.Lead,
+                PlanPermission.AddPlanLocationExpense => member.Role == MemberRole.Lead || member.Role == MemberRole.CoLead,
                 _ => false
             };
         }

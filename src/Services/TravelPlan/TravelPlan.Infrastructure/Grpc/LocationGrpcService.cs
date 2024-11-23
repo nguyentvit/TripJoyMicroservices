@@ -22,7 +22,8 @@ namespace TravelPlan.Infrastructure.Grpc
                     Latitude: location.Coordinates.Latitude,
                     Longitude: location.Coordinates.Longitude,
                     AverageRating: new GrpcLocationAverageRatingDto(location.AverageRating.Value, location.AverageRating.NumRatings),
-                    LocationCategory: new GrpcLocationLocationCategoryDto(Guid.Parse(location.LocationCategory.Id), location.LocationCategory.Name, location.LocationCategory.Description)
+                    LocationCategory: new GrpcLocationLocationCategoryDto(Guid.Parse(location.LocationCategory.Id), location.LocationCategory.Name, location.LocationCategory.Description),
+                    Address: location.Address
                     );
                 return locationDto;
 
@@ -44,11 +45,29 @@ namespace TravelPlan.Infrastructure.Grpc
                     Latitude: Latitude,
                     Longitude: Longitude,
                     AverageRating: new GrpcLocationAverageRatingDto(0, 0),
-                    LocationCategory: new GrpcLocationLocationCategoryDto(Guid.Parse("662b471a-1b58-48d7-a2ea-d271bec1eb16"), "123", "123")
+                    LocationCategory: new GrpcLocationLocationCategoryDto(Guid.Parse("662b471a-1b58-48d7-a2ea-d271bec1eb16"), "123", "123"),
+                    Address: Address
                     );
 
                 return locationDto;
             }
+        }
+
+        public async Task<GrpcLocationGetDto> GetLocationByLocationId(string LocationId)
+        {
+            var locationGrpc = await locationProto.GetLocationByIdAsync(new GetLocationByIdRequest { LocationId = LocationId });
+            var location = locationGrpc.Location;
+            var locationDto = new GrpcLocationGetDto(
+                    LocationId: Guid.Parse(location.Id),
+                    Name: location.Name,
+                    Latitude: location.Coordinates.Latitude,
+                    Longitude: location.Coordinates.Longitude,
+                    AverageRating: new GrpcLocationAverageRatingDto(location.AverageRating.Value, location.AverageRating.NumRatings),
+                    LocationCategory: new GrpcLocationLocationCategoryDto(Guid.Parse(location.LocationCategory.Id), location.LocationCategory.Name, location.LocationCategory.Description),
+                    Address: location.Address
+                    );
+            return locationDto;
+
         }
     }
 }
