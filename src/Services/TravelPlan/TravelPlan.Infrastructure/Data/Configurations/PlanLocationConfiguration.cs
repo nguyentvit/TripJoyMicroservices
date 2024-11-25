@@ -68,6 +68,18 @@
                     .HasColumnName(nameof(Coordinates.Longitude));
             });
 
+            builder.Property(pl => pl.EstimatedStartDate)
+                .HasColumnName(nameof(PlanLocation.EstimatedStartDate))
+                .HasConversion(
+                date => date.Value,
+                dbValue => Date.Of(dbValue));
+
+            builder.OwnsOne(p => p.CompletionDate, dateBuilder =>
+            {
+                dateBuilder.Property(d => d.Value)
+                    .HasColumnName(nameof(PlanLocation.CompletionDate));
+            });
+
         }
         private void ConfigurePlanLocationPlanLocationImageTable(EntityTypeBuilder<PlanLocation> builder)
         {

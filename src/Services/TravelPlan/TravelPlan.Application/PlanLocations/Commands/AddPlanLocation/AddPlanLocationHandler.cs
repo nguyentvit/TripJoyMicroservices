@@ -26,13 +26,16 @@
                     throw new Exception("PlanLocation existed in plan");
             }
 
+            if (plan.StartDate.Value.Date < command.PlanLocation.EstimatedStartDate.Date)
+                throw new Exception($"Estimated start date of planLocation must be greater than Estimated start date of plan {plan.StartDate.Value}");
+
             var userId = UserId.Of(command.UserId);
 
             var location = await grpcService.GetLocationByCoordinates(latitude, longitude, command.PlanLocation.Name, command.PlanLocation.Address);
 
             var order = plan.PlanLocationIds.Count + 1;
 
-            var planLocation = PlanLocation.Of(planId, LocationId.Of(location.LocationId), coordinates, PlanLocationOrder.Of(order));
+            var planLocation = PlanLocation.Of(planId, LocationId.Of(location.LocationId), Date.Of(command.PlanLocation.EstimatedStartDate), coordinates, PlanLocationOrder.Of(order));
 
             plan.AddPlanLocation(userId, planLocation.Id);
 

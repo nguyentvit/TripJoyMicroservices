@@ -1,5 +1,4 @@
 using BuildingBlocks.Exceptions.Handler;
-using Carter;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
@@ -21,6 +20,9 @@ namespace TravelPlan.API
                 });
             });
 
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen();
+
             services.AddCarter();
 
             services.AddExceptionHandler<CustomExceptionHandler>();
@@ -32,6 +34,9 @@ namespace TravelPlan.API
         }
         public static WebApplication UseApiServices(this WebApplication app)
         {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+
             app.UseCors("AllowAllOrigins");
 
             app.MapCarter();

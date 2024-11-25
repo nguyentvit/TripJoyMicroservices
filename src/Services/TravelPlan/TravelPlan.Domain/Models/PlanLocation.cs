@@ -11,6 +11,8 @@
         public PlanId PlanId { get; private set; } = default!;
         public Note Note { get; private set; } = default!;
         public PlanLocationOrder Order { get; private set; } = default!;
+        public Date EstimatedStartDate { get; private set; } = default!;
+        public Date? CompletionDate { get; private set; }
         public PlanLocationStatus Status { get; private set; } = default!;
         public UserId? PayerId { get; private set; }
         public Money? Amount { get; private set; }
@@ -19,6 +21,7 @@
             PlanLocationId id,
             PlanId planId,
             LocationId locationId,
+            Date estimatedStartDate,
             Coordinates coordinates,
             PlanLocationOrder order
             )
@@ -29,14 +32,16 @@
             Coordinates = coordinates;
             Order = order;
             Status = PlanLocationStatus.NotStarted;
+            EstimatedStartDate = estimatedStartDate;
             Note = Note.Of(string.Empty);
         }
-        public static PlanLocation Of(PlanId planId, LocationId locationId, Coordinates coordinates, PlanLocationOrder order)
+        public static PlanLocation Of(PlanId planId, LocationId locationId, Date estimatedStartDate, Coordinates coordinates, PlanLocationOrder order)
         {
             return new PlanLocation(
                 id: PlanLocationId.Of(Guid.NewGuid()),
                 planId: planId,
                 locationId: locationId,
+                estimatedStartDate: estimatedStartDate,
                 coordinates: coordinates,
                 order: order
                 );

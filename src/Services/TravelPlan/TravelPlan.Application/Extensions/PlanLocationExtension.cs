@@ -16,6 +16,8 @@
                 Latitude: planLocation.Coordinates.Latitude,
                 Order: planLocation.Order.Value,
                 Note: planLocation.Note.Value,
+                EstimatedStartDate: planLocation.EstimatedStartDate.Value,
+                CompletionDate: (planLocation.CompletionDate != null) ? planLocation.CompletionDate.Value : null,
                 Status: planLocation.Status,
                 PayerId: (planLocation.PayerId != null) ? planLocation.PayerId.Value : null,
                 Amount: (planLocation.Amount != null) ? planLocation.Amount.Value : null,

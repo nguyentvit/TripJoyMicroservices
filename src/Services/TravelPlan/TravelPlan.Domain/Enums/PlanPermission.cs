@@ -10,6 +10,9 @@
         EditNote,
         AddPlanLocation,
         ChangeOrderPlanLocation,
-        AddPlanLocationExpense
+        AddPlanLocationExpense,
+        RevokeInvitationMember,
+        StartPlan,
+        PausePlan
     }
 }

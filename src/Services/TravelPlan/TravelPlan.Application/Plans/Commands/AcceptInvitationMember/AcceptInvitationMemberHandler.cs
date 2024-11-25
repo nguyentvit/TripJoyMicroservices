@@ -12,7 +12,18 @@
             if (plan == null)
                 throw new PlanNotFoundException(planId.Value);
 
+            var estimatedStartDate = plan.StartDate;
+            var estimatedEndDate = plan.EndDate;
+
             var userId = UserId.Of(command.UserId);
+
+            var plansExisted = await dbContext.Plans.Where(p => p.PlanMembers.Any(m => m.MemberId == userId)).ToListAsync(cancellationToken);
+
+            foreach (var planExisted in plansExisted)
+            {
+                if (!(estimatedEndDate.Value.Date < planExisted.StartDate.Value || estimatedStartDate.Value.Date > planExisted.EndDate.Value))
+                    throw new Exception($"You are already in other plan in this time {planExisted.Id.Value}");
+            }
 
             plan.AcceptInvitationMember(userId);
             await dbContext.SaveChangesAsync(cancellationToken);
