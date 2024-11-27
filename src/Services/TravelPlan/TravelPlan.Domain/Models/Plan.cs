@@ -116,6 +116,15 @@
             var planInvitation = PlanInvitation.Of(userId, targetUserId);
             _planInvitations.Add(planInvitation);
         }
+        public void RevokeInvitationMember(UserId userId, UserId targetUserId)
+        {
+            if (!HasPermission(userId, PlanPermission.RevokeInvitationMember))
+                throw new DomainException("You are not allowed to revoke invitation member");
+
+            var planInvitation = _planInvitations.FirstOrDefault(m => m.InviteeId == targetUserId);
+            if (planInvitation != null)
+                _planInvitations.Remove(planInvitation);
+        }
         public void AcceptInvitationMember(UserId userId)
         {
             if (_planMembers.Any(pi => pi.MemberId == userId))
@@ -130,12 +139,22 @@
             var planMember = PlanMember.Of(userId, MemberRole.Member);
             _planMembers.Add(planMember);
         }
+        public void DeclineInvitationMember(UserId userId)
+        {
+            var planInvitation = _planInvitations.Where(pi => pi.InviteeId == userId).FirstOrDefault();
+            if (planInvitation != null)
+                _planInvitations.Remove(planInvitation);
+        }
         public void RemoveMember(UserId userId, UserId targetMemberId)
         {
             if (!HasPermission(userId, PlanPermission.RemoveMember, targetMemberId))
                 throw new DomainException("You are not allowed to remove member from the plan.");
 
             var planMember = _planMembers.FirstOrDefault(m => m.MemberId == targetMemberId);
+
+            if (planMember != null && planMember.Role == MemberRole.Lead)
+                throw new DomainException("You are not allowed to remove member with role is lead.");
+
             if (planMember != null)
                 _planMembers.Remove(planMember);
         }
@@ -185,8 +204,28 @@
             var memberIds = _planMembers.Select(pm => pm.MemberId).ToList();
             var invalidIds = addPlanLocationExpenseIds.Where(id => !memberIds.Contains(id)).ToList();
 
-            if (invalidIds.Any())
+            if (invalidIds.Count > 0)
                 throw new DomainException($"The following users are not members of the plan: {string.Join(", ", invalidIds)}");
+        }
+        public void StartPlan(UserId userId)
+        {
+            if (!HasPermission(userId, PlanPermission.StartPlan))
+                throw new DomainException("You are not have permission to start the plan");
+
+            if (Status != PlanStatus.NotStarted && Status != PlanStatus.Cancelled)
+                throw new DomainException($"Status of plan is {Status} so cannot start");
+
+            Status = PlanStatus.InProgress;
+        }
+        public void PausePlan(UserId userId)
+        {
+            if (!HasPermission(userId, PlanPermission.PausePlan))
+                throw new DomainException("You are not have permission to pause the plan");
+
+            if (Status != PlanStatus.InProgress)
+                throw new DomainException($"Status of plan is {Status} so cannot pause");
+
+            Status = PlanStatus.Cancelled;
         }
         private bool HasPermission(UserId userId, PlanPermission permission, UserId? targetMemberId = null)
         {
@@ -204,6 +243,9 @@
                 PlanPermission.AddPlanLocation => member.Role == MemberRole.Lead,
                 PlanPermission.ChangeOrderPlanLocation => member.Role == MemberRole.Lead,
                 PlanPermission.AddPlanLocationExpense => member.Role == MemberRole.Lead || member.Role == MemberRole.CoLead,
+                PlanPermission.RevokeInvitationMember => member.Role == MemberRole.Lead || member.Role == MemberRole.CoLead,
+                PlanPermission.StartPlan =>  member.Role == MemberRole.Lead,
+                PlanPermission.PausePlan => member.Role == MemberRole.Lead,
                 _ => false
             };
         }

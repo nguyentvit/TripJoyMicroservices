@@ -15,6 +15,17 @@
             var userId = UserId.Of(command.UserId);
             var targetUserId = UserId.Of(command.TargetUserId);
 
+            var planLocationIds = plan.PlanLocationIds;
+            foreach (var planLocationId in planLocationIds)
+            {
+                var planLocation = await dbContext.PlanLocations.FindAsync([planLocationId], cancellationToken);
+                if (planLocation == null)
+                    throw new PlanLocationNotFoundException(planLocationId.Value);
+
+                if (planLocation.PlanLocationUserSpenders.Any(userSpender => userSpender.UserSpenderId == targetUserId) || planLocation.PayerId == targetUserId)
+                    throw new Exception($"User is in plan location user spender or is a payer {planLocationId.Value}");
+            }
+
             plan.RemoveMember(userId, targetUserId);
             await dbContext.SaveChangesAsync(cancellationToken);
 

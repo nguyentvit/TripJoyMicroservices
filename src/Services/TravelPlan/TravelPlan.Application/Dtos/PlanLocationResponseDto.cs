@@ -8,6 +8,8 @@
         double Latitude,
         int Order,
         string Note,
+        DateTime EstimatedStartDate,
+        DateTime? CompletionDate,
         PlanLocationStatus Status,
         Guid? PayerId,
         decimal? Amount,

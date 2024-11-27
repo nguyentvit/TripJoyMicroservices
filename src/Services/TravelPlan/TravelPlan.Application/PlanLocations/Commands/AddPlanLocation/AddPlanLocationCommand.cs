@@ -29,6 +29,10 @@
             RuleFor(x => x.PlanLocation.Address)
                 .NotEmpty()
                 .WithMessage("Address is required.");
+
+            RuleFor(x => x.PlanLocation.EstimatedStartDate)
+                .NotEmpty()
+                .WithMessage("Estimated Date can not be null");
         }
     }
 }
