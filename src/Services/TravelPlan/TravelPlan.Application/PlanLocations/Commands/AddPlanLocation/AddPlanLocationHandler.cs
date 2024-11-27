@@ -26,7 +26,7 @@
                     throw new Exception("PlanLocation existed in plan");
             }
 
-            if (plan.StartDate.Value.Date < command.PlanLocation.EstimatedStartDate.Date)
+            if (plan.StartDate.Value.Date > command.PlanLocation.EstimatedStartDate.Date)
                 throw new Exception($"Estimated start date of planLocation must be greater than Estimated start date of plan {plan.StartDate.Value}");
 
             var userId = UserId.Of(command.UserId);

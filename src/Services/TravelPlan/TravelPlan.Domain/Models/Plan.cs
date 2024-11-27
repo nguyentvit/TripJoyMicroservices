@@ -151,6 +151,10 @@
                 throw new DomainException("You are not allowed to remove member from the plan.");
 
             var planMember = _planMembers.FirstOrDefault(m => m.MemberId == targetMemberId);
+
+            if (planMember != null && planMember.Role == MemberRole.Lead)
+                throw new DomainException("You are not allowed to remove member with role is lead.");
+
             if (planMember != null)
                 _planMembers.Remove(planMember);
         }
@@ -208,7 +212,7 @@
             if (!HasPermission(userId, PlanPermission.StartPlan))
                 throw new DomainException("You are not have permission to start the plan");
 
-            if (Status != PlanStatus.NotStarted || Status != PlanStatus.Cancelled)
+            if (Status != PlanStatus.NotStarted && Status != PlanStatus.Cancelled)
                 throw new DomainException($"Status of plan is {Status} so cannot start");
 
             Status = PlanStatus.InProgress;
