@@ -26,8 +26,6 @@ namespace UserAccess.Application.Users.Commands.UpdateUser
             RuleFor(u => u.User.Gender)
                 .Must(GenderIsValid).WithMessage("If Gender is provided, Gender must be specified");
 
-            RuleFor(u => u.User.Avatar)
-                .Must(AvatarIsValid).WithMessage("If Avatar is provided, both Url and Format must be specified.");
 
             RuleFor(u => u.User.Address)
                 .Must(AddressIsValid).WithMessage("If Address is provided, Address must be specified");

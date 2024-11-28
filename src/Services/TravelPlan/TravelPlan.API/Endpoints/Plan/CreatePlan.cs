@@ -8,7 +8,7 @@ namespace TravelPlan.API.Endpoints.Plan
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPost("/plans", async (CreatePlanRequest request, ISender sender, IHttpContextAccessor httpContext) =>
+            app.MapPost("/plans", async ([FromForm] CreatePlanRequest request, ISender sender, IHttpContextAccessor httpContext) =>
             {
                 var userId = httpContext.HttpContext!.GetUserIdFromJwt();
                 var command = new CreatePlanCommand(request.Plan, userId);
@@ -18,7 +18,8 @@ namespace TravelPlan.API.Endpoints.Plan
                 var response = result.Adapt<CreatePlanResponse>();
 
                 return Results.Created($"/plan/{response.Id}", response);
-            });
+            }).DisableAntiforgery();
+
         }
     }
 }

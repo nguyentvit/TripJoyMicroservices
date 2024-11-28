@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using BuildingBlocks.Messaging.MassTransit;
 using Microsoft.Extensions.Configuration;
+using BuildingBlocks.Interfaces;
+using BuildingBlocks.Services;
 
 namespace UserAccess.Application
 {
@@ -21,6 +23,7 @@ namespace UserAccess.Application
 
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddMessageBroker(configuration, Assembly.GetExecutingAssembly());
+            services.AddSingleton<IS3Service, S3Service>();
             return services;
         }
     }

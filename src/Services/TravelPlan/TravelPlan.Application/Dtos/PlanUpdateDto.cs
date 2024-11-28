@@ -2,7 +2,7 @@
 {
     public record PlanUpdateDto(
         string Title,
-        string? Avatar,
+        IFormFile? Avatar,
         DateTime StartDate,
         DateTime EndDate,
         decimal EstimatedBudget,

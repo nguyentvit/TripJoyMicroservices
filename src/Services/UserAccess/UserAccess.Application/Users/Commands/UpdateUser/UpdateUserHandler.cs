@@ -28,7 +28,7 @@
             PhoneNumber phoneNumber = null!;
             Date updatedDateOfBirth = null!;
             Address updatedAddress = null!;
-            Image updatedAvatar = null!;
+            FileImg updatedAvatar = null!;
             UserGender? updatedGender = null!;
 
             if (userUpdateDto.PhoneNumber != null)
@@ -55,7 +55,7 @@
 
             if (userUpdateDto.Avatar != null)
             {
-                updatedAvatar = Image.Of(userUpdateDto.Avatar.Url, userUpdateDto.Avatar.Format);
+                updatedAvatar = FileImg.Of(userUpdateDto.Avatar);
             }
 
             if (userUpdateDto.Gender != null)

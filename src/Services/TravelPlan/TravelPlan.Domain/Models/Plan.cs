@@ -1,4 +1,6 @@
-﻿namespace TravelPlan.Domain.Models
+﻿using TravelPlan.Domain.Events.Plans;
+
+namespace TravelPlan.Domain.Models
 {
     public class Plan : Aggregate<PlanId>
     {
@@ -23,7 +25,6 @@
         private Plan(
             PlanId id,
             Title title,
-            Image? avatar,
             Date startDate,
             Date endDate,
             Money estimatedBudget,
@@ -34,7 +35,6 @@
         {
             Id = id;
             Title = title;
-            Avatar = avatar;
             StartDate = startDate;
             EndDate = endDate;
             EstimatedBudget = estimatedBudget;
@@ -45,7 +45,6 @@
         }
         public static Plan Of(
             Title title, 
-            Image? avatar, 
             Date startDate, 
             Date endDate, 
             Money estimatedBudget,
@@ -53,12 +52,12 @@
             PlanVehicle vehicle,
             ProvinceId provinceStartId,
             ProvinceId provinceEndId,
-            UserId userId)
+            UserId userId,
+            FileImg? avatar)
         {
             var plan = new Plan(
                 id: PlanId.Of(Guid.NewGuid()),
                 title: title,
-                avatar: avatar,
                 startDate: startDate,
                 endDate: endDate,
                 estimatedBudget: estimatedBudget,
@@ -74,18 +73,28 @@
             plan.Status = PlanStatus.NotStarted;
             plan._planMembers.Add(planMember);
 
+
+            if (avatar != null)
+            {
+                plan.AddDomainEvent(new UploadImageEvent(plan, avatar));
+            }
+
             return plan;
         }
+        public void UpdateAvatar(Image avatar)
+        {
+            Avatar = avatar;
+        }
         public void UpdatePlan(
-            Title title, 
-            Image? avatar, 
+            Title title,
             Date startDate, 
             Date endDate, 
             Money estimatedBudget, 
             ProvinceId provinceStartId, 
             ProvinceId provinceEndId,
             PlanVehicle vehicle,
-            UserId userId)
+            UserId userId,
+            FileImg? avatar)
         {
             if (!HasPermission(userId, PlanPermission.AccessPlan))
                 throw new DomainException("You do not have access to this plan.");
@@ -93,14 +102,17 @@
                 throw new DomainException("You are not allowed to update the plan.");
 
             Title = title;
-            if (avatar != null)
-                Avatar = avatar;
             StartDate = startDate;
             EndDate = endDate;
             EstimatedBudget = estimatedBudget;
             ProvinceStartId = provinceStartId;
             ProvinceEndId = provinceEndId;
             Vehicle = vehicle;
+
+            if (avatar != null)
+            {
+                AddDomainEvent(new UploadImageEvent(this, avatar));
+            }
         }
         public void InviteMember(UserId userId, UserId targetUserId)
         {
@@ -154,6 +166,16 @@
 
             if (planMember != null && planMember.Role == MemberRole.Lead)
                 throw new DomainException("You are not allowed to remove member with role is lead.");
+
+            if (planMember != null)
+                _planMembers.Remove(planMember);
+        }
+        public void LeavePlan(UserId userId)
+        {
+            var planMember = _planMembers.FirstOrDefault(m => m.MemberId == userId);
+
+            if (planMember != null && planMember.Role == MemberRole.Lead)
+                throw new DomainException("You are not allowed to leave plan with role is lead.");
 
             if (planMember != null)
                 _planMembers.Remove(planMember);

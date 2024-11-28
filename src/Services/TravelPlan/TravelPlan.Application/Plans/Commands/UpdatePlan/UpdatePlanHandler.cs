@@ -33,14 +33,14 @@
         {
             plan.UpdatePlan(
                 title: Title.Of(command.Plan.Title),
-                avatar: (command.Plan.Avatar != null) ? Image.Of(command.Plan.Avatar) : null,
                 startDate: Date.Of(command.Plan.StartDate),
                 endDate: Date.Of(command.Plan.EndDate),
                 estimatedBudget: Money.Of(command.Plan.EstimatedBudget),
                 provinceStartId: ProvinceId.Of(command.Plan.ProvinceStartId),
                 provinceEndId: ProvinceId.Of(command.Plan.ProvinceEndId),
                 vehicle: command.Plan.Vehicle,
-                userId: UserId.Of(command.UserId)
+                userId: UserId.Of(command.UserId),
+                avatar: (command.Plan.Avatar != null) ? FileImg.Of(command.Plan.Avatar) : null
                 );
         }
     }

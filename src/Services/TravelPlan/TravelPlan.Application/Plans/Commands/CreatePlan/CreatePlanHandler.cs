@@ -20,7 +20,6 @@
                 throw new ProvinceNotFoundException(provinceEndId.Value);
 
             var newPlan = CreateNewPlan(command);
-
             dbContext.Plans.Add(newPlan);
 
             await dbContext.SaveChangesAsync(cancellationToken);
@@ -31,7 +30,6 @@
         {
             return Plan.Of(
                 title: Title.Of(command.Plan.Title),
-                avatar: (command.Plan.Avatar != null) ? Image.Of(command.Plan.Avatar) : null,
                 startDate: Date.Of(command.Plan.StartDate),
                 endDate: Date.Of(command.Plan.EndDate),
                 estimatedBudget: Money.Of(command.Plan.EstimatedBudget),
@@ -39,7 +37,8 @@
                 provinceStartId: ProvinceId.Of(command.Plan.ProvinceStartId),
                 provinceEndId: ProvinceId.Of(command.Plan.ProvinceEndId),
                 userId: UserId.Of(command.UserId),
-                vehicle: command.Plan.Vehicle
+                vehicle: command.Plan.Vehicle,
+                avatar: (command.Plan.Avatar != null) ? FileImg.Of(command.Plan.Avatar) : null
                 );
         }
     }
