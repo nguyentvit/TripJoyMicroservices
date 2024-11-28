@@ -63,7 +63,13 @@
 
             return user;
         }
-        public void Update(UserName userName, PhoneNumber phone, Date dateOfBirth, Image avatar, Address address, UserGender? gender)
+        public void Update(
+            UserName userName, 
+            PhoneNumber phone, 
+            Date dateOfBirth, 
+            FileImg avatar, 
+            Address address, 
+            UserGender? gender)
         {
             UserName = userName;
             Phone = phone;
@@ -75,7 +81,7 @@
 
             if (avatar != null)
             {
-                Avatar = avatar;
+                AddDomainEvent(new UploadImageEvent(this, avatar));
             }
 
             if (gender != null)
@@ -87,8 +93,11 @@
             {
                 Address = address;
             }
+        }
 
-            AddDomainEvent(new UserUpdatedEvent(this));
+        public void UpdateAvatar(Image avatar)
+        {
+            Avatar = avatar;
         }
 
         public void SendFriendRequest(UserId receiverId)

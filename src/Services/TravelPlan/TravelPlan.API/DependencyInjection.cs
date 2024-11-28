@@ -22,7 +22,7 @@ namespace TravelPlan.API
 
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
-
+            
             services.AddCarter();
 
             services.AddExceptionHandler<CustomExceptionHandler>();
@@ -38,7 +38,6 @@ namespace TravelPlan.API
             app.UseSwaggerUI();
 
             app.UseCors("AllowAllOrigins");
-
             app.MapCarter();
 
             app.UseExceptionHandler(options => { });

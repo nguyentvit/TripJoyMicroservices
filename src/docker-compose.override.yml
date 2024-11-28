@@ -111,6 +111,10 @@ services:
       - PORT=8080
       - ConnectionStrings__Database=Server=userdb,1433;Database=UserDb;User Id=sa;Password=Nguyenqb242;Encrypt=False;TrustServerCertificate=True
       - ConnectionStrings__Redis=identityredis:6379
+      - AWS__BucketName=movieticketbooking
+      - AWS__AccessKey=${AWS_ACCESS_KEY}
+      - AWS__SecretKey=${AWS_SECRET_KEY}
+      - AWS__Region=${AWS_REGION}
     ports:
       - "6300:8080"
     volumes:
@@ -166,6 +170,10 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_HTTP_PORTS=8080
       - ConnectionStrings__Database=Server=travelplandb,1433;Database=TravelPlanDb;User Id=sa;Password=Nguyenqb242;Encrypt=False;TrustServerCertificate=True
+      - AWS__BucketName=movieticketbooking
+      - AWS__AccessKey=${AWS_ACCESS_KEY}
+      - AWS__SecretKey=${AWS_SECRET_KEY}
+      - AWS__Region=${AWS_REGION}
     ports:
       - "6600:8080"
     volumes:

@@ -32,10 +32,6 @@
                 .GreaterThanOrEqualTo(x => x.Plan.StartDate)
                 .WithMessage("End date must be greater than or equal to Start date.");
 
-            RuleFor(x => x.Plan.Avatar)
-                .Must(AvatarIsValid)
-                .WithMessage("If Avatar is provided, Avatar must be specified");
-
             RuleFor(x => x.Plan.EstimatedBudget)
                 .GreaterThanOrEqualTo(0)
                 .WithMessage("Estimated budget must be a positive number.");

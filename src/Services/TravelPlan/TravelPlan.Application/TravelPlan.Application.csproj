@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <Folder Include="PlanLocations\EventHandlers\" />
-    <Folder Include="Plans\EventHandlers\" />
   </ItemGroup>
 
 </Project>

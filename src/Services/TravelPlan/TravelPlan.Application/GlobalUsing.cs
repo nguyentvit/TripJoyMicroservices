@@ -11,3 +11,7 @@ global using TravelPlan.Application.Exceptions;
 global using BuildingBlocks.Pagination;
 global using TravelPlan.Application.Grpc;
 global using TravelPlan.Application.Extensions;
+global using Microsoft.AspNetCore.Http;
+global using BuildingBlocks.Abstractions;
+global using BuildingBlocks.Interfaces;
+global using TravelPlan.Domain.Events.Plans;

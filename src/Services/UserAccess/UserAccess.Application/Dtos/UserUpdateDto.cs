@@ -1,11 +1,13 @@
-﻿namespace UserAccess.Application.Dtos
+﻿using Microsoft.AspNetCore.Http;
+
+namespace UserAccess.Application.Dtos
 {
     public record UserUpdateDto(
         Guid UserId,
         string UserName,
         string? PhoneNumber,
         string? DateOfBirth,
-        ImageDto? Avatar,
+        IFormFile? Avatar,
         AddressDto? Address,
         UserGender? Gender
         );

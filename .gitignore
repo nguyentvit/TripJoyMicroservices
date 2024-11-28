@@ -396,3 +396,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+src/.env
+src/Services/UserAccess/UserAccess.API/appsettings.Development.json
+src/Services/TravelPlan/TravelPlan.API/appsettings.Development.json

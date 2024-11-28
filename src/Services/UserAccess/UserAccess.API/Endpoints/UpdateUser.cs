@@ -5,7 +5,7 @@ namespace UserAccess.API.Endpoints
         string UserName, 
         string PhoneNumber, 
         string? DateOfBirth, 
-        ImageDto? Avatar, 
+        IFormFile? Avatar, 
         AddressDto? Address, 
         UserGender? Gender
         );
@@ -14,7 +14,7 @@ namespace UserAccess.API.Endpoints
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPut("/users", async (UpdateUserRequest request, ISender sender, IHttpContextAccessor httpContext) =>
+            app.MapPut("/users", async ([FromForm] UpdateUserRequest request, ISender sender, IHttpContextAccessor httpContext) =>
             {
                 var userId = httpContext.HttpContext!.GetUserIdFromJwt()!;
 
@@ -28,12 +28,10 @@ namespace UserAccess.API.Endpoints
                     Gender: request.Gender
                     );
 
-                var userUpdateDtoRequest = new
-                {
-                    User = userUpdateDto
-                };
+                var command = new UpdateUserCommand(userUpdateDto);
 
-                var command = userUpdateDtoRequest.Adapt<UpdateUserCommand>();
+
+
 
                 var result = await sender.Send(command);
 
@@ -45,7 +43,8 @@ namespace UserAccess.API.Endpoints
             .Produces<UpdateUserResponse>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .WithSummary("Update User")
-            .WithDescription("Update User");
+            .WithDescription("Update User")
+            .DisableAntiforgery();
         }
     }
 }
