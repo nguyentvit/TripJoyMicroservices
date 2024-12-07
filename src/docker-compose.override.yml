@@ -1,18 +1,4 @@
 services:
-  provincedb:
-    container_name: provincedb
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=nguyenqb242
-      - POSTGRES_DB=ProvinceDb
-    restart: always
-    ports:
-      - "5432:5433"
-    volumes:
-      - postgres_province:/var/lib/postgresql/data/
-      - ./Services/ProvinceVietNam/ProvinceVietNam.API/Database/CreateTables.sql:/docker-entrypoint-initdb.d/CreateTables.sql
-      - ./Services/ProvinceVietNam/ProvinceVietNam.API/Scripts/init.sh:/docker-entrypoint-initdb.d/init.sh
-
   identityredis:
     container_name: identityredis
     restart: always
@@ -73,19 +59,23 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-  
-  provincevietnam.api:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ConnectionStrings__Database=Server=provincedb;Port=5432;Database=ProvinceDb;User Id=postgres;Password=nguyenqb242;Include Error Detail=true
-    depends_on:
-      - provincedb
+ 
+  notificationredis:
+    container_name: notificationredis
+    restart: always
     ports:
-      - "6100:8080"
+      - "6378:6379"
+
+  notificationdb:
+    container_name: notificationdb
+    environment: 
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Nguyenqb242
+    restart: always
+    ports:
+      - "1429:1433"
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - notificationdb_data:/var/opt/mssql
 
   identity.api:
     environment:
@@ -181,13 +171,23 @@ services:
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
     depends_on:
       - travelplandb
+
+  notificationuser.signalr:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ConnectionStrings__Database=Server=notificationdb,1433;Database=NotificationDb;User Id=sa;Password=Nguyenqb242;Encrypt=False;TrustServerCertificate=True
+      - ConnectionStrings__Redis=notificationredis:6379
+    ports:
+      - "6700:8080"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+    depends_on:
+      - notificationdb
+      - notificationredis
+      - messagebroker
+
 networks:
   default:
    driver: bridge
-
-
-
-
-
-
-

@@ -249,6 +249,12 @@ namespace TravelPlan.Domain.Models
 
             Status = PlanStatus.Cancelled;
         }
+
+        public void EditPlanLocation(UserId userId)
+        {
+            if (!HasPermission(userId, PlanPermission.EditPlanLocation))
+                throw new DomainException("You are not have permission to edit in the plan location");
+        }
         private bool HasPermission(UserId userId, PlanPermission permission, UserId? targetMemberId = null)
         {
             var member = _planMembers.FirstOrDefault(m => m.MemberId == userId);
@@ -268,6 +274,7 @@ namespace TravelPlan.Domain.Models
                 PlanPermission.RevokeInvitationMember => member.Role == MemberRole.Lead || member.Role == MemberRole.CoLead,
                 PlanPermission.StartPlan =>  member.Role == MemberRole.Lead,
                 PlanPermission.PausePlan => member.Role == MemberRole.Lead,
+                PlanPermission.EditPlanLocation => member.Role == MemberRole.Lead || member.Role == MemberRole.CoLead,
                 _ => false
             };
         }

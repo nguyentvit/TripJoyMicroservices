@@ -13,3 +13,4 @@ global using Microsoft.EntityFrameworkCore;
 global using UserAccess.Application.Extensions;
 global using BuildingBlocks.Pagination;
 global using UserAccess.Application.Enums;
+global using MassTransit;

@@ -2,7 +2,7 @@
 
 namespace TravelPlan.API.Endpoints.Plan
 {
-    public record GetPlanLocationByPlanIdResponse(PaginationResult<PlanLocationResponseDto> PlanLocations);
+    public record GetPlanLocationByPlanIdResponse(PaginationResult<PlanLocationResponseDto> PlanLocations, PlanDetailResponseDto Plan);
     public class GetPlanLocationByPlanId : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)

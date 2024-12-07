@@ -1,7 +1,10 @@
-﻿namespace UserAccess.Application.Users.Commands.RemoveFriend
+﻿using BuildingBlocks.Messaging.Events.Event;
+
+namespace UserAccess.Application.Users.Commands.RemoveFriend
 {
     public class RemoveFriendHandler
-        (IApplicationDbContext dbContext)
+        (IApplicationDbContext dbContext,
+        IPublishEndpoint publishEndpoint)
         : ICommandHandler<RemoveFriendCommand, RemoveFriendResult>
     {
         public async Task<RemoveFriendResult> Handle(RemoveFriendCommand command, CancellationToken cancellationToken)
@@ -24,6 +27,14 @@
 
             user.RemoveFriend(friendId);
             await dbContext.SaveChangesAsync(cancellationToken);
+
+            var eventMessage = new FriendShipRemovedEvent
+            {
+                UserIdFirst = userId.Value,
+                UserIdSecond = friendId.Value
+            };
+
+            await publishEndpoint.Publish(eventMessage, cancellationToken);
 
             return new RemoveFriendResult(true);
         }

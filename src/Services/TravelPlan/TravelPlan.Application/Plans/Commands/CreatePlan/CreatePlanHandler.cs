@@ -1,7 +1,8 @@
 ﻿namespace TravelPlan.Application.Plans.Commands.CreatePlan
 {
     public class CreatePlanHandler
-        (IApplicationDbContext dbContext)
+        (IApplicationDbContext dbContext,
+        IPublishEndpoint publishEndpoint)
         : ICommandHandler<CreatePlanCommand, CreatePlanResult>
     {
         public async Task<CreatePlanResult> Handle(CreatePlanCommand command, CancellationToken cancellationToken)
@@ -23,6 +24,14 @@
             dbContext.Plans.Add(newPlan);
 
             await dbContext.SaveChangesAsync(cancellationToken);
+
+            var eventMessage = new PlanCreatedEvent
+            {
+                PlanId = newPlan.Id.Value,
+                UserId = command.UserId
+            };
+
+            await publishEndpoint.Publish(eventMessage, cancellationToken);
 
             return new CreatePlanResult(newPlan.Id.Value);
         }

@@ -1,7 +1,8 @@
 ﻿namespace TravelPlan.Application.PlanLocations.Queries.GetPlanLocationByPlanId
 {
     public class GetPlanLocationByPlanIdHandler
-        (IApplicationDbContext dbContext)
+        (IApplicationDbContext dbContext,
+        ILocationGrpcService grpcService)
         : IQueryHandler<GetPlanLocationByPlanIdQuery, GetPlanLocationByPlanIdResult>
     {
         public async Task<GetPlanLocationByPlanIdResult> Handle(GetPlanLocationByPlanIdQuery query, CancellationToken cancellationToken)
@@ -26,15 +27,44 @@
                 .OrderBy(p => p.Order)
                 .Skip(pageIndex * pageSize)
                 .Take(pageSize)
-                .Select(pl => pl.ToPlanLocationResponseDto())
                 .ToListAsync(cancellationToken);
+
+            var planLocationsResult = new List<PlanLocationResponseDto>();
+
+            foreach (var planLocation in planLocations)
+            {
+                var planLocationResult = await planLocation.ToPlanLocationResponseDto(grpcService);
+                planLocationsResult.Add(planLocationResult);
+            }
+
+            var provinceStart = await dbContext.Provinces.FindAsync([plan.ProvinceStartId], cancellationToken);
+            if (provinceStart == null)
+                throw new ProvinceNotFoundException(plan.ProvinceStartId.Value);
+
+            var provinceEnd = await dbContext.Provinces.FindAsync([plan.ProvinceEndId], cancellationToken);
+            if (provinceEnd == null)
+                throw new ProvinceNotFoundException(plan.ProvinceEndId.Value);
+
+            var planDetailResponseDto = new PlanDetailResponseDto(
+                Title: plan.Title.Value,
+                EstimatedStartDate: plan.StartDate.Value,
+                EstimatedEndDate: plan.EndDate.Value,
+                Method: plan.Method,
+                Vehicle: plan.Vehicle,
+                ProvinceStart: new PlanDetailProvinceResponseDto(provinceStart.Id.Value, provinceStart.Name.Value),
+                ProvinceEnd: new PlanDetailProvinceResponseDto(provinceEnd.Id.Value, provinceEnd.Name.Value),
+                Status: plan.Status,
+                Avatar: (plan.Avatar != null) ? plan.Avatar.Url : null,
+                Note: plan.Note.Value,
+                EstimatedBudget: plan.EstimatedBudget.Value
+                );
 
             return new GetPlanLocationByPlanIdResult(new PaginationResult<PlanLocationResponseDto>(
                 pageIndex,
                 pageSize,
                 totalCount,
-                planLocations
-                ));
+                planLocationsResult
+                ), planDetailResponseDto);
 
 
         }

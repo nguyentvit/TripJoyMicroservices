@@ -8,7 +8,9 @@
         "yarpapigateway": "StartDebugging",
         "locationattraction.api": "StartDebugging",
         "locationattraction.grpc": "StartDebugging",
-        "travelplan.api": "StartDebugging"
+        "travelplan.api": "StartDebugging",
+        "notificationusersignalr": "StartDebugging",
+        "notificationuser.signalr": "StartDebugging"
       }
     }
   }

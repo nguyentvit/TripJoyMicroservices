@@ -12,8 +12,4 @@
     <ProjectReference Include="..\TravelPlan.Domain\TravelPlan.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="PlanLocations\EventHandlers\" />
-  </ItemGroup>
-
 </Project>

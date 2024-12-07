@@ -1,7 +1,4 @@
 services:
-  provincedb:
-   image: postgres
-
   identityredis:
     image: redis
 
@@ -19,12 +16,12 @@ services:
   
   messagebroker:
    image: rabbitmq:management
-
-  provincevietnam.api:
-   image: ${DOCKER_REGISTRY-}provincevietnamapi
-   build:
-    context: .
-    dockerfile: Services/ProvinceVietNam/ProvinceVietNam.API/Dockerfile
+  
+  notificationredis:
+   image: redis
+  
+  notificationdb:
+   image: mcr.microsoft.com/mssql/server
 
   identity.api:
     image: ${DOCKER_REGISTRY-}identityapi
@@ -67,12 +64,20 @@ services:
       context: .
       dockerfile: Services/TravelPlan/TravelPlan.API/Dockerfile
 
+  notificationuser.signalr:
+    image: ${DOCKER_REGISTRY-}notificationusersignalr
+    build:
+      context: .
+      dockerfile: Services/NotificationUser/NotificationUser.SignalR/Dockerfile
+
 volumes:
-  postgres_province:
   identitydb_data:
   userdb_data:
   locationdb_data:
   travelplandb_data:
+  notificationdb_data:
+
+
 
 
 

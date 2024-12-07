@@ -12,7 +12,15 @@ namespace UserAccess.Application.Users.EventHandlers.Domain
 
             Image avatarImage = Image.Of(avatarUrl, ImageFormat.JPEG);
             var user = notification.User;
+
+            var oldAvatar = (user.Avatar == null) ? null : user.Avatar;
+
             user.UpdateAvatar(avatarImage);
+
+            if (oldAvatar != null)
+            {
+                await s3Service.DeleteFileAsync(oldAvatar.Url);
+            }
         }
     }
 }

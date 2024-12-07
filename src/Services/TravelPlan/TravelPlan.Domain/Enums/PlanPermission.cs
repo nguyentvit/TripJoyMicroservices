@@ -13,6 +13,7 @@
         AddPlanLocationExpense,
         RevokeInvitationMember,
         StartPlan,
-        PausePlan
+        PausePlan,
+        EditPlanLocation
     }
 }
