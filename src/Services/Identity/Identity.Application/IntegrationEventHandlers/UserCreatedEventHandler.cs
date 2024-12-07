@@ -5,12 +5,15 @@ using MassTransit;
 namespace Identity.Application.IntegrationEventHandlers
 {
     public class UserCreatedEventHandler
-        (ISender sender)
+        (ISender sender, IPublishEndpoint publishEndpoint)
         : IConsumer<UserCreatedEvent>
     {
         public async Task Consume(ConsumeContext<UserCreatedEvent> context)
         {
             await sender.Send(new UpdateUserIdCommand(context.Message.AccountId, context.Message.UserId));
+
+            var eventMessage = new UserCreatedNotificationEvent { UserId = context.Message.UserId };
+            await publishEndpoint.Publish(eventMessage);
         }
     }
 }

@@ -1,7 +1,10 @@
-﻿namespace UserAccess.Application.Users.Commands.AcceptFriendRequest
+﻿using BuildingBlocks.Messaging.Events.Event;
+
+namespace UserAccess.Application.Users.Commands.AcceptFriendRequest
 {
     public class AcceptFriendRequestHandler
-        (IApplicationDbContext dbContext)
+        (IApplicationDbContext dbContext,
+        IPublishEndpoint publishEndpoint)
         : ICommandHandler<AcceptFriendRequestCommand, AcceptFriendRequestResult>
     {
         public async Task<AcceptFriendRequestResult> Handle(AcceptFriendRequestCommand command, CancellationToken cancellationToken)
@@ -24,6 +27,14 @@
 
             user.AcceptFriendRequest(senderId);
             await dbContext.SaveChangesAsync(cancellationToken);
+
+            var eventMessage = new FriendShipCreatedEvent
+            {
+                UserIdFirst = userId.Value,
+                UserIdSecond = senderId.Value
+            };
+
+            await publishEndpoint.Publish(eventMessage, cancellationToken);
 
             return new AcceptFriendRequestResult(true);
         }

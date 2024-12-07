@@ -1,7 +1,8 @@
 ﻿namespace TravelPlan.Application.Plans.Commands.LeavePlan
 {
     public class LeavePlanHandler
-        (IApplicationDbContext dbContext)
+        (IApplicationDbContext dbContext,
+        IPublishEndpoint publishEndpoint)
         : ICommandHandler<LeavePlanCommand, LeavePlanResult>
     {
         public async Task<LeavePlanResult> Handle(LeavePlanCommand command, CancellationToken cancellationToken)
@@ -26,6 +27,14 @@
 
             plan.LeavePlan(userId);
             await dbContext.SaveChangesAsync(cancellationToken);
+
+            var eventMessage = new PlanMemberRemovedEvent
+            {
+                PlanId = planId.Value,
+                UserId = userId.Value
+            };
+
+            await publishEndpoint.Publish(eventMessage, cancellationToken);
 
             return new LeavePlanResult(true);
         }

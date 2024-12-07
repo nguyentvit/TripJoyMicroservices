@@ -1,8 +1,10 @@
-﻿using Identity.Application.Services.Interfaces;
+﻿using BuildingBlocks.Messaging.Events.Event;
+using Identity.Application.Services.Interfaces;
 using Identity.Domain.Common.Errors;
+using MassTransit;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using System.Net;
 
 namespace Identity.Application.Command.Login
 {
@@ -61,6 +63,9 @@ namespace Identity.Application.Command.Login
             
             LoginUserResult loginUserResult = new(user.UserId, user.UserName, user.Email, user.Name, user.Id);
             LoginResult loginResult = new(tokenResult.AccessToken, tokenResult.RefreshToken, tokenResult.ExpiresIn, tokenResult.TokenType, tokenResult.IdToken, loginUserResult);
+
+            if (user.UserId == null)
+                throw new Exception("UserId cannot be null");
 
             return loginResult;
         }

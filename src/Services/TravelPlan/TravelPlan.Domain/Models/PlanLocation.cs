@@ -1,4 +1,6 @@
-﻿namespace TravelPlan.Domain.Models
+﻿using TravelPlan.Domain.Events.PlanLocations;
+
+namespace TravelPlan.Domain.Models
 {
     public class PlanLocation : Aggregate<PlanLocationId>
     {
@@ -64,6 +66,35 @@
         public bool ExistUserIdInUserSpender(UserId userId)
         {
             return _planLocationUserSpenders.Any(spender => spender.UserSpenderId == userId);
+        }
+
+        public void EditNotePlanLocation(Note note)
+        {
+            Note = note;
+        }
+        public void AddImagePlanLocation(FileImg image, UserId userId)
+        {
+            AddDomainEvent(new AddImagePlanLocationEvent(this, userId, image));
+        }
+        public void AddImagePlanLocationHandler(Image image, UserId userId)
+        {
+            var planLocationImage = PlanLocationImage.Of(userId, image, Title.Of("image"));
+            _images.Add(planLocationImage);
+        }
+        public void RemoveImagePlanLocation(Image image)
+        {
+            if (_images.Any(i => i.Image == image))
+            {
+                AddDomainEvent(new RemoveImagePlanLocationEvent(this, image));
+            }
+        }
+        public void RemoveImagePlanLocationHandler(Image image)
+        {
+            var planLocationImage = _images.FirstOrDefault(i => i.Image == image);  
+            if (planLocationImage != null)
+            {
+                _images.Remove(planLocationImage);
+            }
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using BuildingBlocks.Messaging.Events.Event;
-using MassTransit;
 using UserAccess.Application.Users.Commands.CreateUser;
 
 namespace UserAccess.Application.Users.EventHandlers.Integration

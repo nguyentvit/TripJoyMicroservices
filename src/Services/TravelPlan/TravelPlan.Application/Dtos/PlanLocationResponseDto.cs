@@ -13,6 +13,8 @@
         PlanLocationStatus Status,
         Guid? PayerId,
         decimal? Amount,
+        string LocationName,
+        string LocationAddress,
         List<PlanLocationImageResponse> Images,
         List<PlanLocationUserSpenderResponse> UserSpenders
         );

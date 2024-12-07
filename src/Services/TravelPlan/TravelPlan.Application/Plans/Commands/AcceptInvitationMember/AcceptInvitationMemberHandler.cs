@@ -1,7 +1,8 @@
 ﻿namespace TravelPlan.Application.Plans.Commands.AcceptInvitationMember
 {
     public class AcceptInvitationMemberHandler
-        (IApplicationDbContext dbContext)
+        (IApplicationDbContext dbContext,
+        IPublishEndpoint publishEndpoint)
         : ICommandHandler<AcceptInvitationMemberCommand, AcceptInvitationMemberResult>
     {
         public async Task<AcceptInvitationMemberResult> Handle(AcceptInvitationMemberCommand command, CancellationToken cancellationToken)
@@ -27,6 +28,15 @@
 
             plan.AcceptInvitationMember(userId);
             await dbContext.SaveChangesAsync(cancellationToken);
+
+            var eventMessage = new PlanMemberAddedEvent
+            {
+                PlanId = planId.Value,
+                UserId = userId.Value
+            };
+
+            await publishEndpoint.Publish(eventMessage, cancellationToken);
+
             return new AcceptInvitationMemberResult(true);
         }
     }

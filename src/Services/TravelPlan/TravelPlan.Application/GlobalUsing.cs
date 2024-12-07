@@ -15,3 +15,7 @@ global using Microsoft.AspNetCore.Http;
 global using BuildingBlocks.Abstractions;
 global using BuildingBlocks.Interfaces;
 global using TravelPlan.Domain.Events.Plans;
+global using TravelPlan.Domain.Events.PlanLocations;
+global using MassTransit;
+global using BuildingBlocks.Messaging.Events.Event;
+global using TravelPlan.Application.ExternalService;

@@ -1,0 +1,12 @@
+﻿global using Microsoft.EntityFrameworkCore;
+global using NotificationUser.SignalR.Models;
+global using NotificationUser.SignalR.Data.IRepository;
+global using Microsoft.Extensions.Caching.Distributed;
+global using System.Text.Json;
+global using BuildingBlocks.Exceptions;
+global using NotificationUser.SignalR.Exceptions;
+global using NotificationUser.SignalR.Dtos;
+global using BuildingBlocks.CQRS;
+global using BuildingBlocks.Messaging.Events.Event;
+global using MassTransit;
+global using MediatR;

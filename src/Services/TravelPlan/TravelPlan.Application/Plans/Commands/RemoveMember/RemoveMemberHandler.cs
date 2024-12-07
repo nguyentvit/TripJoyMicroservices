@@ -1,7 +1,8 @@
 ﻿namespace TravelPlan.Application.Plans.Commands.RemoveMember
 {
     public class RemoveMemberHandler
-        (IApplicationDbContext dbContext)
+        (IApplicationDbContext dbContext,
+        IPublishEndpoint publishEndpoint)
         : ICommandHandler<RemoveMemberCommand, RemoveMemberResult>
     {
         public async Task<RemoveMemberResult> Handle(RemoveMemberCommand command, CancellationToken cancellationToken)
@@ -28,6 +29,14 @@
 
             plan.RemoveMember(userId, targetUserId);
             await dbContext.SaveChangesAsync(cancellationToken);
+
+            var eventMessage = new PlanMemberRemovedEvent
+            {
+                PlanId = planId.Value,
+                UserId = targetUserId.Value
+            };
+
+            await publishEndpoint.Publish(eventMessage, cancellationToken);
 
             return new RemoveMemberResult(true);
         }
