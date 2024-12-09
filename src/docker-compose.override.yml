@@ -77,6 +77,17 @@ services:
     volumes:
       - notificationdb_data:/var/opt/mssql
 
+  chatdb:
+    container_name: chatdb
+    environment: 
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Nguyenqb242
+    restart: always
+    ports:
+      - "1428:1433"
+    volumes:
+      - chatdb_data:/var/opt/mssql
+
   identity.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
@@ -187,6 +198,19 @@ services:
       - notificationdb
       - notificationredis
       - messagebroker
+
+  chat.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ConnectionStrings__Database=Server=chatdb,1433;Database=NotificationDb;User Id=sa;Password=Nguyenqb242;Encrypt=False;TrustServerCertificate=True
+    ports:
+      - "6800:8080"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+    depends_on:
+      - chatdb
 
 networks:
   default:

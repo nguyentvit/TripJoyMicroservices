@@ -10,7 +10,8 @@
         "locationattraction.grpc": "StartDebugging",
         "travelplan.api": "StartDebugging",
         "notificationusersignalr": "StartDebugging",
-        "notificationuser.signalr": "StartDebugging"
+        "notificationuser.signalr": "StartDebugging",
+        "chat.api": "StartDebugging"
       }
     }
   }

@@ -11,7 +11,8 @@
         PlanStatus Status,
         string? Avatar,
         string Note,
-        decimal EstimatedBudget
+        decimal EstimatedBudget,
+        MemberRole Role
         );
     public record PlanDetailProvinceResponseDto(
         Guid ProvinceId,
