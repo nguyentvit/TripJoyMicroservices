@@ -2,7 +2,8 @@
 namespace TravelPlan.Application.Plans.Queries.GetMembersByPlanId
 {
     public class GetMembersByPlanIdHandler
-        (IApplicationDbContext dbContext)
+        (IApplicationDbContext dbContext,
+        IUserAccessService userService)
         : IQueryHandler<GetMembersByPlanIdQuery, GetMembersByPlanIdResult>
     {
         public async Task<GetMembersByPlanIdResult> Handle(GetMembersByPlanIdQuery query, CancellationToken cancellationToken)
@@ -22,8 +23,17 @@ namespace TravelPlan.Application.Plans.Queries.GetMembersByPlanId
             var planMembers = plan.PlanMembers;
             var totalCount = planMembers.Count;
 
+            var userIds = planMembers.Select(x => x.MemberId.Value).Distinct().ToList();
+            var usersInfo = await userService.GetUsersInfoAsync(userIds, cancellationToken);
+
             var result = planMembers
-                .Select(p => new PlanMemberResponseDto(p.MemberId.Value, p.Role))
+                .Select(p =>
+                {
+                    var userId = p.MemberId.Value;
+                    var userInfo = usersInfo.FirstOrDefault(u => u.UserId == userId);
+
+                    return new PlanMemberResponseDto(userId, p.Role, userInfo!.UserName, userInfo.Avatar);
+                })
                 .OrderBy(p => p.Role)
                 .Skip(pageSize * pageIndex)
                 .Take(pageSize)

@@ -1,0 +1,12 @@
+﻿global using Chat.Domain.Models;
+global using BuildingBlocks.CQRS;
+global using Chat.Application.Data;
+global using Chat.Domain.Enums;
+global using Chat.Application.Dtos;
+global using FluentValidation;
+global using Chat.Domain.Entities;
+global using Chat.Domain.ValueObjects;
+global using Microsoft.EntityFrameworkCore;
+global using BuildingBlocks.Pagination;
+global using Chat.Application.Exceptions;
+global using Chat.Application.ExternalService;

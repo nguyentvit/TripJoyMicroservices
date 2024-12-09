@@ -45,6 +45,11 @@
             if (provinceEnd == null)
                 throw new ProvinceNotFoundException(plan.ProvinceEndId.Value);
 
+            var role = plan.PlanMembers.Where(pm => pm.MemberId == userId).FirstOrDefault();
+
+            if (role == null)
+                throw new Exception("UserNotFound");
+
             var planDetailResponseDto = new PlanDetailResponseDto(
                 Title: plan.Title.Value,
                 EstimatedStartDate: plan.StartDate.Value,
@@ -56,7 +61,8 @@
                 Status: plan.Status,
                 Avatar: (plan.Avatar != null) ? plan.Avatar.Url : null,
                 Note: plan.Note.Value,
-                EstimatedBudget: plan.EstimatedBudget.Value
+                EstimatedBudget: plan.EstimatedBudget.Value,
+                Role: role.Role
                 );
 
             return new GetPlanLocationByPlanIdResult(new PaginationResult<PlanLocationResponseDto>(

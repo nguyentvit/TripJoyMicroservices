@@ -10,10 +10,10 @@ namespace Identity.Application.IntegrationEventHandlers
     {
         public async Task Consume(ConsumeContext<UserCreatedEvent> context)
         {
-            await sender.Send(new UpdateUserIdCommand(context.Message.AccountId, context.Message.UserId));
-
             var eventMessage = new UserCreatedNotificationEvent { UserId = context.Message.UserId };
             await publishEndpoint.Publish(eventMessage);
+
+            await sender.Send(new UpdateUserIdCommand(context.Message.AccountId, context.Message.UserId));
         }
     }
 }

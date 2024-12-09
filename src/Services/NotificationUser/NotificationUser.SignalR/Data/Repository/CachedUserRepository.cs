@@ -7,7 +7,7 @@
         {
             await repository.CreateUser(user, cancellationToken);
 
-            await cache.SetStringAsync(user.Id.ToString(), JsonSerializer.Serialize(user), cancellationToken);
+            //await cache.SetStringAsync(user.Id.ToString(), JsonSerializer.Serialize(user), cancellationToken);
 
             return new UserResponseDto(user.Id, user.UserFriends.Select(u => u.FriendId).ToList(), new List<string>());
         }

@@ -19,7 +19,8 @@ namespace TravelPlan.API.Endpoints.PlanLocation
                 var response = result.Adapt<AddImagePlanLocationResponse>();
 
                 return Results.Ok(response);
-            });
+            })
+                .DisableAntiforgery();
         }
     }
 }
