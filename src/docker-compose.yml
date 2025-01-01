@@ -1,29 +1,14 @@
 services:
-  identityredis:
+  redis:
     image: redis
 
-  identitydb:
-   image: mcr.microsoft.com/mssql/server
-
-  userdb:
-   image: mcr.microsoft.com/mssql/server
-
-  locationdb:
-   image: mcr.microsoft.com/mssql/server
-
-  travelplandb:
-   image: mcr.microsoft.com/mssql/server
-  
   messagebroker:
    image: rabbitmq:management
   
-  notificationredis:
+  userredis:
    image: redis
-  
-  notificationdb:
-   image: mcr.microsoft.com/mssql/server
 
-  chatdb:
+  sqlserverdb:
    image: mcr.microsoft.com/mssql/server
 
   identity.api:
@@ -79,13 +64,15 @@ services:
       context: .
       dockerfile: Services/Chat/Chat.API/Dockerfile
 
+  postmanagement.api:
+    image: ${DOCKER_REGISTRY-}postmanagementapi
+    build:
+      context: .
+      dockerfile: Services/PostManagement/PostManagement.API/Dockerfile
+
 volumes:
-  identitydb_data:
-  userdb_data:
-  locationdb_data:
-  travelplandb_data:
-  notificationdb_data:
-  chatdb_data:
+  sqlserverdb_data:
+
 
 
 

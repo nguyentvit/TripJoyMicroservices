@@ -1,5 +1,4 @@
-﻿
-namespace Chat.Application.ChatRooms.Commands.PostMessage
+﻿namespace Chat.Application.ChatRooms.Commands.PostMessage
 {
     public class PostMessageHandler
         (IApplicationDbContext dbContext)
@@ -17,9 +16,9 @@ namespace Chat.Application.ChatRooms.Commands.PostMessage
             chatRoom.AccessChatRoom(userId);
 
             var message = Message.Of(command.Message);
+            var chatMessage = ChatMessage.Of(message, userId, chatRoom);
 
-            var chatMessage = ChatMessage.Of(message, userId);
-            chatRoom.AddMessage(chatMessage);
+            dbContext.ChatMessages.Add(chatMessage);
 
             await dbContext.SaveChangesAsync(cancellationToken);
 

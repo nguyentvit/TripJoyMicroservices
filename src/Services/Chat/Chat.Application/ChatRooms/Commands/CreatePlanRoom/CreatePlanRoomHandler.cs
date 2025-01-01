@@ -1,4 +1,5 @@
-﻿namespace Chat.Application.ChatRooms.Commands.CreatePlanRoom
+﻿
+namespace Chat.Application.ChatRooms.Commands.CreatePlanRoom
 {
     public class CreatePlanRoomHandler
         (IApplicationDbContext dbContext,

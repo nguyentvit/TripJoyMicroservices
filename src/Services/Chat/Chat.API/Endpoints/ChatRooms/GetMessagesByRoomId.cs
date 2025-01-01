@@ -2,7 +2,7 @@
 
 namespace Chat.API.Endpoints.ChatRooms
 {
-    public record GetMessagesByRoomIdResponse(PaginationResult<GetMessagesByRoomIdDto> Messages);
+    public record GetMessagesByRoomIdResponse(PaginationResult<GetMessagesByRoomIdDto> Messages, List<GetMessagesByRoomIdMemberDto> Members);
     public class GetMessagesByRoomId : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)

@@ -2,7 +2,8 @@
 namespace TravelPlan.Application.PlanLocations.Commands.AddImagePlanLocation
 {
     public class AddImagePlanLocationHandler
-        (IApplicationDbContext dbContext)
+        (IApplicationDbContext dbContext,
+        IS3Service s3Service)
         : ICommandHandler<AddImagePlanLocationCommand, AddImagePlanLocationResult>
     {
         public async Task<AddImagePlanLocationResult> Handle(AddImagePlanLocationCommand command, CancellationToken cancellationToken)
@@ -20,12 +21,15 @@ namespace TravelPlan.Application.PlanLocations.Commands.AddImagePlanLocation
 
             plan.EditPlanLocation(userId);
 
-            var image = FileImg.Of(command.Image);
-            planLocation.AddImagePlanLocation(image, userId);
+            string imgUrl = await s3Service.UploadFileAsync(command.Image);
+
+            Image imgImage = Image.Of(imgUrl);
+
+            planLocation.AddImagePlanLocationHandler(imgImage, userId);
 
             await dbContext.SaveChangesAsync(cancellationToken);
 
-            return new AddImagePlanLocationResult(true);
+            return new AddImagePlanLocationResult(imgUrl, true);
         }
     }
 }

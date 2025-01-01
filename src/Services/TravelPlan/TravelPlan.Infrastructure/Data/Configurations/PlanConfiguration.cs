@@ -9,6 +9,7 @@
             ConfigurePlanPlanInvitationTable(builder);
             ConfigurePlanLocationRelation(builder);
             ConfigureProvinceRelation(builder);
+            ConfigurePlanJoinRequestTable(builder);
         }
         private void ConfigurePlanTable(EntityTypeBuilder<Plan> builder)
         {
@@ -81,6 +82,13 @@
                 method => method.ToString(),
                 dbMethod => (CreationMethod)Enum.Parse(typeof(CreationMethod), dbMethod)
                 );
+
+            builder.Property(p => p.JoinStatus)
+                .HasColumnName(nameof(Plan.JoinStatus))
+                .HasConversion(
+                joinStatus => joinStatus.ToString(),
+                dbJoinStatus => (PlanJoinStatus)Enum.Parse(typeof(PlanJoinStatus), dbJoinStatus)
+                );
         }
         private void ConfigurePlanPlanMemberTable(EntityTypeBuilder<Plan> builder)
         {
@@ -148,6 +156,38 @@
             });
             builder.Metadata.FindNavigation(nameof(Plan.PlanInvitations))!.SetPropertyAccessMode(PropertyAccessMode.Field);
         }
+        private void ConfigurePlanJoinRequestTable(EntityTypeBuilder<Plan> builder)
+        {
+            builder.OwnsMany(p => p.PlanJoinRequests, jrs =>
+            {
+                jrs.ToTable("PlanJoinRequest");
+                jrs.WithOwner().HasForeignKey("PlanId");
+                jrs.HasKey("Id", "PlanId");
+
+                jrs.Property(i => i.Id)
+                    .HasColumnName("PlanJoinRequestId")
+                    .ValueGeneratedNever()
+                    .HasConversion(
+                    id => id.Value,
+                    dbId => PlanJoinRequestId.Of(dbId)
+                    );
+
+                jrs.Property(i => i.UserId)
+                    .HasColumnName(nameof(PlanJoinRequest.UserId))
+                    .HasConversion(
+                    userId => userId.Value,
+                    dbUserId => UserId.Of(dbUserId)
+                    );
+
+                jrs.Property(i => i.Introduction)
+                    .HasConversion(
+                    intro => intro.Value,
+                    dbIntro => Introduction.Of(dbIntro)
+                    );
+            });
+
+            builder.Metadata.FindNavigation(nameof(Plan.PlanJoinRequests))!.SetPropertyAccessMode(PropertyAccessMode.Field);
+        }
         private void ConfigurePlanLocationRelation(EntityTypeBuilder<Plan> builder)
         {
             builder.OwnsMany(p => p.PlanLocationIds, pli =>
@@ -165,6 +205,7 @@
 
             builder.Metadata.FindNavigation(nameof(Plan.PlanLocationIds))!.SetPropertyAccessMode(PropertyAccessMode.Field);
         }
+        
         private void ConfigureProvinceRelation(EntityTypeBuilder<Plan> builder)
         {
             builder.Property(p => p.ProvinceEndId)
@@ -179,5 +220,6 @@
                 dbId => ProvinceId.Of(dbId)
                 );
         }
+        
     }
 }

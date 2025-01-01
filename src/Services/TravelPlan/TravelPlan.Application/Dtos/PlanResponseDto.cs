@@ -11,13 +11,22 @@
         List<PlanResponseLocationDto> Locations,
         PlanVehicle Vehicle,
         PlanStatus Status,
-        CreationMethod Method
+        CreationMethod Method,
+        PlanResponseProvinceDto ProvinceStart,
+        PlanResponseProvinceDto ProvinceEnd,
+        List<PlanResponseImageDto> Images,
+        PlanJoinStatus JoinStatus
         );
 
     public record PlanResponseLocationDto(
         Guid Id,
-        double Latitude,
-        double Longitude,
-        int Order
+        PlanResponseLocationDtoCoordinates Coordinates,
+        int Order,
+        string Name,
+        string Address,
+        DateTime EstimatedStartDate
         );
+    public record PlanResponseProvinceDto(Guid ProvinceId, string ProvinceName);
+    public record PlanResponseLocationDtoCoordinates(double Latitude, double Longitude);
+    public record PlanResponseImageDto(string Url);
 }

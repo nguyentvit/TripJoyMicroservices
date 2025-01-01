@@ -1,9 +1,9 @@
-﻿using TravelPlan.Application.Extensions;
+﻿
 
 namespace TravelPlan.Application.Plans.Queries.GetPlans
 {
     public class GetPlansHandler
-        (IApplicationDbContext dbContext)
+        (IApplicationDbContext dbContext, ILocationGrpcService grpcService)
         : IQueryHandler<GetPlansQuery, GetPlansResult>
     {
         public async Task<GetPlansResult> Handle(GetPlansQuery query, CancellationToken cancellationToken)
@@ -40,7 +40,7 @@ namespace TravelPlan.Application.Plans.Queries.GetPlans
 
             foreach (var plan in plans)
             {
-                var planDto = await plan.ToPlanResponseDto(dbContext);
+                var planDto = await plan.ToPlanResponseDto(dbContext, grpcService);
                 result.Add(planDto);
             }
 

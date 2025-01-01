@@ -22,6 +22,38 @@ namespace Chat.Infrastructure.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Chat.Domain.Models.ChatMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ChatRoomId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("PostedByUser")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ChatMessages");
+                });
+
             modelBuilder.Entity("Chat.Domain.Models.ChatRoom", b =>
                 {
                     b.Property<Guid>("Id")
@@ -51,15 +83,15 @@ namespace Chat.Infrastructure.Data.Migrations
                     b.ToTable("ChatRooms");
                 });
 
-            modelBuilder.Entity("Chat.Domain.Models.ChatRoom", b =>
+            modelBuilder.Entity("Chat.Domain.Models.ChatMessage", b =>
                 {
-                    b.OwnsMany("Chat.Domain.Entities.ChatMessage", "Messages", b1 =>
+                    b.OwnsMany("Chat.Domain.Entities.ReadByRecipient", "ReadByRecipients", b1 =>
                         {
                             b1.Property<Guid>("Id")
                                 .HasColumnType("uniqueidentifier")
-                                .HasColumnName("ChatMessageId");
+                                .HasColumnName("ReadByRecipientId");
 
-                            b1.Property<Guid>("ChatRoomId")
+                            b1.Property<Guid>("ChatMessageId")
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<DateTime?>("CreatedAt")
@@ -74,25 +106,24 @@ namespace Chat.Infrastructure.Data.Migrations
                             b1.Property<string>("LastModifiedBy")
                                 .HasColumnType("nvarchar(max)");
 
-                            b1.Property<string>("Message")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("Message");
+                            b1.Property<Guid>("ReadByUserId")
+                                .HasColumnType("uniqueidentifier");
 
-                            b1.Property<Guid>("PostedByUser")
-                                .HasColumnType("uniqueidentifier")
-                                .HasColumnName("PostedByUser");
+                            b1.HasKey("Id", "ChatMessageId");
 
-                            b1.HasKey("Id", "ChatRoomId");
+                            b1.HasIndex("ChatMessageId");
 
-                            b1.HasIndex("ChatRoomId");
-
-                            b1.ToTable("ChatMessage", (string)null);
+                            b1.ToTable("ReadByRecipient", (string)null);
 
                             b1.WithOwner()
-                                .HasForeignKey("ChatRoomId");
+                                .HasForeignKey("ChatMessageId");
                         });
 
+                    b.Navigation("ReadByRecipients");
+                });
+
+            modelBuilder.Entity("Chat.Domain.Models.ChatRoom", b =>
+                {
                     b.OwnsMany("Chat.Domain.Entities.ChatRoomMember", "Members", b1 =>
                         {
                             b1.Property<Guid>("Id")
@@ -128,6 +159,31 @@ namespace Chat.Infrastructure.Data.Migrations
                                 .HasForeignKey("ChatRoomId");
                         });
 
+                    b.OwnsMany("Chat.Domain.ValueObjects.ChatMessageId", "ChatMessageIds", b1 =>
+                        {
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
+
+                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+
+                            b1.Property<Guid>("ChatRoomId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<Guid>("Value")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("ChatMessageId");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("ChatRoomId");
+
+                            b1.ToTable("ChatMessageIds", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("ChatRoomId");
+                        });
+
                     b.OwnsOne("Chat.Domain.ValueObjects.ChatRoomName", "Name", b1 =>
                         {
                             b1.Property<Guid>("ChatRoomId")
@@ -146,9 +202,9 @@ namespace Chat.Infrastructure.Data.Migrations
                                 .HasForeignKey("ChatRoomId");
                         });
 
-                    b.Navigation("Members");
+                    b.Navigation("ChatMessageIds");
 
-                    b.Navigation("Messages");
+                    b.Navigation("Members");
 
                     b.Navigation("Name");
                 });

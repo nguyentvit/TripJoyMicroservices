@@ -6,7 +6,8 @@
     {
         public EditNotePlanLocationCommandValidator()
         {
-
+            RuleFor(x => x.UserId).NotEmpty().WithMessage("UserId is required.");
+            RuleFor(x => x.PlanLocationId).NotEmpty().WithMessage("PlanLocationId is required.");
         }
     }
 }

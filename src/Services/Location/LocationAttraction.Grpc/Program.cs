@@ -1,6 +1,7 @@
 using LocationAttraction.Application;
 using LocationAttraction.Infrastructure;
 using LocationAttraction.Grpc;
+using LocationAttraction.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,8 @@ builder.Services
     .AddApiService(builder.Configuration);
 
 var app = builder.Build();
+
+await app.InitializeDatabaseAsync();
 
 app.UseApiServices();
 

@@ -17,13 +17,13 @@ namespace TravelPlan.Application.Plans.Queries.GetUsersAvailableAddMember
 
             plan.AccessPlan(userId);
 
-            var users = await userService.GetAllUsersAsync(query.PaginationRequest, query.KeySearch, cancellationToken);
+            var users = await userService.GetAllUsersAsync(query.PaginationRequest, new BuildingBlocks.Dtos.KeySearchUser(query.KeySearch.Name), cancellationToken);
 
             var usersSearch = users.Data;
 
             var memberIds = plan.PlanMembers.Select(p => p.MemberId.Value).ToList();
             var inviteeIds = plan.PlanInvitations.Select(p => p.InviteeId.Value).ToList();
-
+            var applyIds = plan.PlanJoinRequests.Select(p => p.UserId.Value).ToList();
 
             List<PlanInvitationUserAvailableDto> usersResult = new();
 
@@ -42,6 +42,10 @@ namespace TravelPlan.Application.Plans.Queries.GetUsersAvailableAddMember
                 else if (user.UserId == userId.Value)
                 {
                     status = InvitationStatus.Self;
+                }
+                else if (applyIds.Contains(user.UserId))
+                {
+                    status = InvitationStatus.Applied;
                 }
                 usersResult.Add(new PlanInvitationUserAvailableDto(
                     UserId: user.UserId,

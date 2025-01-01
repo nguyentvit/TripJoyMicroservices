@@ -1,7 +1,7 @@
 ﻿namespace TravelPlan.Application.Plans.Queries.GetExpenseMembersByPlanId
 {
     public class GetExpenseMembersByPlanIdHandler
-        (IApplicationDbContext dbContext)
+        (IApplicationDbContext dbContext, IUserAccessService userService)
         : IQueryHandler<GetExpenseMembersByPlanIdQuery, GetExpenseMembersByPlanIdResult>
     {
         public async Task<GetExpenseMembersByPlanIdResult> Handle(GetExpenseMembersByPlanIdQuery query, CancellationToken cancellationToken)
@@ -59,9 +59,13 @@
 
             List<PlanExpenseMembersResponseDto> result = new();
 
+            var userIds = userExpenses.Keys.Select(u => u.Value).Distinct().ToList();
+            var usersInfo = await userService.GetUsersInfoAsync(userIds);
+
             foreach (var planExpenseMemberId in userExpenses.Keys.ToList())
             {
-                result.Add(new PlanExpenseMembersResponseDto(planExpenseMemberId.Value, userExpenses[planExpenseMemberId]));
+                var userInfo = usersInfo.FirstOrDefault(u => u.UserId == planExpenseMemberId.Value);
+                result.Add(new PlanExpenseMembersResponseDto(planExpenseMemberId.Value, userExpenses[planExpenseMemberId], userInfo!.UserName, userInfo.Avatar));
             }
 
             return new GetExpenseMembersByPlanIdResult(new PaginationResult<PlanExpenseMembersResponseDto>(pageIndex, pageSize, totalCount, result));

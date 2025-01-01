@@ -21,7 +21,7 @@
 
             var planExpenseDto = await plan.ToPlanExpenseDto(userId, query.PaginationRequest, dbContext, locationGrpcService);
 
-            return new GetExpenseMeByPlanIdResult(planExpenseDto.Expense, planExpenseDto.Excess, new PaginationResult<ExpenseResponseDto>(
+            return new GetExpenseMeByPlanIdResult(planExpenseDto.TotalExpense, planExpenseDto.Expense, planExpenseDto.Excess, new PaginationResult<ExpenseResponseDto>(
                 pageIndex,
                 pageSize,
                 planExpenseDto.TotalCount,

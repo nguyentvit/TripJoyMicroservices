@@ -52,6 +52,11 @@ namespace TravelPlan.Domain.Models
         {
             Order = order;
         }
+        public void ChangeOrderAndDate(PlanLocationOrder order, Date estimatedStartDate)
+        {
+            Order = order;
+            EstimatedStartDate = estimatedStartDate;
+        }
         public void AddPlanLocationExpense(List<UserId> planLocationUserSpenders, UserId payerId, Money amount)
         {
             _planLocationUserSpenders.Clear();

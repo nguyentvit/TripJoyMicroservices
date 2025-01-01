@@ -32,8 +32,11 @@
             var orderFirst = planLocationFirst.Order;
             var orderSecond = planLocationSecond.Order;
 
-            planLocationFirst.ChangeOrder(orderSecond);
-            planLocationSecond.ChangeOrder(orderFirst);
+            var dateFirst = planLocationFirst.EstimatedStartDate;
+            var dateSecond = planLocationSecond.EstimatedStartDate;
+
+            planLocationFirst.ChangeOrderAndDate(orderSecond, dateSecond);
+            planLocationSecond.ChangeOrderAndDate(orderFirst, dateFirst);
 
             await dbContext.SaveChangesAsync(cancellationToken);
 

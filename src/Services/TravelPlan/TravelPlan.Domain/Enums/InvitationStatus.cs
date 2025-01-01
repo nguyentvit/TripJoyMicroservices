@@ -5,6 +5,7 @@
         Invited,
         Joined,
         Self,
-        NotInvited
+        NotInvited,
+        Applied
     }
 }

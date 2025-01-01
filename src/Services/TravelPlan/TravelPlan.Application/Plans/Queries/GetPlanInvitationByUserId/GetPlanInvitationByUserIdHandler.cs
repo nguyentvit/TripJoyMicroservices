@@ -1,5 +1,4 @@
-﻿using TravelPlan.Application.ExternalService;
-
+﻿
 namespace TravelPlan.Application.Plans.Queries.GetPlanInvitationByUserId
 {
     public class GetPlanInvitationByUserIdHandler

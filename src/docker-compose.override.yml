@@ -1,53 +1,10 @@
 services:
-  identityredis:
-    container_name: identityredis
+  redis:
+    container_name: redis
     restart: always
     ports:
      - "6379:6379"
 
-  identitydb:
-    container_name: identitydb
-    environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=Nguyenqb242
-    ports:
-      - "1433:1433"
-    restart: always
-    volumes:
-      - identitydb_data:/var/opt/mssql
-
-  userdb:
-    container_name: userdb
-    environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=Nguyenqb242
-    ports:
-      - "1432:1433"
-    restart: always
-    volumes:
-      - userdb_data:/var/opt/mssql
-
-  locationdb:
-    container_name: locationdb
-    environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=Nguyenqb242
-    ports:
-      - "1431:1433"
-    restart: always
-    volumes:
-      - locationdb_data:/var/opt/mssql
-
-  travelplandb:
-    container_name: travelplandb
-    environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=Nguyenqb242
-    ports:
-      - "1430:1433"
-    restart: always
-    volumes:
-      - travelplandb_data:/var/opt/mssql
 
   messagebroker:
     container_name: messagebroker
@@ -60,45 +17,34 @@ services:
       - "5672:5672"
       - "15672:15672"
  
-  notificationredis:
-    container_name: notificationredis
+  userredis:
+    container_name: userredis
     restart: always
     ports:
       - "6378:6379"
 
-  notificationdb:
-    container_name: notificationdb
+  sqlserverdb:
+    container_name: sqlserverdb
     environment: 
       - ACCEPT_EULA=Y
       - SA_PASSWORD=Nguyenqb242
     restart: always
     ports:
-      - "1429:1433"
+      - "1433:1433"
     volumes:
-      - notificationdb_data:/var/opt/mssql
-
-  chatdb:
-    container_name: chatdb
-    environment: 
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=Nguyenqb242
-    restart: always
-    ports:
-      - "1428:1433"
-    volumes:
-      - chatdb_data:/var/opt/mssql
+      - sqlserverdb_data:/var/opt/mssql
 
   identity.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_HTTP_PORTS=8080
-      - ConnectionStrings__Redis=identityredis:6379
-      - ConnectionStrings__DefaultConnection=Server=identitydb,1433;Database=IdentityDb;User Id=sa;Password=Nguyenqb242;TrustServerCertificate=True;
+      - ConnectionStrings__Redis=redis:6379
+      - ConnectionStrings__DefaultConnection=Server=sqlserverdb,1433;Database=IdentityDb;User Id=sa;Password=Nguyenqb242;TrustServerCertificate=True;
       - PORT=8080
-      - ConnectionStrings__SqlConnection=Server=identitydb,1433;Database=IdentityDb;User Id=sa;Password=Nguyenqb242;TrustServerCertificate=True;
+      - ConnectionStrings__SqlConnection=Server=sqlserverdb,1433;Database=IdentityDb;User Id=sa;Password=Nguyenqb242;TrustServerCertificate=True;
     depends_on:
-      - identityredis
-      - identitydb
+      - redis
+      - sqlserverdb
     ports:
       - "6200:8080"
     volumes:
@@ -110,9 +56,9 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_HTTP_PORTS=8080
       - PORT=8080
-      - ConnectionStrings__Database=Server=userdb,1433;Database=UserDb;User Id=sa;Password=Nguyenqb242;Encrypt=False;TrustServerCertificate=True
-      - ConnectionStrings__Redis=identityredis:6379
-      - AWS__BucketName=movieticketbooking
+      - ConnectionStrings__Database=Server=sqlserverdb,1433;Database=UserDb;User Id=sa;Password=Nguyenqb242;Encrypt=False;TrustServerCertificate=True
+      - ConnectionStrings__Redis=userredis:6379
+      - AWS__BucketName=${AWS_BUCKET_NAME}
       - AWS__AccessKey=${AWS_ACCESS_KEY}
       - AWS__SecretKey=${AWS_SECRET_KEY}
       - AWS__Region=${AWS_REGION}
@@ -122,8 +68,8 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
     depends_on:
-      - userdb
-      - identityredis
+      - sqlserverdb
+      - userredis
 
   yarpapigateway:
     environment:
@@ -144,34 +90,34 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_HTTP_PORTS=8080
-      - ConnectionStrings__Database=Server=locationdb,1433;Database=LocationDb;User Id=sa;Password=Nguyenqb242;Encrypt=False;TrustServerCertificate=True
+      - ConnectionStrings__Database=Server=sqlserverdb,1433;Database=LocationDb;User Id=sa;Password=Nguyenqb242;Encrypt=False;TrustServerCertificate=True
     ports:
       - "6400:8080"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
     depends_on:
-      - locationdb
+      - sqlserverdb
 
   locationattraction.grpc:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_HTTP_PORTS=8080
-      - ConnectionStrings__Database=Server=locationdb,1433;Database=LocationDb;User Id=sa;Password=Nguyenqb242;Encrypt=False;TrustServerCertificate=True
+      - ConnectionStrings__Database=Server=sqlserverdb,1433;Database=LocationDb;User Id=sa;Password=Nguyenqb242;Encrypt=False;TrustServerCertificate=True
     ports:
       - "6500:8080"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
     depends_on:
-      - locationdb
+      - sqlserverdb
 
   travelplan.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_HTTP_PORTS=8080
-      - ConnectionStrings__Database=Server=travelplandb,1433;Database=TravelPlanDb;User Id=sa;Password=Nguyenqb242;Encrypt=False;TrustServerCertificate=True
-      - AWS__BucketName=movieticketbooking
+      - ConnectionStrings__Database=Server=sqlserverdb,1433;Database=TravelPlanDb;User Id=sa;Password=Nguyenqb242;Encrypt=False;TrustServerCertificate=True
+      - AWS__BucketName=${AWS_BUCKET_NAME}
       - AWS__AccessKey=${AWS_ACCESS_KEY}
       - AWS__SecretKey=${AWS_SECRET_KEY}
       - AWS__Region=${AWS_REGION}
@@ -181,37 +127,54 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
     depends_on:
-      - travelplandb
+      - sqlserverdb
 
   notificationuser.signalr:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_HTTP_PORTS=8080
-      - ConnectionStrings__Database=Server=notificationdb,1433;Database=NotificationDb;User Id=sa;Password=Nguyenqb242;Encrypt=False;TrustServerCertificate=True
-      - ConnectionStrings__Redis=notificationredis:6379
+      - ConnectionStrings__Database=Server=sqlserverdb,1433;Database=NotificationDb;User Id=sa;Password=Nguyenqb242;Encrypt=False;TrustServerCertificate=True
+      - ConnectionStrings__Redis=redis:6379
     ports:
       - "6700:8080"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
     depends_on:
-      - notificationdb
-      - notificationredis
+      - sqlserverdb
+      - redis
       - messagebroker
 
   chat.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_HTTP_PORTS=8080
-      - ConnectionStrings__Database=Server=chatdb,1433;Database=NotificationDb;User Id=sa;Password=Nguyenqb242;Encrypt=False;TrustServerCertificate=True
+      - ConnectionStrings__Database=Server=sqlserverdb,1433;Database=NotificationDb;User Id=sa;Password=Nguyenqb242;Encrypt=False;TrustServerCertificate=True
     ports:
       - "6800:8080"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
     depends_on:
-      - chatdb
+      - sqlserverdb
 
+  postmanagement.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ConnectionStrings__Database=Server=sqlserverdb,1433;Database=PostManagement;User Id=sa;Password=Nguyenqb242;Encrypt=False;TrustServerCertificate=True
+      - AWS__BucketName=${AWS_BUCKET_NAME}
+      - AWS__AccessKey=${AWS_ACCESS_KEY}
+      - AWS__SecretKey=${AWS_SECRET_KEY}
+      - AWS__Region=${AWS_REGION}
+    ports:
+      - "6900:8080"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+    depends_on:
+      - sqlserverdb
 networks:
   default:
    driver: bridge
+
