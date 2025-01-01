@@ -2,7 +2,7 @@
 
 namespace TravelPlan.API.Endpoints.Plan
 {
-    public record GetExpenseByPlanIdResponse(decimal Expense,decimal Excess, PaginationResult<ExpenseResponseDto> DetailExpense);
+    public record GetExpenseByPlanIdResponse(decimal TotalExpense, decimal Expense,decimal Excess, PaginationResult<ExpenseResponseDto> DetailExpense);
     public class GetExpenseByPlanId : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)

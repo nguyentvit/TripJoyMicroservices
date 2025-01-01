@@ -7,9 +7,11 @@ namespace TravelPlan.Domain.Models
         private readonly List<PlanMember> _planMembers = new();
         private readonly List<PlanInvitation> _planInvitations = new();
         private readonly List<PlanLocationId> _planLocationIds = new();
+        private readonly List<PlanJoinRequest> _planJoinRequests = new();
         public IReadOnlyList<PlanMember> PlanMembers => _planMembers.AsReadOnly();
         public IReadOnlyList<PlanInvitation> PlanInvitations => _planInvitations.AsReadOnly();
         public IReadOnlyList<PlanLocationId> PlanLocationIds => _planLocationIds.AsReadOnly();
+        public IReadOnlyList<PlanJoinRequest> PlanJoinRequests => _planJoinRequests.AsReadOnly();
         public Title Title { get; private set; } = default!;
         public Image? Avatar { get; private set; }
         public Date StartDate { get; private set; } = default!;
@@ -21,6 +23,7 @@ namespace TravelPlan.Domain.Models
         public PlanVehicle Vehicle { get; private set; } = default!;
         public PlanStatus Status { get; private set; }
         public CreationMethod Method { get; private set; }
+        public PlanJoinStatus JoinStatus { get; private set; }
         private Plan() { }
         private Plan(
             PlanId id,
@@ -42,6 +45,9 @@ namespace TravelPlan.Domain.Models
             ProvinceStartId = provinceStartId;
             ProvinceEndId = provinceEndId;
             Vehicle = vehicle;
+            Note = Note.Of(string.Empty);
+            Status = PlanStatus.NotStarted;
+            JoinStatus = PlanJoinStatus.NotAllow;
         }
         public static Plan Of(
             Title title, 
@@ -68,9 +74,6 @@ namespace TravelPlan.Domain.Models
                 );
 
             var planMember = PlanMember.Of(userId, MemberRole.Lead);
-
-            plan.Note = Note.Of(string.Empty);
-            plan.Status = PlanStatus.NotStarted;
             plan._planMembers.Add(planMember);
 
 
@@ -193,6 +196,33 @@ namespace TravelPlan.Domain.Models
 
             planMember.ChangeRole();
         }
+        public void AcceptJoinPlanRequest(UserId userId, UserId targetUserId)
+        {
+            if (!HasPermission(userId, PlanPermission.AcceptJoinPlanRequest))
+                throw new DomainException("You do not have permission to accept join plan request");
+
+            var planJoinRequestExisted = _planJoinRequests.FirstOrDefault(j => j.UserId == targetUserId);
+            if (planJoinRequestExisted == null)
+                throw new DomainException("Join plan request with userId not found");
+
+            _planJoinRequests.Remove(planJoinRequestExisted);
+            if (!_planMembers.Any(m => m.MemberId == targetUserId))
+            {
+                var planMember = PlanMember.Of(targetUserId, MemberRole.Member);
+                _planMembers.Add(planMember);
+            }
+        }
+        public void DeclineJoinPlanRequest(UserId userId, UserId targetUserId)
+        {
+            if (!HasPermission(userId, PlanPermission.DeclineJoinPlanRequest))
+                throw new DomainException("You do not have permission to decline join plan request");
+
+            var planJoinRequestExisted = _planJoinRequests.FirstOrDefault(j => j.UserId == targetUserId);
+            if (planJoinRequestExisted == null)
+                throw new DomainException("Join plan request with userId not found");
+
+            _planJoinRequests.Remove(planJoinRequestExisted);
+        }
         public void EditNote(UserId userId, Note note)
         {
             if (!HasPermission(userId, PlanPermission.EditNote))
@@ -234,7 +264,7 @@ namespace TravelPlan.Domain.Models
             if (!HasPermission(userId, PlanPermission.StartPlan))
                 throw new DomainException("You are not have permission to start the plan");
 
-            if (Status != PlanStatus.NotStarted && Status != PlanStatus.Cancelled)
+            if (Status == PlanStatus.InProgress)
                 throw new DomainException($"Status of plan is {Status} so cannot start");
 
             Status = PlanStatus.InProgress;
@@ -250,10 +280,66 @@ namespace TravelPlan.Domain.Models
             Status = PlanStatus.Cancelled;
         }
 
+        public void CompletePlan(UserId userId)
+        {
+            if (!HasPermission(userId, PlanPermission.CompletePlan))
+                throw new DomainException("You are not have permission to complete the plan");
+
+            if (Status != PlanStatus.InProgress)
+                throw new DomainException($"Status of plan is {Status} to cannot complete");
+
+            Status = PlanStatus.Completed;
+        }
         public void EditPlanLocation(UserId userId)
         {
             if (!HasPermission(userId, PlanPermission.EditPlanLocation))
                 throw new DomainException("You are not have permission to edit in the plan location");
+        }
+
+        public void RemovePlanLocation(UserId userId, PlanLocation planLocation)
+        {
+            if (!HasPermission(userId, PlanPermission.RemovePlanLocation))
+                throw new DomainException("You are not have permission to remove plan location");
+
+            _planLocationIds.Remove(planLocation.Id);
+
+            AddDomainEvent(new RemovePlanLocationEvent(this, planLocation));
+        }
+        public void ChangePlanJoinStatus(UserId userId)
+        {
+            if (!HasPermission(userId, PlanPermission.ChangePlanJoinStatus))
+                throw new DomainException("You are not have permission to change plan join status");
+
+            if (JoinStatus == PlanJoinStatus.Allow)
+            { 
+                JoinStatus = PlanJoinStatus.NotAllow; 
+            }
+            else
+            {
+                JoinStatus = PlanJoinStatus.Allow;
+            }
+        }
+        public void JoinRequestPlan(PlanJoinRequest joinRequest)
+        {
+            if (JoinStatus == PlanJoinStatus.NotAllow)
+                throw new DomainException("Plan is already not allow to join");
+
+            if (_planMembers.Any(m => m.MemberId == joinRequest.UserId))
+                throw new DomainException("You are already in member list");
+
+            if (_planInvitations.Any(i => i.InviteeId == joinRequest.UserId))
+                throw new DomainException("This plan invited me");
+
+            if (_planJoinRequests.Any(j => j.UserId == joinRequest.UserId))
+                throw new DomainException("You applied this plan");
+
+            _planJoinRequests.Add(joinRequest);
+        }
+        public void RevokeJoinRequestPlan(UserId userId)
+        {
+            var planJoinRequestExisted = _planJoinRequests.FirstOrDefault(j => j.UserId == userId);
+            if (planJoinRequestExisted != null)
+                _planJoinRequests.Remove(planJoinRequestExisted);
         }
         private bool HasPermission(UserId userId, PlanPermission permission, UserId? targetMemberId = null)
         {
@@ -263,18 +349,23 @@ namespace TravelPlan.Domain.Models
             return permission switch
             { 
                 PlanPermission.AccessPlan => true,
-                PlanPermission.UpdatePlan => member.Role == MemberRole.Lead,
-                PlanPermission.InviteMember => member.Role == MemberRole.Lead || member.Role == MemberRole.CoLead,
-                PlanPermission.RemoveMember => CanRemoveMember(member, targetMemberId),
-                PlanPermission.ChangePermission => member.Role == MemberRole.Lead,
-                PlanPermission.EditNote => member.Role == MemberRole.Lead || member.Role == MemberRole.CoLead,
-                PlanPermission.AddPlanLocation => member.Role == MemberRole.Lead,
-                PlanPermission.ChangeOrderPlanLocation => member.Role == MemberRole.Lead,
-                PlanPermission.AddPlanLocationExpense => member.Role == MemberRole.Lead || member.Role == MemberRole.CoLead,
-                PlanPermission.RevokeInvitationMember => member.Role == MemberRole.Lead || member.Role == MemberRole.CoLead,
+                PlanPermission.UpdatePlan => member.Role == MemberRole.Lead && Status != PlanStatus.Completed,
+                PlanPermission.InviteMember =>(member.Role == MemberRole.Lead || member.Role == MemberRole.CoLead) && Status != PlanStatus.Completed,
+                PlanPermission.RemoveMember => CanRemoveMember(member, targetMemberId) && Status != PlanStatus.Completed,
+                PlanPermission.ChangePermission => member.Role == MemberRole.Lead && Status != PlanStatus.Completed,
+                PlanPermission.EditNote => (member.Role == MemberRole.Lead || member.Role == MemberRole.CoLead) && Status != PlanStatus.Completed,
+                PlanPermission.AddPlanLocation => member.Role == MemberRole.Lead && Status != PlanStatus.Completed,
+                PlanPermission.ChangeOrderPlanLocation => member.Role == MemberRole.Lead && Status != PlanStatus.Completed,
+                PlanPermission.AddPlanLocationExpense => (member.Role == MemberRole.Lead || member.Role == MemberRole.CoLead) && Status != PlanStatus.Completed,
+                PlanPermission.RevokeInvitationMember => (member.Role == MemberRole.Lead || member.Role == MemberRole.CoLead) && Status != PlanStatus.Completed,
                 PlanPermission.StartPlan =>  member.Role == MemberRole.Lead,
-                PlanPermission.PausePlan => member.Role == MemberRole.Lead,
-                PlanPermission.EditPlanLocation => member.Role == MemberRole.Lead || member.Role == MemberRole.CoLead,
+                PlanPermission.PausePlan => member.Role == MemberRole.Lead && Status != PlanStatus.Completed,
+                PlanPermission.EditPlanLocation => (member.Role == MemberRole.Lead || member.Role == MemberRole.CoLead) && Status != PlanStatus.Completed,
+                PlanPermission.RemovePlanLocation => member.Role == MemberRole.Lead && Status != PlanStatus.Completed,
+                PlanPermission.ChangePlanJoinStatus => member.Role == MemberRole.Lead && Status != PlanStatus.Completed,
+                PlanPermission.AcceptJoinPlanRequest => (member.Role == MemberRole.Lead || member.Role == MemberRole.CoLead) && Status != PlanStatus.Completed,
+                PlanPermission.DeclineJoinPlanRequest => (member.Role == MemberRole.Lead || member.Role == MemberRole.CoLead) && Status != PlanStatus.Completed,
+                PlanPermission.CompletePlan => member.Role == MemberRole.Lead && Status != PlanStatus.Completed,
                 _ => false
             };
         }

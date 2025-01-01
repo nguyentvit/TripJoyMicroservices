@@ -29,12 +29,6 @@ namespace Chat.Infrastructure.Data.Configurations
                 dbType => (ChatRoomType)Enum.Parse(typeof(ChatRoomType), dbType)
                 );
 
-            //builder.OwnsOne(x => x.PlanId, planIdBuilder =>
-            //{
-            //    planIdBuilder.Property(x => x.Value)
-            //        .HasColumnName(nameof(ChatRoom.PlanId));
-            //});
-
             builder.Property(x => x.PlanId)
                 .HasConversion(
                     planId => planId == null ? (Guid?)null : planId.Value,
@@ -49,35 +43,20 @@ namespace Chat.Infrastructure.Data.Configurations
         }
         private void ConfigureChatRoomChatMessageTable(EntityTypeBuilder<ChatRoom> builder)
         {
-            builder.OwnsMany(r => r.Messages, ms =>
+            builder.OwnsMany(r => r.ChatMessageIds, mis =>
             {
-                ms.ToTable("ChatMessage");
-                ms.WithOwner().HasForeignKey("ChatRoomId");
-                ms.HasKey("Id", "ChatRoomId");
+                mis.ToTable("ChatMessageIds");
 
-                ms.Property(m => m.Id)
+                mis.WithOwner().HasForeignKey("ChatRoomId");
+
+                mis.HasKey("Id");
+
+                mis.Property(mi => mi.Value)
                     .HasColumnName("ChatMessageId")
-                    .ValueGeneratedNever()
-                    .HasConversion(
-                        id => id.Value,
-                        dbId => ChatMessageId.Of(dbId)
-                    );
-
-                ms.Property(m => m.PostedByUser)
-                    .HasColumnName("PostedByUser")
-                    .ValueGeneratedNever()
-                    .HasConversion(
-                        id => id.Value,
-                        value => UserId.Of(value)
-                    );
-
-                ms.Property(m => m.Message)
-                    .HasColumnName("Message")
-                    .HasConversion(
-                        message => message.Value,
-                        dbMessage => Message.Of(dbMessage)
-                    );
+                    .ValueGeneratedNever();
             });
+
+            builder.Metadata.FindNavigation(nameof(ChatRoom.ChatMessageIds))!.SetPropertyAccessMode(PropertyAccessMode.Field);
         }
         private void ConfigureChatRoomChatRoomMemberTable(EntityTypeBuilder<ChatRoom> builder)
         {
@@ -103,6 +82,8 @@ namespace Chat.Infrastructure.Data.Configurations
                         value => UserId.Of(value)
                     );
             });
+
+            builder.Metadata.FindNavigation(nameof(ChatRoom.Members))!.SetPropertyAccessMode(PropertyAccessMode.Field);
         }
     }
 }

@@ -18,4 +18,4 @@ global using TravelPlan.Domain.Events.Plans;
 global using TravelPlan.Domain.Events.PlanLocations;
 global using MassTransit;
 global using BuildingBlocks.Messaging.Events.Event;
-global using TravelPlan.Application.ExternalService;
+global using TravelPlan.Domain.Entities;

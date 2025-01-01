@@ -1,0 +1,17 @@
+﻿global using BuildingBlocks.Exceptions;
+global using BuildingBlocks.CQRS;
+global using PostManagement.Application.Data;
+global using FluentValidation;
+global using PostManagement.Application.Dtos;
+global using Microsoft.EntityFrameworkCore;
+global using PostManagement.Domain.Models;
+global using PostManagement.Domain.Enums;
+global using PostManagement.Domain.ValueObjects;
+global using Microsoft.AspNetCore.Http;
+global using BuildingBlocks.Abstractions;
+global using BuildingBlocks.Interfaces;
+global using PostManagement.Domain.Events;
+global using PostManagement.Domain.Entities;
+global using BuildingBlocks.Pagination;
+global using PostManagement.Application.Extensions;
+global using PostManagement.Application.Exceptions;

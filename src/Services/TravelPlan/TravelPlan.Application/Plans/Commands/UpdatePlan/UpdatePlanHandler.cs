@@ -22,6 +22,16 @@
             if (provinceEnd == null)
                 throw new ProvinceNotFoundException(provinceEndId.Value);
 
+            var planLocations = await dbContext.PlanLocations.Where(pl => pl.PlanId == planId).OrderBy(pl => pl.Order).ToListAsync(cancellationToken);
+
+            foreach (var planLocation in planLocations)
+            {
+                if (planLocation.EstimatedStartDate.Value.Date < command.Plan.StartDate.Date || planLocation.EstimatedStartDate.Value.Date > command.Plan.EndDate.Date)
+                    throw new Exception($"There are have plan location in old estimated time, {planLocation.Coordinates.Longitude}:{planLocation.Coordinates.Latitude}");
+            }
+            
+
+
             UpdatePlan(plan, command);
             dbContext.Plans.Update(plan);
             await dbContext.SaveChangesAsync(cancellationToken);

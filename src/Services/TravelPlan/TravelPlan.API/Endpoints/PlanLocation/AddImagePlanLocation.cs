@@ -3,7 +3,7 @@
 namespace TravelPlan.API.Endpoints.PlanLocation
 {
     public record AddImagePlanLocationRequest(IFormFile Image);
-    public record AddImagePlanLocationResponse(bool IsSuccess);
+    public record AddImagePlanLocationResponse(string Url, bool IsSuccess);
     public class AddImagePlanLocation : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)

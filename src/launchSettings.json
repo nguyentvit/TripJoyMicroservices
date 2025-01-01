@@ -11,7 +11,8 @@
         "travelplan.api": "StartDebugging",
         "notificationusersignalr": "StartDebugging",
         "notificationuser.signalr": "StartDebugging",
-        "chat.api": "StartDebugging"
+        "chat.api": "StartDebugging",
+        "postmanagement.api": "StartDebugging"
       }
     }
   }

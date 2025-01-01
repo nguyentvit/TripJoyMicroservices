@@ -14,6 +14,11 @@
         RevokeInvitationMember,
         StartPlan,
         PausePlan,
-        EditPlanLocation
+        EditPlanLocation,
+        RemovePlanLocation,
+        ChangePlanJoinStatus,
+        AcceptJoinPlanRequest,
+        DeclineJoinPlanRequest,
+        CompletePlan
     }
 }

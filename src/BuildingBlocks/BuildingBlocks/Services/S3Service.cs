@@ -47,7 +47,9 @@ namespace BuildingBlocks.Services
             if (string.IsNullOrEmpty(filePath))
                 throw new ArgumentException("File key is invalid");
 
-            string fileKey = filePath.Split("/")[filePath.Length - 1];
+            string[] parts = filePath.Split('/');
+            string fileNameWithExtension = parts[^1];
+            string fileKey = fileNameWithExtension.Split('.')[0];
 
             var deleteObjectRequest = new DeleteObjectRequest
             {

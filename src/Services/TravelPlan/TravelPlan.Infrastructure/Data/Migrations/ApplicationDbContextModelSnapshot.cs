@@ -42,6 +42,11 @@ namespace TravelPlan.Infrastructure.Data.Migrations
                         .HasColumnType("decimal(18,2)")
                         .HasColumnName("EstimatedBudget");
 
+                    b.Property<string>("JoinStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("JoinStatus");
+
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
@@ -543,6 +548,45 @@ namespace TravelPlan.Infrastructure.Data.Migrations
                                 .HasForeignKey("PlanId");
                         });
 
+                    b.OwnsMany("TravelPlan.Domain.Entities.PlanJoinRequest", "PlanJoinRequests", b1 =>
+                        {
+                            b1.Property<Guid>("Id")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("PlanJoinRequestId");
+
+                            b1.Property<Guid>("PlanId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<DateTime?>("CreatedAt")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<string>("CreatedBy")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Introduction")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<DateTime?>("LastModified")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<string>("LastModifiedBy")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("UserId");
+
+                            b1.HasKey("Id", "PlanId");
+
+                            b1.HasIndex("PlanId");
+
+                            b1.ToTable("PlanJoinRequest", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("PlanId");
+                        });
+
                     b.OwnsMany("TravelPlan.Domain.Entities.PlanMember", "PlanMembers", b1 =>
                         {
                             b1.Property<Guid>("Id")
@@ -629,6 +673,8 @@ namespace TravelPlan.Infrastructure.Data.Migrations
                     b.Navigation("Avatar");
 
                     b.Navigation("PlanInvitations");
+
+                    b.Navigation("PlanJoinRequests");
 
                     b.Navigation("PlanLocationIds");
 

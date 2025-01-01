@@ -1,8 +1,8 @@
-﻿using Chat.Application.Data;
-using Chat.Application.ExternalService;
+﻿using BuildingBlocks.Interfaces;
+using BuildingBlocks.Services;
+using Chat.Application.Data;
 using Chat.Infrastructure.Data;
 using Chat.Infrastructure.Data.Interceptors;
-using Chat.Infrastructure.ExternalService;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

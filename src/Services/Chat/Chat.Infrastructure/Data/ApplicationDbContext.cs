@@ -8,6 +8,7 @@ namespace Chat.Infrastructure.Data
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
         public DbSet<ChatRoom> ChatRooms => Set<ChatRoom>();
+        public DbSet<ChatMessage> ChatMessages => Set<ChatMessage>();
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

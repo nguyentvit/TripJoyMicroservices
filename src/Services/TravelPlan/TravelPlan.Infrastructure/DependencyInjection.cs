@@ -1,4 +1,6 @@
-﻿using LocationAttraction.Grpc;
+﻿using BuildingBlocks.Interfaces;
+using BuildingBlocks.Services;
+using LocationAttraction.Grpc;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,7 +8,6 @@ using TravelPlan.Application.Data;
 using TravelPlan.Application.Grpc;
 using TravelPlan.Infrastructure.Data;
 using TravelPlan.Infrastructure.Data.Interceptors;
-using TravelPlan.Infrastructure.ExternalService;
 using TravelPlan.Infrastructure.Grpc;
 
 namespace TravelPlan.Infrastructure

@@ -33,9 +33,29 @@
 
             var location = await grpcService.GetLocationByCoordinates(latitude, longitude, command.PlanLocation.Name, command.PlanLocation.Address);
 
-            var order = plan.PlanLocationIds.Count + 1;
+            var estimatedStartDate = Date.Of(command.PlanLocation.EstimatedStartDate);
 
-            var planLocation = PlanLocation.Of(planId, LocationId.Of(location.LocationId), Date.Of(command.PlanLocation.EstimatedStartDate), coordinates, PlanLocationOrder.Of(order));
+            var order = 1;
+
+            var PlanLocationsBeforePlanLocationAdded = await dbContext.PlanLocations.Where(pl => pl.PlanId == planId).ToListAsync(cancellationToken);
+
+            foreach (var planLocationExisted in PlanLocationsBeforePlanLocationAdded)
+            {
+                if (planLocationExisted.EstimatedStartDate.Value.Date <= estimatedStartDate.Value.Date)
+                {
+                    ++order;
+                }
+                else
+                {
+                    var oldOrder = planLocationExisted.Order.Value;
+                    planLocationExisted.ChangeOrder(PlanLocationOrder.Of(++oldOrder));
+                }
+            }
+
+            
+
+
+            var planLocation = PlanLocation.Of(planId, LocationId.Of(location.LocationId), estimatedStartDate, coordinates, PlanLocationOrder.Of(order));
 
             plan.AddPlanLocation(userId, planLocation.Id);
 

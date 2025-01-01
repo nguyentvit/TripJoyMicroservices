@@ -6,7 +6,9 @@
     {
         public RemoveImagePlanLocationCommandValidator()
         {
-
+            RuleFor(x => x.UserId).NotEmpty().WithMessage("UserId is required.");
+            RuleFor(x => x.PlanLocationId).NotEmpty().WithMessage("PlanLocationId is required.");
+            RuleFor(x => x.ImageUrl).NotEmpty().WithMessage("ImageUrl is required.");
         }
     }
 }

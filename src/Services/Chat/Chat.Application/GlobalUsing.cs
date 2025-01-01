@@ -9,4 +9,7 @@ global using Chat.Domain.ValueObjects;
 global using Microsoft.EntityFrameworkCore;
 global using BuildingBlocks.Pagination;
 global using Chat.Application.Exceptions;
-global using Chat.Application.ExternalService;
+global using BuildingBlocks.Interfaces;
+global using BuildingBlocks.Abstractions;
+global using Chat.Domain.Events;
+global using Chat.Application.Enums;

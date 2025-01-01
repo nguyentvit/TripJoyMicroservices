@@ -4,7 +4,7 @@ namespace NotificationUser.SignalR.Hubs
 {
     public class NotificationHub
         (IUserRepository userRepository,
-        IPlanRepository planRepository) : Hub
+        IPlanRepository planRepository, ILogger<NotificationHub> logger) : Hub
     {
         public override Task OnConnectedAsync()
         {
@@ -41,8 +41,20 @@ namespace NotificationUser.SignalR.Hubs
             }
             await Clients.Client(connectionId).SendAsync("OnlineFriends", onlineFriends);
         }
+        public async Task SendMessage(Guid UserId, string Message, string UserName, string? Avatar)
+        {
+            var user = await userRepository.GetUser(UserId);
+            var connectionIds = user.ConnectionIds;
+            var timestamp = DateTime.UtcNow;
+
+            foreach (var connectionId in connectionIds)
+            {
+                await Clients.Client(connectionId).SendAsync("ReceiveMessage", new { Message, Timestamp = timestamp, UserName, Avatar });
+            }
+        }
         public async Task JoinPlan(Guid UserId, Guid PlanId)
         {
+            logger.LogInformation($"{UserId} join plan {PlanId}");
             var plan = await planRepository.GetPlan(PlanId);
             if (plan != null && plan.UserIds.Contains(UserId))
             {
@@ -52,6 +64,7 @@ namespace NotificationUser.SignalR.Hubs
         }
         public async Task LeavePlan(Guid UserId, Guid PlanId)
         {
+            logger.LogInformation($"{UserId} leave plan {PlanId}");
             var plan = await planRepository.GetPlan(PlanId);
             if (plan != null && plan.UserIds.Contains(UserId))
             {
@@ -59,13 +72,23 @@ namespace NotificationUser.SignalR.Hubs
                 await Groups.RemoveFromGroupAsync(connectionId, $"PlanGroup-{PlanId}");
             }
         }
-        public async Task SendCoordinates(Guid UserId, Guid PlanId, double Longitude, double Latitude)
+        public async Task SendCoordinates(Guid UserId, Guid PlanId, double Longitude, double Latitude, string UserName, string? Avatar)
         {
             var plan = await planRepository.GetPlan(PlanId);
             if (plan != null && plan.UserIds.Contains(UserId))
             {
-                var coordinates = new CoordinatesPlanDto(Latitude, Longitude, UserId);
-                await Clients.Group($"PlanGroup-{PlanId}").SendAsync("ReceiveCoordinates", coordinates);
+                var connectionId = Context.ConnectionId;
+                await Clients.GroupExcept($"PlanGroup-{PlanId}", new[] { connectionId }).SendAsync("ReceiveCoordinates", new { UserId, PlanId, Longitude, Latitude, UserName, Avatar });
+            }
+        }
+        public async Task SendMessagePlan(Guid PlanId, Guid UserId, string Message, string UserName, string? Avatar)
+        {
+            var plan = await planRepository.GetPlan(PlanId);
+            if (plan != null && plan.UserIds.Contains(UserId))
+            {
+                var timestamp = DateTime.UtcNow;
+                var connectionId = Context.ConnectionId;
+                await Clients.GroupExcept($"PlanGroup-{PlanId}", new[] { connectionId }).SendAsync("ReceiveMessagePlan", new { Message, Timestamp = timestamp, UserName, PlanId, Avatar });
             }
         }
         public async Task SendUpdatedPlan(Guid UserId, Guid PlanId, UpdateExpensePlanDto UpdateExpensePlanDto)

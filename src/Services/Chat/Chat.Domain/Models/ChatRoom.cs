@@ -2,10 +2,10 @@
 {
     public class ChatRoom : Aggregate<ChatRoomId>
     {
-        private readonly List<ChatMessage> _messages = new();
         private readonly List<ChatRoomMember> _members = new();
-        public IReadOnlyList<ChatMessage> Messages => _messages.AsReadOnly();
+        private readonly List<ChatMessageId> _chatMessageIds = new();
         public IReadOnlyList<ChatRoomMember> Members => _members.AsReadOnly();
+        public IReadOnlyList<ChatMessageId> ChatMessageIds => _chatMessageIds.AsReadOnly();
         public ChatRoomType Type { get; private set; }
         public PlanId? PlanId { get; private set; }
         public ChatRoomName? Name { get; private set; }
@@ -53,16 +53,16 @@
 
             _members.Remove(existedMember);
         }
-        public void AddMessage(ChatMessage message)
-        {
-            _messages.Add(message);
-        }
         public bool IsPrivateRoom() => Type == ChatRoomType.Private;
         public bool IsPlanRoom() => Type == ChatRoomType.Plan;
         public void AccessChatRoom(UserId userId)
         {
             if (!_members.Any(m => m.MemberId == userId))
                 throw new DomainException("You don't have policy to access chat room");
+        }
+        public void AddChatMessageId(ChatMessageId chatMessageId)
+        {
+            _chatMessageIds.Add(chatMessageId);
         }
     }
 }

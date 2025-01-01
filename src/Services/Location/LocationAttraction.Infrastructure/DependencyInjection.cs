@@ -4,7 +4,6 @@ using LocationAttraction.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using UserAccess.Infrastructure.Data.Interceptors;
 
 namespace LocationAttraction.Infrastructure
 {

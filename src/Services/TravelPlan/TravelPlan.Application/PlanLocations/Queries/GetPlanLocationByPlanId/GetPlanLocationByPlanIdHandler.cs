@@ -2,7 +2,8 @@
 {
     public class GetPlanLocationByPlanIdHandler
         (IApplicationDbContext dbContext,
-        ILocationGrpcService grpcService)
+        ILocationGrpcService grpcService,
+        IUserAccessService userService)
         : IQueryHandler<GetPlanLocationByPlanIdQuery, GetPlanLocationByPlanIdResult>
     {
         public async Task<GetPlanLocationByPlanIdResult> Handle(GetPlanLocationByPlanIdQuery query, CancellationToken cancellationToken)
@@ -33,7 +34,7 @@
 
             foreach (var planLocation in planLocations)
             {
-                var planLocationResult = await planLocation.ToPlanLocationResponseDto(grpcService);
+                var planLocationResult = await planLocation.ToPlanLocationResponseDto(grpcService, userService);
                 planLocationsResult.Add(planLocationResult);
             }
 
